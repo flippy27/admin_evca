@@ -11,8 +11,17 @@ import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 
 export default function AppLayout() {
-  const { hasPermission } = usePermissions();
+  const { hasPermission, permissions, roles } = usePermissions();
   const colors = getThemeColors("light");
+
+  console.log('[APP LAYOUT] Permissions check:', {
+    hasPermissions: permissions.length > 0,
+    permissionCount: permissions.length,
+    firstFewPermissions: permissions.slice(0, 5),
+    hasDashboardView: permissions.includes(AuthPermissionsEnum.DASHBOARD_VIEW),
+    hasChargersView: permissions.includes(AuthPermissionsEnum.CHARGERS_VIEW),
+    roles: roles,
+  });
 
   return (
     <Tabs
