@@ -1,0 +1,500 @@
+{
+  "info": {
+    "name": "EVCA Admin API",
+    "description": "Complete API endpoints for EVCA Admin mobile app testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@evca.com\",\n  \"password\": \"password123\",\n  \"rememberMe\": true\n}"
+            },
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/auth/login",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/auth/refresh",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "auth", "refresh"]
+            }
+          }
+        },
+        {
+          "name": "Get Permissions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/auth/permissions",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "auth", "permissions"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/auth/logout",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chargers",
+      "item": [
+        {
+          "name": "List Chargers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/chargers?page=1&pageSize=20",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "chargers"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20"
+                },
+                {
+                  "key": "siteId",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Charger Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/chargers/{chargerId}",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "chargers", "{chargerId}"]
+            }
+          }
+        },
+        {
+          "name": "Get Charger Live Data",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/chargers/{chargerId}/live",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "chargers", "{chargerId}", "live"]
+            }
+          }
+        },
+        {
+          "name": "Get Charger History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/chargers/{chargerId}/history?page=1&pageSize=10",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "chargers", "{chargerId}", "history"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                },
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01",
+                  "disabled": true
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-12-31",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Charger Configuration",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/chargers/{chargerId}/configuration",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "chargers", "{chargerId}", "configuration"]
+            }
+          }
+        },
+        {
+          "name": "Update Charger Configuration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"variables\": {\n    \"maxCurrent\": 32,\n    \"minChargingPower\": 1.4,\n    \"updateInterval\": 300\n  }\n}"
+            },
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/chargers/{chargerId}/configuration",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "chargers", "{chargerId}", "configuration"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sites",
+      "item": [
+        {
+          "name": "List Sites",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/sites?page=1&pageSize=20",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "sites"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Site Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/sites/{siteId}",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "sites", "{siteId}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/profile",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Felipe\",\n  \"lastName\": \"Carrasco\",\n  \"email\": \"felipe@evca.com\"\n}"
+            },
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/profile",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"oldPassword123\",\n  \"newPassword\": \"newPassword456\"\n}"
+            },
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/profile/change-password",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "profile", "change-password"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "List Reports",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/reports?page=1&pageSize=20",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "reports"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Credentials",
+      "item": [
+        {
+          "name": "List Credentials",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/credentials?page=1&pageSize=20",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "credentials"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Revoke Credential",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/credentials/{credentialId}",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "credentials", "{credentialId}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Energy Resources",
+      "item": [
+        {
+          "name": "List Energy Resources",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{API_BASE_URL}}/api/energy-resources?page=1&pageSize=20",
+              "host": ["{{API_BASE_URL}}"],
+              "path": ["api", "energy-resources"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "API_BASE_URL",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

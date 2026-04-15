@@ -3,11 +3,12 @@
  * Automatically shows toast when API errors occur
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useToast } from '@/components/ui/Toast';
 
 /**
  * Hook to display toast notification when API error occurs
+ * Only shows once per unique error to avoid repeated toasts
  * Usage: useApiErrorToast(chargersError, 'Failed to load chargers')
  */
 export function useApiErrorToast(
@@ -15,10 +16,17 @@ export function useApiErrorToast(
   fallbackMessage: string = 'An error occurred'
 ) {
   const { show } = useToast();
+  const lastErrorRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (error) {
+    // Only show toast if error changed
+    if (error && error !== lastErrorRef.current) {
+      lastErrorRef.current = error;
       show(error || fallbackMessage, 'error', 'Error');
+    }
+    // Clear ref when error clears
+    if (!error) {
+      lastErrorRef.current = null;
     }
   }, [error, show, fallbackMessage]);
 }
