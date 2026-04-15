@@ -8,10 +8,10 @@ import { View, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-nat
 import { useForm, Controller } from 'react-hook-form';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import i18n from '../lib/i18n';
+import i18n from '../../lib/i18n';
 
-import { useAuthStore } from '../lib/stores/auth.store';
-import { useAppStore } from '../lib/stores/app.store';
+import { useAuthStore } from '../../lib/stores/auth.store';
+import { useAppStore } from '../../lib/stores/app.store';
 import { useToast } from '../components/ui/Toast';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';

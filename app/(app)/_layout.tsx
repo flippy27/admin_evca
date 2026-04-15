@@ -5,8 +5,8 @@
  */
 
 import { Tabs } from 'expo-router';
-import { usePermissions } from '../lib/hooks/use-permissions';
-import { AuthPermissionsEnum } from '../lib/config/permissions';
+import { usePermissions } from '../../lib/hooks/use-permissions';
+import { AuthPermissionsEnum } from '../../lib/config/permissions';
 import { Ionicons } from '@expo/vector-icons';
 import { getThemeColors, spacing } from '../theme';
 
