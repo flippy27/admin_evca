@@ -160,18 +160,18 @@ export default function ComponentShowcase() {
               <CardContent style={{ gap: spacing.md }}>
                 <Button
                   label="Primary"
-                  variant="info"
+                  variant="primary"
                   onPress={() => showToast("Clicked!")}
                 />
                 <Button
                   label="Secondary"
-                  variant="info"
+                  variant="secondary"
                   onPress={() => {}}
                 />
                 <Button label="Outline" variant="outline" onPress={() => {}} />
                 <Button
                   label="Disabled"
-                  variant="info"
+                  variant="outline"
                   disabled
                   onPress={() => {}}
                 />
@@ -209,10 +209,10 @@ export default function ComponentShowcase() {
                   flexWrap: "wrap",
                 }}
               >
-                <Badge label="Default" variant="info" />
-                <Badge label="Secondary" variant="info" />
+                <Badge label="Default" variant="secondary" />
+                <Badge label="Secondary" variant="default" />
                 <Badge label="Outline" variant="outline" />
-                <Badge label="Charging" variant="info" />
+                <Badge label="Charging" variant="destructive" />
               </CardContent>
             </Card>
           </View>
@@ -312,7 +312,7 @@ export default function ComponentShowcase() {
               <CardContent>
                 <Button
                   label="Open Modal"
-                  variant="info"
+                  variant="ghost"
                   onPress={() => setModalVisible(true)}
                 />
                 <Modal
@@ -349,7 +349,7 @@ export default function ComponentShowcase() {
               <CardContent>
                 <Button
                   label="Open Drawer"
-                  variant="info"
+                  variant="primary"
                   onPress={() => setDrawerVisible(true)}
                 />
                 <Modal
