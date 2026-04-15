@@ -40,7 +40,7 @@ export function usePermissionGuard({
           : requiredPermissions.every((p) => userPerms.includes(p));
 
       if (!hasPerms) {
-        router.replace(fallbackRoute);
+        router.replace(fallbackRoute as any);
         return;
       }
     }
@@ -51,7 +51,7 @@ export function usePermissionGuard({
       const hasRoles = requiredRoles.some((r) => userRoles.includes(r));
 
       if (!hasRoles) {
-        router.replace(fallbackRoute);
+        router.replace(fallbackRoute as any);
         return;
       }
     }

@@ -40,12 +40,12 @@ export default function ComponentShowcase() {
   const [switchValue, setSwitchValue] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [checkboxValue, setCheckboxValue] = useState(false);
-  const [selectValue, setSelectValue] = useState("option1");
+  const [selectValue, setSelectValue] = useState<string | number>("option1");
   const [modalVisible, setModalVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const { showToast } = useToast();
+  const { show: showToast } = useToast();
 
   const mockTableData = [
     { id: "1", name: "Charger-001", status: "charging", power: 22.5 },
@@ -160,18 +160,18 @@ export default function ComponentShowcase() {
               <CardContent style={{ gap: spacing.md }}>
                 <Button
                   label="Primary"
-                  variant="default"
+                  variant="info"
                   onPress={() => showToast("Clicked!")}
                 />
                 <Button
                   label="Secondary"
-                  variant="secondary"
+                  variant="info"
                   onPress={() => {}}
                 />
                 <Button label="Outline" variant="outline" onPress={() => {}} />
                 <Button
                   label="Disabled"
-                  variant="default"
+                  variant="info"
                   disabled
                   onPress={() => {}}
                 />
@@ -209,10 +209,10 @@ export default function ComponentShowcase() {
                   flexWrap: "wrap",
                 }}
               >
-                <Badge label="Default" variant="default" />
-                <Badge label="Secondary" variant="secondary" />
+                <Badge label="Default" variant="info" />
+                <Badge label="Secondary" variant="info" />
                 <Badge label="Outline" variant="outline" />
-                <Badge label="Charging" variant="default" />
+                <Badge label="Charging" variant="info" />
               </CardContent>
             </Card>
           </View>
@@ -312,7 +312,7 @@ export default function ComponentShowcase() {
               <CardContent>
                 <Button
                   label="Open Modal"
-                  variant="default"
+                  variant="info"
                   onPress={() => setModalVisible(true)}
                 />
                 <Modal
@@ -349,10 +349,10 @@ export default function ComponentShowcase() {
               <CardContent>
                 <Button
                   label="Open Drawer"
-                  variant="default"
+                  variant="info"
                   onPress={() => setDrawerVisible(true)}
                 />
-                <Drawer
+                <Modal
                   visible={drawerVisible}
                   onClose={() => setDrawerVisible(false)}
                 >
@@ -365,7 +365,7 @@ export default function ComponentShowcase() {
                     <Text style={{ marginTop: spacing.md }}>Sites</Text>
                     <Text style={{ marginTop: spacing.md }}>Settings</Text>
                   </View>
-                </Drawer>
+                </Modal>
               </CardContent>
             </Card>
           </View>
@@ -410,12 +410,12 @@ export default function ComponentShowcase() {
             <Card>
               <CardContent style={{ gap: spacing.md }}>
                 <Alert
-                  variant="default"
+                  variant="info"
                   title="Info"
                   message="This is an info alert"
                 />
                 <Alert
-                  variant="warning"
+                  variant="destructive"
                   title="Warning"
                   message="This is a warning alert"
                 />

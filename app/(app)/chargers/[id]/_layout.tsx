@@ -11,8 +11,6 @@ export default function ChargerDetailLayout() {
         headerTintColor: colors.primary,
         headerStyle: {
           backgroundColor: colors.card,
-          borderBottomColor: colors.border,
-          borderBottomWidth: 1,
         },
         contentStyle: { backgroundColor: colors.background },
       }}

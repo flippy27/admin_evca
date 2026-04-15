@@ -279,7 +279,7 @@ export default function ProfileScreen() {
                   <View style={{ gap: spacing.md, marginTop: spacing.md }}>
                     <Button
                       label={updateLoading ? "Saving..." : "Save"}
-                      variant="default"
+                      variant="primary"
                       onPress={handleSavePersonal}
                       disabled={updateLoading}
                     />
@@ -471,7 +471,7 @@ export default function ProfileScreen() {
                 <View style={{ gap: spacing.md, marginTop: spacing.md }}>
                   <Button
                     label={passwordLoading ? "Changing..." : "Change Password"}
-                    variant="default"
+                    variant="primary"
                     onPress={handleChangePassword}
                     disabled={passwordLoading}
                   />

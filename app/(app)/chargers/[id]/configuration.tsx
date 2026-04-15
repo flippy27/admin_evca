@@ -18,7 +18,7 @@ import { getThemeColors, spacing } from "@/theme";
 export default function ChargerConfigurationScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const colors = getThemeColors("light");
-  const { showToast } = useToast();
+  const { show: showToast } = useToast();
   const { show: showLoading, hide: hideLoading } = useLoadingOverlay();
 
   const {
@@ -166,7 +166,7 @@ export default function ChargerConfigurationScreen() {
             {/* Save Button */}
             <Button
               label={isSaving ? "Saving..." : "Save Configuration"}
-              variant="default"
+              variant="primary"
               onPress={handleSave}
               disabled={isSaving || configLoading}
             />

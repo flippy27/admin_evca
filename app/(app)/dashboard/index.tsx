@@ -85,7 +85,7 @@ export default function DashboardScreen() {
             variant="body"
             style={{ color: colors.mutedForeground, marginTop: spacing.sm }}
           >
-            Welcome back, {user?.firstName || "User"}
+            Welcome back, {user?.fullName?.split(" ")[0] || "User"}
           </Text>
         </View>
 
@@ -246,7 +246,7 @@ export default function DashboardScreen() {
                   Name
                 </Text>
                 <Text variant="body">
-                  {user?.firstName} {user?.lastName}
+                  {user?.fullName}
                 </Text>
               </View>
               <View>

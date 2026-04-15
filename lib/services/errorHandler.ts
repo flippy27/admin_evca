@@ -31,9 +31,10 @@ export function extractErrorMessage(error: unknown): ApiError {
       };
     }
 
-    if (axiosError.response?.data?.message) {
+    if (axiosError.response?.data && typeof axiosError.response.data === 'object' && 'message' in axiosError.response.data) {
+      const data = axiosError.response.data as any;
       return {
-        message: axiosError.response.data.message,
+        message: data.message,
         statusCode: axiosError.response.status ?? 500,
       };
     }

@@ -125,7 +125,13 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
         <Alert
           message={toast.message}
           title={toast.title}
-          variant={toast.variant === 'default' ? 'default' : toast.variant}
+          variant={
+            toast.variant === 'error' || toast.variant === 'warning'
+              ? 'destructive'
+              : toast.variant === 'default'
+              ? 'default'
+              : (toast.variant as 'success' | 'info')
+          }
         />
       </TouchableOpacity>
     </Animated.View>

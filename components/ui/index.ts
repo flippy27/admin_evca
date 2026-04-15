@@ -21,7 +21,7 @@ export type { TextVariant } from './Text';
 
 export { Drawer } from './Drawer';
 
-export { Toast, ToastContainer, useToast, useToastStore } from './Toast';
+export { ToastContainer, useToast, useToastStore } from './Toast';
 export type { ToastVariant } from './Toast';
 
 export { LoadingOverlayComponent, useLoadingOverlay, useLoadingStore } from './LoadingOverlay';

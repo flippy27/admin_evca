@@ -1,107 +1,98 @@
-import { Badge } from "@/components/ui/Badge";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Text } from "@/components/ui/Text";
-import { getThemeColors, spacing } from "@/theme";
-import { Ionicons } from "@expo/vector-icons";
-import { useTranslation } from "react-i18next";
-import { SafeAreaView, ScrollView, View } from "react-native";
+import React, { useEffect } from 'react';
+import { SafeAreaView, ScrollView, View, RefreshControl } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { Ionicons } from '@expo/vector-icons';
 
-interface EnergyResource {
-  id: string;
-  name: string;
-  type: "solar" | "battery" | "grid" | "wind";
-  capacity: number;
-  available: number;
-  unit: string;
-  status: "active" | "inactive";
-}
-
-const MOCK_RESOURCES: EnergyResource[] = [
-  {
-    id: "1",
-    name: "Solar Array - Roof",
-    type: "solar",
-    capacity: 50,
-    available: 45,
-    unit: "kW",
-    status: "active",
-  },
-  {
-    id: "2",
-    name: "Battery Storage - Main",
-    type: "battery",
-    capacity: 200,
-    available: 165,
-    unit: "kWh",
-    status: "active",
-  },
-  {
-    id: "3",
-    name: "Grid Connection",
-    type: "grid",
-    capacity: 500,
-    available: 500,
-    unit: "kW",
-    status: "active",
-  },
-  {
-    id: "4",
-    name: "Wind Turbine - North",
-    type: "wind",
-    capacity: 100,
-    available: 0,
-    unit: "kW",
-    status: "inactive",
-  },
-];
+import { Badge } from '@/components/ui/Badge';
+import { Card, CardContent } from '@/components/ui/Card';
+import { Text } from '@/components/ui/Text';
+import { Alert } from '@/components/ui/Alert';
+import { useEnergyStore } from '@/lib/stores/energy.store';
+import { usePermissionGuard } from '@/lib/hooks/usePermissionGuard';
+import { AuthPermissionsEnum } from '@/lib/types/auth.types';
+import { getThemeColors, spacing } from '@/theme';
 
 const getResourceIcon = (type: string) => {
   switch (type) {
-    case "solar":
-      return "sunny";
-    case "battery":
-      return "battery";
-    case "grid":
-      return "flash";
-    case "wind":
-      return "leaf";
+    case 'solar':
+      return 'sunny';
+    case 'battery':
+      return 'battery';
+    case 'grid':
+      return 'flash';
+    case 'wind':
+      return 'leaf';
     default:
-      return "help";
+      return 'help';
   }
 };
 
 const getResourceColor = (type: string) => {
   switch (type) {
-    case "solar":
-      return "#f59e0b";
-    case "battery":
-      return "#3b82f6";
-    case "grid":
-      return "#ef4444";
-    case "wind":
-      return "#10b981";
+    case 'solar':
+      return '#f59e0b';
+    case 'battery':
+      return '#3b82f6';
+    case 'grid':
+      return '#ef4444';
+    case 'wind':
+      return '#10b981';
     default:
-      return "#6b7280";
+      return '#6b7280';
   }
 };
 
 export default function EnergyResourcesScreen() {
   const { t } = useTranslation();
-  const colors = getThemeColors("light");
+  const colors = getThemeColors('light');
 
-  const utilizationPercent = (available: number, capacity: number) => {
-    const used = capacity - available;
-    return Math.round((used / capacity) * 100);
+  // Permission guard
+  const hasAccess = usePermissionGuard({
+    requiredPermissions: [AuthPermissionsEnum.ENERGY_RESOURCES_VIEW],
+  });
+
+  if (!hasAccess) return null;
+
+  // Store
+  const {
+    resources,
+    resourcesLoading,
+    resourcesError,
+    fetchResources,
+    clearError,
+  } = useEnergyStore();
+
+  // Fetch on mount
+  useEffect(() => {
+    fetchResources(1, 20);
+  }, []);
+
+  const handleRefresh = () => {
+    clearError('resources');
+    fetchResources(1, 20);
+  };
+
+  const getUtilization = (resource: any) => {
+    if (!resource.capacity || resource.capacity === 0) return 0;
+    const used = (resource.capacity - (resource.currentOutput || 0));
+    return Math.round((used / resource.capacity) * 100);
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView
         contentContainerStyle={{ padding: spacing.lg, gap: spacing.lg }}
+        refreshControl={
+          <RefreshControl
+            refreshing={resourcesLoading}
+            onRefresh={handleRefresh}
+          />
+        }
       >
+        {/* Header */}
         <View>
           <Text variant="h2" weight="bold">
-            {t("common.ui.pageTitles.energyResources") || "Energy Resources"}
+            {t('common.ui.pageTitles.energyResources') || 'Energy Resources'}
           </Text>
           <Text
             variant="body"
@@ -111,20 +102,22 @@ export default function EnergyResourcesScreen() {
           </Text>
         </View>
 
-        {MOCK_RESOURCES.map((resource) => {
-          const utilization = utilizationPercent(
-            resource.available,
-            resource.capacity,
-          );
+        {resourcesError && (
+          <Alert variant="destructive" title="Error" message={resourcesError} />
+        )}
+
+        {/* Resources List */}
+        {resources.map((resource) => {
           const iconColor = getResourceColor(resource.type);
+          const utilization = getUtilization(resource);
 
           return (
             <Card key={resource.id}>
               <CardContent style={{ gap: spacing.md }}>
                 <View
                   style={{
-                    flexDirection: "row",
-                    alignItems: "center",
+                    flexDirection: 'row',
+                    alignItems: 'center',
                     gap: spacing.md,
                   }}
                 >
@@ -134,8 +127,8 @@ export default function EnergyResourcesScreen() {
                       height: 48,
                       borderRadius: 24,
                       backgroundColor: `${iconColor}20`,
-                      justifyContent: "center",
-                      alignItems: "center",
+                      justifyContent: 'center',
+                      alignItems: 'center',
                     }}
                   >
                     <Ionicons
@@ -156,58 +149,85 @@ export default function EnergyResourcesScreen() {
                     </Text>
                   </View>
                   <Badge
-                    label={resource.status === "active" ? "Online" : "Offline"}
+                    label={resource.status === 'active' ? 'Online' : 'Offline'}
                     variant={
-                      resource.status === "active" ? "secondary" : "outline"
+                      resource.status === 'active' ? 'secondary' : 'outline'
                     }
                   />
                 </View>
 
-                <View style={{ gap: spacing.sm }}>
+                {resource.capacity && (
+                  <View style={{ gap: spacing.sm }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Text
+                        variant="caption"
+                        style={{ color: colors.mutedForeground }}
+                      >
+                        Capacity
+                      </Text>
+                      <Text variant="body" weight="bold">
+                        {(resource.currentOutput || 0).toFixed(1)} / {resource.capacity.toFixed(1)} kW
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        height: 6,
+                        backgroundColor: colors.border,
+                        borderRadius: 3,
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <View
+                        style={{
+                          height: '100%',
+                          width: `${100 - utilization}%`,
+                          backgroundColor: iconColor,
+                        }}
+                      />
+                    </View>
+                    <Text
+                      variant="caption"
+                      style={{ color: colors.mutedForeground }}
+                    >
+                      {utilization}% capacity
+                    </Text>
+                  </View>
+                )}
+
+                {resource.description && (
                   <View
                     style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      alignItems: "center",
+                      borderTopWidth: 1,
+                      borderTopColor: colors.border,
+                      paddingTop: spacing.md,
                     }}
                   >
                     <Text
                       variant="caption"
                       style={{ color: colors.mutedForeground }}
                     >
-                      Capacity
-                    </Text>
-                    <Text variant="body" weight="bold">
-                      {resource.available} / {resource.capacity} {resource.unit}
+                      {resource.description}
                     </Text>
                   </View>
-                  <View
-                    style={{
-                      height: 6,
-                      backgroundColor: colors.border,
-                      borderRadius: 3,
-                      overflow: "hidden",
-                    }}
-                  >
-                    <View
-                      style={{
-                        height: "100%",
-                        width: `${100 - utilizationPercent(resource.available, resource.capacity)}%`,
-                        backgroundColor: iconColor,
-                      }}
-                    />
-                  </View>
-                  <Text
-                    variant="caption"
-                    style={{ color: colors.mutedForeground }}
-                  >
-                    {utilization}% in use
-                  </Text>
-                </View>
+                )}
               </CardContent>
             </Card>
           );
         })}
+
+        {resources.length === 0 && !resourcesLoading && (
+          <View style={{ alignItems: 'center', paddingVertical: spacing.xl }}>
+            <Text variant="body" style={{ color: colors.mutedForeground }}>
+              No energy resources found. Pull to refresh.
+            </Text>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
