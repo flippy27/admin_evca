@@ -18,7 +18,7 @@ import { Input } from '../components/ui/Input';
 import { Switch } from '../components/ui/Switch';
 import { Text } from '../components/ui/Text';
 import { Card } from '../components/ui/Card';
-import { getThemeColors, spacing } from '../theme';
+import { getThemeColors, spacing } from '../../theme';
 
 interface LoginForm {
   email: string;

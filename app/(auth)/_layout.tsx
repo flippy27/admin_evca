@@ -4,7 +4,7 @@
  */
 
 import { Stack } from 'expo-router';
-import { getThemeColors } from '../theme';
+import { getThemeColors } from '../../theme';
 
 export default function AuthLayout() {
   const colors = getThemeColors('light');

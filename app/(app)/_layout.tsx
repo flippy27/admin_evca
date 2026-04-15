@@ -8,7 +8,7 @@ import { Tabs } from 'expo-router';
 import { usePermissions } from '../../lib/hooks/use-permissions';
 import { AuthPermissionsEnum } from '../../lib/config/permissions';
 import { Ionicons } from '@expo/vector-icons';
-import { getThemeColors, spacing } from '../theme';
+import { getThemeColors, spacing } from '../../theme';
 
 export default function AppLayout() {
   const { hasPermission } = usePermissions();
