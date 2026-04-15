@@ -10,6 +10,7 @@ import { useProfileStore } from "@/lib/stores/profile.store";
 import { usePermissionGuard } from "@/lib/hooks/usePermissionGuard";
 import { AuthPermissionsEnum } from "@/lib/types/auth.types";
 import { getThemeColors, spacing } from "@/theme";
+import { validators, validationMessages } from "@/lib/validation/validators";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
@@ -61,6 +62,10 @@ export default function ProfileScreen() {
     confirmPassword: "",
   });
 
+  // Validation errors
+  const [personalErrors, setPersonalErrors] = useState<Record<string, string>>({});
+  const [passwordErrors, setPasswordErrors] = useState<Record<string, string>>({});
+
   // Fetch profile on mount
   useEffect(() => {
     fetchProfile();
@@ -82,20 +87,72 @@ export default function ProfileScreen() {
     router.replace("/(auth)/login");
   };
 
+  const validatePersonalForm = (): boolean => {
+    const errors: Record<string, string> = {};
+
+    if (!validators.required(personalForm.firstName)) {
+      errors.firstName = validationMessages.required;
+    } else if (!validators.minLength(personalForm.firstName, 2)) {
+      errors.firstName = validationMessages.minLength(2);
+    }
+
+    if (!validators.required(personalForm.lastName)) {
+      errors.lastName = validationMessages.required;
+    } else if (!validators.minLength(personalForm.lastName, 2)) {
+      errors.lastName = validationMessages.minLength(2);
+    }
+
+    if (!validators.required(personalForm.email)) {
+      errors.email = validationMessages.required;
+    } else if (!validators.email(personalForm.email)) {
+      errors.email = validationMessages.email;
+    }
+
+    setPersonalErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const validatePasswordForm = (): boolean => {
+    const errors: Record<string, string> = {};
+
+    if (!validators.required(passwordForm.currentPassword)) {
+      errors.currentPassword = validationMessages.required;
+    }
+
+    if (!validators.required(passwordForm.newPassword)) {
+      errors.newPassword = validationMessages.required;
+    } else {
+      const pwCheck = validators.password(passwordForm.newPassword);
+      if (!pwCheck.valid) {
+        errors.newPassword = validationMessages.passwordWeak;
+      }
+    }
+
+    if (!validators.required(passwordForm.confirmPassword)) {
+      errors.confirmPassword = validationMessages.required;
+    } else if (!validators.match(passwordForm.newPassword, passwordForm.confirmPassword)) {
+      errors.confirmPassword = validationMessages.passwordMismatch;
+    }
+
+    setPasswordErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSavePersonal = async () => {
+    if (!validatePersonalForm()) return;
+
     try {
       await updateProfile(personalForm);
       setIsEditingPersonal(false);
+      setPersonalErrors({});
     } catch {
       // Error handled by store
     }
   };
 
   const handleChangePassword = async () => {
-    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      // TODO: show error
-      return;
-    }
+    if (!validatePasswordForm()) return;
+
     try {
       await changePassword({
         currentPassword: passwordForm.currentPassword,
@@ -107,6 +164,7 @@ export default function ProfileScreen() {
         newPassword: "",
         confirmPassword: "",
       });
+      setPasswordErrors({});
     } catch {
       // Error handled by store
     }
@@ -258,6 +316,7 @@ export default function ProfileScreen() {
                     onChangeText={(val) =>
                       setPersonalForm({ ...personalForm, firstName: val })
                     }
+                    error={personalErrors.firstName}
                   />
                   <Input
                     label="Last Name"
@@ -265,6 +324,7 @@ export default function ProfileScreen() {
                     onChangeText={(val) =>
                       setPersonalForm({ ...personalForm, lastName: val })
                     }
+                    error={personalErrors.lastName}
                   />
                   <Input
                     label="Email"
@@ -273,6 +333,7 @@ export default function ProfileScreen() {
                       setPersonalForm({ ...personalForm, email: val })
                     }
                     keyboardType="email-address"
+                    error={personalErrors.email}
                   />
 
                   <View style={{ gap: spacing.md, marginTop: spacing.md }}>
@@ -446,6 +507,7 @@ export default function ProfileScreen() {
                     })
                   }
                   secureTextEntry
+                  error={passwordErrors.currentPassword}
                 />
                 <Input
                   label="New Password"
@@ -454,6 +516,7 @@ export default function ProfileScreen() {
                     setPasswordForm({ ...passwordForm, newPassword: val })
                   }
                   secureTextEntry
+                  error={passwordErrors.newPassword}
                 />
                 <Input
                   label="Confirm Password"
@@ -465,6 +528,7 @@ export default function ProfileScreen() {
                     })
                   }
                   secureTextEntry
+                  error={passwordErrors.confirmPassword}
                 />
 
                 <View style={{ gap: spacing.md, marginTop: spacing.md }}>
