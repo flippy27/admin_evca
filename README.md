@@ -1,50 +1,88 @@
-# Welcome to your Expo app 👋
+# EVCA Admin Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+React Native + Expo mobile application for managing EV charging infrastructure. Mirror of [ui-emobility-web](../ui-emobility-web) with complete feature parity.
 
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Quick Start
 
 ```bash
-npm run reset-project
+npm install
+cp .env.example .env
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Status
 
-## Learn more
+✅ **Complete**: Authentication, routing, permission guards, UI components, API client, state management, TypeScript
 
-To learn more about developing your project with Expo, look at the following resources:
+🟡 **In Progress**: Real-time data, detail screens, form editing, reporting
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+❌ **Todo**: Tests, CI/CD, WebSocket updates, offline sync
 
-## Join the community
+## Documentation
 
-Join our community of developers creating universal apps.
+- **[DEVELOPMENT.md](DEVELOPMENT.md)** — Setup, config, debugging
+- **[POSTMAN_COLLECTION.json](POSTMAN_COLLECTION.json)** — API endpoints
+- **[.env.example](.env.example)** — Environment variables
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Key Features
+
+- 📱 Charger management (list, detail, live data)
+- 🏢 Site management with maps
+- 👤 Authentication & permissions
+- 📊 Reporting & analytics
+- 🔐 AES-256 token encryption
+- 🌍 Multi-language (ES/EN)
+- 🧪 Mock API for development
+- ✅ Full TypeScript type safety
+
+## Configuration
+
+```bash
+# Copy environment template
+cp .env.example .env
+
+# Edit for your setup
+API_BASE_URL=http://localhost:3000
+TOKEN_ENCRYPTION_KEY=your-key
+```
+
+## Development
+
+### Without Backend (Mock API)
+```env
+ENABLE_MOCK_API=true
+```
+
+### With Local Backend
+```env
+API_BASE_URL=http://localhost:3000
+ENABLE_MOCK_API=false
+```
+
+### With Remote Server
+```env
+API_BASE_URL=https://api.your-domain.com
+```
+
+## Structure
+
+```
+├── app/              # Expo Router screens
+├── components/       # UI components
+├── lib/
+│   ├── api/         # API clients
+│   ├── stores/      # State management
+│   ├── hooks/       # Custom hooks
+│   ├── types/       # TypeScript types
+│   └── config/      # Configuration
+└── assets/          # Images, fonts
+```
+
+## Support
+
+See [DEVELOPMENT.md](DEVELOPMENT.md) for:
+- Setup instructions
+- Configuration options
+- API testing with Postman
+- Debugging tips
+- File structure details
