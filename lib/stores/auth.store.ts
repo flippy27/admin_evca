@@ -78,6 +78,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       // Step 2: Get encrypted permissions
       const permRes = await authApi.getPermissions();
+      console.log('[AUTH] Permissions response:', {
+        hasPayload: !!permRes.data.payload,
+        payloadKeys: Object.keys(permRes.data.payload || {}),
+        hasData: !!permRes.data.payload?.data,
+        dataType: typeof permRes.data.payload?.data,
+        dataKeys: permRes.data.payload?.data ? Object.keys(permRes.data.payload.data) : [],
+        fullPayload: permRes.data.payload,
+      });
       const decrypted = await decryptAndValidate<PermissionsData>(permRes.data.payload.data);
 
       // Process permissions into ProcessedUserData
