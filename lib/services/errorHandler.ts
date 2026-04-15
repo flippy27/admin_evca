@@ -22,21 +22,28 @@ export function extractErrorMessage(error: unknown): ApiError {
     const axiosError = error as AxiosError<{ details?: ErrorDetails }>;
 
     // Try to get message from response
-    if (axiosError.response?.data?.details?.message) {
-      const msg = axiosError.response.data.details.message;
-      return {
-        message: Array.isArray(msg) ? msg[0] : msg,
-        statusCode: axiosError.status ?? 500,
-        details: Array.isArray(msg) ? msg : [msg],
-      };
-    }
+    try {
+      if (axiosError.response?.data?.details?.message) {
+        const msg = axiosError.response.data.details.message;
+        if (msg) {
+          return {
+            message: Array.isArray(msg) ? String(msg[0]) : String(msg),
+            statusCode: axiosError.status ?? 500,
+            details: Array.isArray(msg) ? msg.map(String) : [String(msg)],
+          };
+        }
+      }
 
-    if (axiosError.response?.data && typeof axiosError.response.data === 'object' && 'message' in axiosError.response.data) {
-      const data = axiosError.response.data as any;
-      return {
-        message: data.message,
-        statusCode: axiosError.response.status ?? 500,
-      };
+      if (axiosError.response?.data && typeof axiosError.response.data === 'object' && 'message' in axiosError.response.data) {
+        const data = axiosError.response.data as any;
+        const message = data.message || 'Unknown error occurred';
+        return {
+          message: String(message),
+          statusCode: axiosError.response.status ?? 500,
+        };
+      }
+    } catch (parseError) {
+      logger.warn('Error parsing API response:', parseError);
     }
 
     // Fallback by status code
