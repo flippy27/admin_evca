@@ -1,0 +1,2125 @@
+{
+  "common": {
+    "ui": {
+      "actions": {
+        "back": "Back",
+        "cancel": "Cancel",
+        "continue": "Continue",
+        "close": "Close",
+        "ok": "Ok",
+        "save": "Save",
+        "download": "Download",
+        "copy": "Copy",
+        "restart": "Restart",
+        "confirm": "Confirm",
+        "add": "Add",
+        "edit": "Edit",
+        "delete": "Delete",
+        "view": "View",
+        "required": "Required"
+      },
+      "responses": {
+        "yes": "Yes",
+        "no": "No"
+      },
+      "messages": {
+        "success": "Success",
+        "error": "Error",
+        "warning": "Warning",
+        "info": "Info",
+        "googleServicesError": "Could not connect to Google services",
+        "notAvailable": "Not available",
+        "locationNotAvailable": "Location not available",
+        "modelNotAvailable": "Model not available",
+        "manufacturerNotAvailable": "Manufacturer not available"
+      },
+      "understood": "Understood",
+      "placeholders": {
+        "enterValue": "Enter value",
+        "enterNumber": "Enter number"
+      },
+      "export": {
+        "excel": "Excel",
+        "csv": "CSV"
+      },
+      "tooltips": {
+        "exportData": "Export data"
+      },
+      "search": {
+        "placeholder": "Search",
+        "noResults": "No results"
+      },
+      "noData": "No data",
+      "modals": {
+        "confirmDelete": {
+          "title": "Are you sure you want to delete this item?",
+          "confirmButton": "Yes, delete"
+        }
+      },
+      "navigation": {
+        "home": "Home",
+        "administration": "Administration",
+        "chargers": "Chargers",
+        "users": "Users",
+        "sites": "Sites",
+        "dashboard": "Dashboard",
+        "products": "Products",
+        "siteview": "Site view",
+        "profile": "Profile",
+        "reporting": "Reports",
+        "otherAssets": "Other assets",
+        "credentials": "Credentials",
+        "energyResources": "Energy Resources",
+        "siteView": "siteView"
+      },
+      "pageTitles": {
+        "dashboard": "Dashboard",
+        "chargers": "Chargers",
+        "chargersList": "Chargers list",
+        "chargingSessions": "Charging sessions",
+        "live": "Live",
+        "chargerDetail": "Charger detail",
+        "chargerConfiguration": "Charger configuration",
+        "sites": "Sites",
+        "sitesList": "Sites list",
+        "siteProfile": "Site profile",
+        "users": "Users",
+        "reporting": "Reports",
+        "credentials": "Credentials",
+        "credentialsRfid": "RFID credentials",
+        "credentialsEvccid": "EVCCID credentials",
+        "energyResources": "Energy resources",
+        "profile": "Profile",
+        "designSystem": "Design System",
+        "login": "Login",
+        "register": "Register",
+        "error": "Error",
+        "unauthorized": "Unauthorized",
+        "forbidden": "Forbidden",
+        "notFound": "Not found",
+        "serverError": "Server error"
+      },
+      "menu": {
+        "sections": {
+          "home": "Home",
+          "administration": "Administration",
+          "other": "Other"
+        },
+        "items": {
+          "login": "Login",
+          "register": "Register",
+          "menuLevel": "Menu Level",
+          "menu1": "Menu 1",
+          "menu2": "Menu 2",
+          "disabled": "Disabled",
+          "chip": "Chip",
+          "outlined": "Outlined",
+          "externalLink": "External Link"
+        }
+      },
+      "pagination": {
+        "rowsPerPage": "Rows per page",
+        "selectPlaceholder": "Select",
+        "of": "of",
+        "previousPageLabel": "Previous",
+        "nextPageLabel": "Next"
+      },
+      "table": {
+        "sorting": {
+          "title": "Sort by",
+          "subtitle": "Select the column and sorting type",
+          "columnPlaceholder": "Column",
+          "orderLabel": "Order",
+          "orderPlaceholder": "Sorting type",
+          "noOrder": "— No order —",
+          "ascending": "Ascending",
+          "descending": "Descending"
+        },
+        "filters": {
+          "title": "Filters and columns",
+          "subtitle": "Select the columns and data fields you want to view",
+          "searchPlaceholder": "Search",
+          "selectedLabel": "selected",
+          "noRangeLabel": "No range",
+          "showAllColumns": "Show all columns",
+          "selectAll": "Select all"
+        },
+        "actions": {
+          "apply": "Apply",
+          "reset": "Reset",
+          "filtersAndSort": "Edit columns and filters",
+          "export": "Export data",
+          "downloadExcel": "Download Excel",
+          "personalize": "Personalize"
+        },
+        "filterPlaceholders": {
+          "minimum": "Minimum",
+          "maximum": "Maximum",
+          "from": "From",
+          "to": "To",
+          "searchSite": "Search by site name...",
+          "minimumKwh": "Minimum (kWh)",
+          "maximumKwh": "Maximum (kWh)"
+        },
+        "errorState": "Error loading data"
+      },
+      "visualGuide": {
+        "title": "Visual guide",
+        "subtitle": "Color symbology"
+      },
+      "select": {
+        "notFoundText": "No items found",
+        "loading": "Loading..."
+      },
+      "loading": "Loading...",
+      "validation": {
+        "errors": {
+          "required": "Required",
+          "strictEmail": "Invalid email",
+          "nameMaxLength": "Max 30 characters",
+          "nameInvalidFormat": "Invalid format. Only letters, numbers, accents, hyphens, underscores and spaces are allowed",
+          "nameEmojiNotAllowed": "Emojis are not allowed",
+          "nameInvisibleChars": "Invisible characters are not allowed",
+          "whitespace": "Field required",
+          "descriptiveMaxLength": "Max 100 characters",
+          "descriptiveInvalidFormat": "Invalid format. Only letters, numbers, accents, hyphens, underscores, spaces, periods and commas are allowed",
+          "descriptiveEmojiNotAllowed": "Emojis are not allowed",
+          "descriptiveInvisibleChars": "Invisible characters are not allowed",
+          "integerInvalidFormat": "Numbers only",
+          "integerMaxLength": "Max 10 digits",
+          "decimalInvalidFormat": "Invalid format. Only numbers with decimal point are allowed",
+          "decimalIntegerMaxLength": "Max 4 integer digits",
+          "decimalMaxLength": "Max 2 decimals",
+          "numericIdInvalidFormat": "Numbers only",
+          "numericIdLength": "Between 10 and 20 digits",
+          "technicalIdLength": "Between 3 and 30 characters",
+          "technicalIdInvalidFormat": "Invalid format. Only letters, numbers, hyphens and underscores are allowed",
+          "chargerIdLength": "The ID must be between 10 and 20 characters",
+          "chargerIdInvalidFormat": "Invalid format. Only letters, numbers, hyphens and underscores are allowed",
+          "invalidDateFormat": "Invalid date. Use DD/MM/YYYY format",
+          "dateMinError": "Date cannot be before the minimum allowed date",
+          "dateMaxError": "Date cannot be after the maximum allowed date",
+          "serialMaxLength": "Max 40 characters",
+          "serialNoSpaces": "Spaces not allowed",
+          "serialInvalidFormat": "Invalid format. Only letters, numbers and hyphens are allowed",
+          "percentageInvalidFormat": "Numbers only",
+          "percentageRange": "Value between 1 and 100",
+          "urlMaxLength": "Max 255 characters",
+          "urlNoSpaces": "Spaces not allowed in the URL",
+          "urlInvalidFormat": "Must start with http:// or https://",
+          "ocppTextMaxLength": "Max 100 characters",
+          "ocppTextNoSpaces": "Spaces not allowed",
+          "ocppTextInvalidFormat": "Invalid format. Only letters, numbers, hyphens, periods and slashes are allowed",
+          "ocppInvalidMeasurand": "Invalid value. Must be a comma-separated list of valid Measurands",
+          "ocppInvalidFeatureProfile": "Invalid value. Must be a comma-separated list of valid Feature Profiles",
+          "latitudeInvalidFormat": "Invalid format. Only numbers are allowed",
+          "latitudeOutOfRange": "Latitude must be between -90 and 90",
+          "longitudeInvalidFormat": "Invalid format. Only numbers are allowed",
+          "longitudeOutOfRange": "Longitude must be between -180 and 180",
+          "invalidFormat": "Invalid format",
+          "numbersOnly": "Numbers only",
+          "spacesNotAllowed": "Spaces not allowed",
+          "emojisNotAllowed": "Emojis not allowed",
+          "invalidCharacters": "Invalid characters",
+          "greaterThanZero": "Must be a number greater than 0",
+          "greaterThanOrEqualZero": "Must be a number greater than or equal to 0",
+          "maxPowerExceeded": "Maximum power cannot exceed 9999.99 kW",
+          "minPowerExceeded": "Minimum power cannot exceed 9999.99 kW",
+          "maxCurrentExceeded": "Maximum current cannot exceed 9999 A",
+          "maxVoltageExceeded": "Maximum voltage cannot exceed 9999 V"
+        }
+      }
+    },
+    "errors": {
+      "loadSites": "Error loading sites",
+      "loadChargers": "Error loading chargers",
+      "loadData": "Error loading data",
+      "reviewData": "Please review the data and try again.",
+      "noSubsidiarySelected": "No subsidiary selected",
+      "noSubsidiaryForReport": "No subsidiary selected for the report",
+      "noCompanyIdAvailable": "No company_id available",
+      "noUserIdAvailable": "No user_id available",
+      "getAllLocations": "Get All Locations",
+      "unexpectedError": "An unexpected error occurred - Please try again",
+      "unexpectedErrorWithAction": "An unexpected error occurred while {{action}} - Please try again",
+      "noPermission": "You do not have permission to perform this action",
+      "noPermissionRestart": "You do not have permission to execute the restart command",
+      "genericError": "An unexpected error occurred",
+      "connectivityError": "Connectivity error. Please contact an administrator.",
+      "unknown": "Unknown error"
+    },
+    "genericError": "An unexpected error occurred",
+    "table": {
+      "emptyState": "No records found",
+      "emptyStateAlt": "No data",
+      "errorState": "Error loading data"
+    },
+    "languages": {
+      "english": "English",
+      "spanish": "Spanish"
+    },
+    "entities": {
+      "charger": {
+        "states": {
+          "available": "Available",
+          "unavailable": "Unavailable",
+          "error": "Error"
+        }
+      },
+      "connector": {
+        "states": {
+          "available": "Available",
+          "preparing": "Preparing",
+          "charging": "Charging",
+          "suspendedEvse": "Suspended by Charger",
+          "suspendedEv": "Suspended by Vehicle",
+          "finishing": "Finishing",
+          "reserved": "Reserved",
+          "unavailable": "Unavailable",
+          "faulted": "Faulted",
+          "offline": "Offline"
+        }
+      }
+    },
+    "actions": {
+      "restart": {
+        "confirm": "Are you sure you want to restart the charger {{chargerName}}?",
+        "success": "The charger {{cargador}} has been restarted successfully",
+        "notFound": "Charger not found or disconnected",
+        "timeout": "Timeout: The charger did not respond in time"
+      },
+      "startCharge": {
+        "confirm": "Are you sure you want to start charging on {{connectorName}}?",
+        "success": "Charging has been started successfully on Connector {{conector}} - {{cargador}}",
+        "error": "Could not start charging. Please try again."
+      },
+      "stopCharge": {
+        "confirm": "Are you sure you want to stop charging on {{connectorName}}?",
+        "success": "Charging has been stopped successfully on Connector {{conector}} - {{cargador}}",
+        "error": "Could not stop charging. Please try again."
+      },
+      "enable": {
+        "confirm": "Are you sure you want to enable {{connectorName}}?",
+        "success": "Connector {{conector}} - {{cargador}} has been enabled successfully",
+        "error": "Could not enable connector. Please try again."
+      },
+      "disable": {
+        "confirm": "Are you sure you want to disable {{connectorName}}?",
+        "success": "Connector {{conector}} - {{cargador}} has been disabled successfully",
+        "error": "Could not disable connector. Please try again."
+      },
+      "unlock": {
+        "confirm": "Are you sure you want to unlock {{connectorName}}?",
+        "success": "Connector {{conector}} - {{cargador}} has been unlocked successfully",
+        "error": "Could not unlock connector. Please try again."
+      },
+      "prioritize": {
+        "confirm": "Are you sure you want to prioritize charging on {{connectorName}}?",
+        "success": "Charging has been prioritized successfully on Connector {{conector}} - {{cargador}}",
+        "error": "Could not prioritize charging. Please try again."
+      },
+      "delete": {
+        "confirm": "Are you sure you want to delete the charger {{chargerName}}?",
+        "warning": "This action cannot be undone.",
+        "success": "The charger {{cargador}} has been deleted successfully",
+        "error": "Error deleting charger"
+      },
+      "confirmDelete": "Yes, delete"
+    }
+  },
+  "auth": {
+    "login": {
+      "welcome": "Welcome",
+      "welcomeTo": "to Dhemax",
+      "loginTitle": "Welcome",
+      "subtitle": "to Dhemax",
+      "signIn": "Sign In",
+      "logIn": "Sign In",
+      "username": "Email",
+      "password": "Password",
+      "rememberMe": "Remember Me",
+      "forgotPassword": "Forgot Password?",
+      "loginWithGoogle": "Login with Google",
+      "loginWithFacebook": "Login with Facebook",
+      "loginWithGitHub": "Login with GitHub",
+      "loginSuccess": "Login successful!",
+      "loginSuccessMessage": "Login successful!",
+      "loginError": "Login error",
+      "authenticationError": "Invalid credentials",
+      "nameRequired": "Name is required.",
+      "nameMinLength": "Name should be 6 characters.",
+      "passwordRequired": "Password is required.",
+      "rememberDevice": "Remember this device",
+      "newToApp": "New to UI Dhemax?",
+      "createAccount": "Create an account",
+      "usernameInvalid": "Invalid username",
+      "invalidCredentials": "Invalid credentials",
+      "signingIn": "Signing in...",
+      "forgotPasswordConfirm": "Are you sure you want to recover your password?",
+      "emailPlaceholder": "Enter your email",
+      "passwordPlaceholder": "Enter your password"
+    },
+    "error": {
+      "title": "Oops!!!",
+      "subtitle": "This page you are looking for could not be found.",
+      "goBackHome": "Go back to Home"
+    },
+    "maintenance": {
+      "title": "Maintenance Mode!!!",
+      "subtitle": "Website is Under Construction. Check back later!",
+      "goBackHome": "Go back to Home"
+    },
+    "register": {
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "nameRequired": "Name is required",
+      "nameMinLength": "Name must be at least 6 characters",
+      "emailRequired": "Email is required",
+      "passwordRequired": "Password is required",
+      "signUp": "Sign Up",
+      "signIn": "Sign In",
+      "subtitle": "Create an account to get started",
+      "welcome": "Welcome",
+      "alreadyHaveAccount": "Already have an account?"
+    },
+    "forgotPassword": {
+      "instructions": "Enter your email address and we'll send you a link to reset your password",
+      "emailAddress": "Email Address",
+      "emailRequired": "Email is required",
+      "resetPassword": "Reset Password",
+      "backToLogin": "Back to Login",
+      "title": "Forgot Password",
+      "subtitle": "Enter your email address and we'll send you a link to reset your password",
+      "emailInvalid": "Please enter a valid email",
+      "sendLink": "Send Recovery Link",
+      "emailSent": "Email Sent",
+      "emailSentMessage": "A recovery link has been sent to your email address. Check your inbox and follow the instructions.",
+      "recoveryEmailSentTitle": "To recover your password we've sent an email to",
+      "yourEmailPlaceholder": "your email",
+      "emailNotFound": "Email is not registered in the system",
+      "tryAgain": "Try Again"
+    },
+    "resetPassword": {
+      "title": "Recover password",
+      "passwordSendEmail": "Password sent to email",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 8 characters long",
+      "passwordPattern": "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character",
+      "passwordsNotMatch": "Passwords do not match",
+      "verificationCodeRequired": "Verification code is required",
+      "verificationCodeMinLength": "Verification code must be at least 6 characters",
+      "genericError": "An error occurred. Please try again.",
+      "resetPassword": "Reset password",
+      "passwordReset": "Password reset",
+      "passwordResetMessage": "Your password has been reset successfully. You can now log in with your new password.",
+      "goToLogin": "Go to Login",
+      "linkExpired": "Link Expired",
+      "linkExpiredMessage": "The recovery link has expired. Please request a new recovery link.",
+      "requestNewLink": "Request New Link"
+    },
+    "session": {
+      "expirationTitle": "Your session is about to expire",
+      "renewQuestion": "Do you want to stay connected?",
+      "expiresIn": "Session will expire in:",
+      "renewButton": "Stay connected",
+      "closeButton": "Log out",
+      "renewSuccess": "Session extended successfully",
+      "renewError": "We couldn't renew your session. Please sign in again."
+    }
+  },
+  "starter": "Starter",
+  "dashboard": {
+    "title": "Dashboard",
+    "tabsDate": {
+      "today": "24 hrs",
+      "lastWeek": "1 week",
+      "month": "1 month",
+      "months": "3 months",
+      "ariaLabel": "Time range"
+    },
+    "errors": {
+      "dateRangeExceedsMax": "You cannot select a date range greater than 3 months.",
+      "invalidDateRangeTitle": "Invalid date range"
+    },
+    "charts": {
+      "sessions": "Charging sessions",
+      "sessionsSeriesName": "Sessions",
+      "peakPower": "Peak Power",
+      "connectors": {
+        "title": "Connectors",
+        "subtitle": "Current status",
+        "available": "Available",
+        "charging": "Charging",
+        "faulted": "Faulted"
+      }
+    }
+  },
+  "chargers": {
+    "tooltips": {
+      "status": {
+        "online": "Charger connected",
+        "offline": "Charger disconnected",
+        "error": "Charger with error"
+      },
+      "session": {
+        "success": "Charge completed",
+        "charging": "Charge in progress",
+        "interrupted": "Charge interrupted"
+      }
+    },
+    "views": {
+      "list": {
+        "title": "Chargers management",
+        "subtitle": "Real-time monitoring and control of charging infrastructure.",
+        "buttons": {
+          "createCharger": "Create",
+          "filtersAndSort": "Sort and filter columns"
+        },
+        "search": {
+          "placeholder": "Search"
+        },
+        "emptyState": {
+          "message": "No charger data available at this time"
+        },
+        "tableHeaders": {
+          "status": "",
+          "chargerNameId": "Name / ID",
+          "site": "Site",
+          "connectors": "Connectors",
+          "maxPower": "Max power",
+          "alarms": "Alarms",
+          "errors": "Errors",
+          "errorsTooltip": "Charger errors",
+          "resets": "Resets",
+          "resetsTooltip": "Charger resets",
+          "maxPowerTooltip": "Maximum power of the charger and its connectors",
+          "manufacturer": "Manufacturer",
+          "model": "Model",
+          "address": "Address",
+          "group": "Group",
+          "actions": ""
+        },
+        "filters": {
+          "title": "Filters",
+          "labels": {
+            "chargerStatus": "Charger status",
+            "chargerNameId": "Name / ID",
+            "site": "Site",
+            "connectors": "Connectors",
+            "maxPower": "Max power",
+            "errors": "Errors",
+            "resets": "Resets",
+            "manufacturer": "Manufacturer",
+            "model": "Model",
+            "address": "Address",
+            "group": "Group",
+            "alarms": "Label"
+          }
+        },
+        "values": {
+          "connectorsCount": "connectors",
+          "noData": "No data",
+          "empty": "-",
+          "kilowatts": "kW",
+          "unknown": "Unknown",
+          "notAvailable": "Not available"
+        }
+      },
+      "navigation": {
+        "tabs": {
+          "chargersList": "List of chargers",
+          "chargingSessions": "Charging sessions"
+        }
+      },
+      "chargingSessions": {
+        "subtitle": "Charging sessions history and monitoring",
+        "tableHeaders": {
+          "timeStart": "timeStart",
+          "timeEnd": "timeEnd"
+        }
+      },
+      "create": {
+        "title": "Create charger",
+        "subtitle": "Add your charger and get it running.",
+        "steps": {
+          "step1": {
+            "label": "Charger type",
+            "title": "Charger type and site",
+            "subtitle": "Select the type and location of the charger"
+          },
+          "step2": {
+            "label": "Charger site",
+            "title": "Manufacturer information"
+          },
+          "step3": {
+            "label": "Create site",
+            "title": "Site information"
+          },
+          "step4": {
+            "label": "Charger configuration",
+            "title": "Charger configuration"
+          },
+          "step5": {
+            "label": "Connector configuration",
+            "title": "Connector configuration"
+          },
+          "connectors": {
+            "table": {
+              "name": "Name",
+              "type": "Connector type",
+              "maxPower": "Max power",
+              "minPower": "Min power",
+              "maxCurrent": "Max current",
+              "maxVoltage": "Max voltage"
+            },
+            "placeholders": {
+              "name": "Name",
+              "type": "Connector type",
+              "maxPower": "Max power",
+              "minPower": "Min power",
+              "maxCurrent": "Max current",
+              "maxVoltage": "Max voltage"
+            },
+            "actions": {
+              "add": "Add connector",
+              "delete": "Delete connector"
+            },
+            "emptyMessage": "No connectors. Add the first one.",
+            "messages": {
+              "siteCreatedSuccess": "Site created successfully"
+            },
+            "errors": {
+              "nameRequired": "Name is required",
+              "nameMaxLength": "Name cannot exceed 30 characters",
+              "typeRequired": "Type is required",
+              "maxPowerRequired": "Maximum power is required",
+              "minPowerRequired": "Minimum power is required",
+              "minPowerExceeded": "Minimum power cannot exceed 9999.99 kW",
+              "maxCurrentRequired": "Maximum current is required",
+              "maxVoltageRequired": "Maximum voltage is required"
+            }
+          }
+        },
+        "fields": {
+          "chargerType": {
+            "label": "Charger type",
+            "options": {
+              "public": "Public",
+              "private": "Private"
+            },
+            "errors": {
+              "required": "Charger type is required"
+            }
+          },
+          "site": {
+            "label": "Charger site",
+            "placeholder": "Select a site",
+            "options": {
+              "newSite": "Add charger to a new site",
+              "existingSite": "Add charger to an existing site"
+            },
+            "messages": {
+              "newSiteFlow": "New site creation flow in development",
+              "existingSiteFlow": "Existing site selection in development"
+            },
+            "errors": {
+              "required": "Site is required"
+            }
+          },
+          "manufacturer": {
+            "label": "Manufacturer",
+            "placeholder": "Select a manufacturer",
+            "errors": {
+              "required": "Manufacturer is required"
+            }
+          },
+          "model": {
+            "label": "Model",
+            "placeholder": "Select a model",
+            "hint": "First select a manufacturer",
+            "errors": {
+              "required": "Model is required"
+            }
+          },
+          "siteName": {
+            "label": "New site name",
+            "placeholder": "Site 3",
+            "errors": {
+              "required": "Site name is required"
+            }
+          },
+          "siteLocation": {
+            "label": "Address",
+            "placeholder": "Manuel Antonio Prieto 191",
+            "searchOr": "Address not found, ",
+            "selectOnMap": "select address here",
+            "errors": {
+              "required": "Address is required"
+            }
+          },
+          "chargerName": {
+            "label": "Name",
+            "placeholder": "Charger 1"
+          },
+          "chargerId": {
+            "label": "ID",
+            "placeholder": "CHG001"
+          },
+          "accessType": {
+            "label": "Access type",
+            "placeholder": "Select access type"
+          },
+          "maxPower": {
+            "label": "Max power",
+            "placeholder": "0.00",
+            "errors": {
+              "required": "Maximum power is required"
+            }
+          }
+        },
+        "mapSelection": {
+          "title": "Select location on map",
+          "errorLoading": "Error loading Google Maps",
+          "errorInitializing": "Error initializing map",
+          "searchPlaceholder": "Search address..."
+        },
+        "errors": {
+          "invalidCompanyId": "Invalid company ID",
+          "invalidManufacturerOrModel": "Invalid manufacturer or model",
+          "missingCompanyId": "Missing company ID",
+          "missingCountryId": "Missing country ID",
+          "missingLocationData": "Missing location data",
+          "missingSiteName": "Missing site name",
+          "noConnectors": "No connectors configured",
+          "title": "Error",
+          "message": "Error",
+          "invalidForm": "Error",
+          "addressFoundSuccess": "Address found successfully",
+          "addressProcessError": "Error processing the selected address",
+          "serverEmptyResponse": "Server response is empty",
+          "locationIdError": "Could not get the created location ID",
+          "addressSearchError": "Error searching for address",
+          "addressDetailsError": "Error processing details of the selected address",
+          "addressServiceError": "Error loading address search service",
+          "unknownError": "Unknown error"
+        },
+        "modals": {
+          "confirmCreate": {
+            "title": "Are you sure you want to create this charger?",
+            "text": ""
+          },
+          "confirmCreateWithSite": {
+            "title": "Are you sure you want to create this site and charger?",
+            "text": ""
+          },
+          "confirmCancel": {
+            "title": "Are you sure you want to cancel creating this charger?",
+            "text": ""
+          },
+          "confirmCancelWithSite": {
+            "title": "Are you sure you want to cancel creating this site and charger?",
+            "text": ""
+          },
+          "successCreate": {
+            "title": "Charger has been created successfully",
+            "text": ""
+          },
+          "successCreateWithSite": {
+            "title": "Site and charger have been created successfully",
+            "text": ""
+          },
+          "successCancel": {
+            "title": "Charger creation has been cancelled successfully",
+            "text": ""
+          },
+          "successCancelWithSite": {
+            "title": "Site and charger creation has been cancelled successfully",
+            "text": ""
+          },
+          "errorValidation": {
+            "title": "Error",
+            "text": "Error"
+          },
+          "errorValidationWithSite": {
+            "title": "Error",
+            "text": "Error"
+          },
+          "errorCreate": {
+            "title": "Error creating charger",
+            "text": "Could not create charger. Please try again later."
+          }
+        },
+        "success": {
+          "title": "Success",
+          "message": "Success"
+        }
+      }
+    }
+  },
+  "sites": {
+    "views": {
+      "list": {
+        "buttons": {
+          "createSite": "Create"
+        },
+        "emptyState": {
+          "message": "You haven't created your first site yet"
+        },
+        "tableHeaders": {
+          "name": "Site name",
+          "connectorCount": "Number of connectors",
+          "address": "Address",
+          "comuna": "Commune",
+          "region": "Region",
+          "country": "Country",
+          "timezone": "Timezone"
+        },
+        "filters": {
+          "labels": {
+            "name": "Site name",
+            "connectorCount": "Number of connectors",
+            "address": "Address",
+            "comuna": "Commune",
+            "region": "Region",
+            "country": "Country",
+            "timezone": "Timezone"
+          }
+        }
+      },
+      "create": {
+        "title": "Create site",
+        "subtitle": "Add your site and get it running.",
+        "fields": {
+          "name": {
+            "label": "Site name",
+            "placeholder": "Enter site name",
+            "errors": {
+              "required": "Site name is required",
+              "maxLength": "Name cannot exceed 30 characters",
+              "invalidFormat": "Invalid format. Only letters, numbers, accents, hyphens, underscores and spaces are allowed",
+              "emojiNotAllowed": "Emojis are not allowed",
+              "invisibleChars": "Invisible characters are not allowed",
+              "whitespace": "Name cannot be empty"
+            }
+          },
+          "address": {
+            "label": "Address",
+            "placeholder": "Enter address",
+            "enterManually": "Enter address manually",
+            "searchAddress": "Search address",
+            "useAsAddress": "Use this address",
+            "errors": {
+              "required": "Address is required",
+              "maxLength": "Address cannot exceed 100 characters",
+              "invalidFormat": "Invalid format. Only letters, numbers, accents, hyphens, underscores, spaces, dots and commas are allowed",
+              "emojiNotAllowed": "Emojis are not allowed",
+              "invisibleChars": "Invisible characters are not allowed",
+              "whitespace": "Address cannot be empty"
+            }
+          },
+          "country": {
+            "label": "Country",
+            "placeholder": "Select a country"
+          },
+          "region": {
+            "label": "Region",
+            "placeholder": "Select a region"
+          },
+          "comuna": {
+            "label": "Commune",
+            "placeholder": "Select a commune"
+          },
+          "selectOnMap": "select address here"
+        },
+        "errors": {
+          "loadRegions": "Error loading regions. Please try again.",
+          "loadCommunes": "Error loading communes. Please try again."
+        },
+        "modals": {
+          "confirmCreate": {
+            "title": "Are you sure you want to create this site?",
+            "text": ""
+          },
+          "successCreate": {
+            "title": "Site created successfully",
+            "text": ""
+          },
+          "errorValidation": {
+            "title": "Validation error",
+            "text": "Please complete all required fields"
+          },
+          "errorCreate": {
+            "title": "Error creating site",
+            "text": "Could not create site. Please try again."
+          }
+        }
+      },
+      "navigation": {
+        "tabs": {
+          "sitesList": "Sites list"
+        }
+      }
+    },
+    "detail": {
+      "tabs": {
+        "profile": "Profile",
+        "energyManagement": "Energy management"
+      }
+    },
+    "energyManagement": {
+      "subTabs": {
+        "powerIntervals": "Power intervals",
+        "scheduledDisabling": "Scheduled disabling"
+      },
+      "allocationTypes": {
+        "title": "Allocation types",
+        "description": "Define the energy management strategy that will be applied in each interval, according to the level of control and dynamism required by your operation.",
+        "protectedStart": "Protected start",
+        "protectedStartDesc": "Restricts the start of new charges when the maximum power of the interval is compromised.",
+        "equalShare": "Equal share",
+        "equalShareDesc": "Distributes the maximum power of the interval equally among all active charges, adjusting dynamically.",
+        "loadPlan": "Load plan",
+        "loadPlanDesc": "Prioritizes power allocation according to each vehicle's load plan (SoC, required energy and target time)."
+      },
+      "powerIntervals": {
+        "title": "Power time intervals",
+        "description": "Define date ranges and schedules in which maximum power will be applied according to the selected allocation type.",
+        "createInterval": "Create interval",
+        "columns": {
+          "name": "Name",
+          "allocationType": "Allocation type",
+          "dateRange": "Date",
+          "schedule": "Schedule",
+          "activeDays": "Activation days",
+          "maxPower": "Maximum power",
+          "status": "Status"
+        },
+        "statusActive": "Active",
+        "statusScheduled": "Scheduled",
+        "footnote": "Note: Any unplanned time range will use the maximum available power."
+      },
+      "scheduledDisabling": {
+        "placeholder": "Scheduled disabling content in development."
+      }
+    },
+    "profile": {
+      "sections": {
+        "identification": "Identification"
+      },
+      "fields": {
+        "name": "Site name",
+        "region": "Region",
+        "address": "Address",
+        "country": "Country",
+        "commune": "Commune",
+        "comuna": "Commune",
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "timezone": "Timezone"
+      },
+      "placeholders": {
+        "name": "Enter site name",
+        "address": "Enter address",
+        "selectRegion": "Select region",
+        "selectCountry": "Select country",
+        "selectCommune": "Select commune",
+        "selectComuna": "Select commune",
+        "latitude": "Enter latitude",
+        "longitude": "Enter longitude",
+        "selectTimezone": "Select timezone"
+      },
+      "messages": {
+        "sectionSaved": "The information for {{section}} was saved successfully"
+      },
+      "errors": {
+        "saveError": "An unexpected error occurred - Please try again"
+      }
+    }
+  },
+  "products": {
+    "siteView": {
+      "title": "Site view",
+      "description": "Product management and visualization module in site."
+    },
+    "siteview": {
+      "title": "Site view",
+      "description": "Product management and visualization module in site."
+    }
+  },
+  "credentials": {
+    "views": {
+      "navigation": {
+        "tabs": {
+          "rfid": "RFID",
+          "evccid": "EVCCID"
+        }
+      },
+      "list": {
+        "buttons": {
+          "createCredential": "Create"
+        },
+        "emptyState": {
+          "message": "You haven't created your first credential yet"
+        },
+        "tableHeaders": {
+          "name": "Name",
+          "code": "Code",
+          "status": "Status",
+          "associatedChargers": "Associated chargers",
+          "expirationDate": "Expiration date"
+        },
+        "status": {
+          "available": "Available",
+          "unavailable": "Unavailable"
+        },
+        "filters": {
+          "labels": {
+            "status": "Status",
+            "associatedChargers": "Associated chargers",
+            "expirationDate": "Expiration date"
+          }
+        }
+      },
+      "detail": {
+        "sections": {
+          "associatedChargers": "Associated chargers"
+        },
+        "labels": {
+          "validity": "Validity",
+          "allChargers": "All chargers",
+          "selected": "selected"
+        }
+      }
+    },
+    "modals": {
+      "create": {
+        "title": {
+          "rfid": "Create RFID card",
+          "evccid": "Create EVCCID"
+        },
+        "subtitle": "Fill in the details to create a new credential",
+        "success": {
+          "rfid": "RFID card created successfully",
+          "evccid": "EVCCID created successfully"
+        }
+      },
+      "edit": {
+        "title": {
+          "rfid": "Edit RFID card",
+          "evccid": "Edit EVCCID"
+        },
+        "subtitle": "Update the credential details",
+        "success": {
+          "rfid": "RFID card updated successfully",
+          "evccid": "EVCCID updated successfully"
+        }
+      },
+      "fields": {
+        "name": "Name",
+        "code": "Code/ID",
+        "validity": "Validity",
+        "expirationDate": "Expiration date"
+      },
+      "placeholders": {
+        "name": "RFID Credential 001",
+        "code": "ABC123456"
+      },
+      "errors": {
+        "expirationDateRequired": "Expiration date is required"
+      }
+    }
+  },
+  "energyResources": {
+    "views": {
+      "list": {
+        "buttons": {
+          "createEnergyResource": "Create"
+        },
+        "emptyState": {
+          "message": "You haven't created your first energy resource yet"
+        },
+        "tableHeaders": {
+          "name": "Name",
+          "type": "Type",
+          "site": "Site",
+          "status": "Status",
+          "associatedChargers": "Associated chargers",
+          "maxPower": "Maximum Power"
+        },
+        "status": {
+          "available": "Available",
+          "unavailable": "Unavailable"
+        },
+        "filters": {
+          "labels": {
+            "status": "Status",
+            "site": "Site",
+            "type": "Type",
+            "associatedChargers": "Associated chargers",
+            "maxPower": "Maximum Power"
+          }
+        }
+      },
+      "detail": {
+        "sections": {
+          "associatedChargers": "Associated chargers"
+        },
+        "labels": {
+          "type": "Type",
+          "allChargers": "All chargers",
+          "selected": "selected"
+        }
+      }
+    },
+    "modals": {
+      "create": {
+        "title": "Create energy resource",
+        "subtitle": "Fill in the details to create a new energy resource",
+        "success": "Energy resource created successfully"
+      },
+      "edit": {
+        "title": "Edit energy resource",
+        "subtitle": "Update the energy resource details",
+        "success": "Energy resource updated successfully"
+      },
+      "fields": {
+        "name": "Name",
+        "type": "Type",
+        "site": "Site",
+        "maxPower": "Maximum Power (kW)"
+      },
+      "placeholders": {
+        "name": "Energy Resource 001",
+        "type": "Select a type",
+        "site": "Select a site"
+      }
+    }
+  },
+  "chargerDetail": {
+    "sessionsCharger": {
+      "title": "Charger",
+      "subtitle": "View the charging sessions of your charger."
+    },
+    "emptyStateCharger": {
+      "message": "Perform your first charge to view data"
+    },
+    "actions": {
+      "loading": {
+        "restart": "Restarting..."
+      }
+    },
+    "tabs": {
+      "live": "Live",
+      "configuration": "Configuration",
+      "history": "History"
+    },
+    "navigation": {
+      "breadcrumb": {
+        "history": "History",
+        "sessionsCharger": "Charging sessions"
+      }
+    },
+    "tableHeaders": {
+      "connector": "Connector",
+      "vehicle": "Vehicle",
+      "statusSession": "Status session",
+      "dateTimeStart": "Start charge",
+      "initialSoc": "Initial SoC",
+      "dateTimeEnd": "End charge",
+      "endSoc": "End SoC",
+      "energyDelivered": "Energy delivered",
+      "sessionDuration": "Session time",
+      "user": "User",
+      "rfidUsed": "RFID",
+      "assignedDriver": "Driver",
+      "min_power": "Min power",
+      "max_power": "Max power",
+      "cost": "Cost"
+    },
+    "filters": {
+      "labels": {
+        "connector": "Connector",
+        "vehicle": "Vehicle",
+        "statusSession": "Status session",
+        "dateTimeStart": "Start charge",
+        "initialSoc": "Initial SoC",
+        "dateTimeEnd": "End charge",
+        "endSoc": "End SoC",
+        "energyDelivered": "Energy delivered",
+        "sessionDuration": "Session time",
+        "user": "User",
+        "rfidUsed": "RFID",
+        "assignedDriver": "Driver",
+        "min_power": "Min power",
+        "max_power": "Max power",
+        "cost": "Cost"
+      }
+    }
+  },
+  "connectors": {
+    "views": {
+      "detail": {
+        "status": {
+          "available": "Available",
+          "charging": "Charging",
+          "offline": "Offline",
+          "error": "Error"
+        },
+        "actions": {
+          "enable": "Enable",
+          "disable": "Disable",
+          "unlock": "Unlock",
+          "startCharge": "Start charge",
+          "stopCharge": "Stop charge",
+          "priorityCharge": "Priority charge"
+        },
+        "labels": {
+          "connectorNumber": "Connector",
+          "status": "Status",
+          "date": "Date:",
+          "chargeStart": "Charge start:",
+          "chargeEnd": "Charge end:",
+          "vehicle": "Vehicle:",
+          "socTarget": "SoC target:",
+          "frameId": "Frame ID",
+          "siteName": "Site",
+          "manufacturer": "Manufacturer",
+          "model": "Model",
+          "power": "Power"
+        },
+        "metrics": {
+          "currentSoc": "Current SoC",
+          "currentPower": "Current power",
+          "energyDelivered": "Energy delivered",
+          "sessionTime": "Session time"
+        },
+        "sections": {
+          "tecle": "Remote",
+          "charge": "Charge",
+          "commands": "Commands"
+        },
+        "buttons": {
+          "startCharge": "Start charge",
+          "stopCharge": "Stop charge",
+          "prioritizeCharge": "Prioritize charge",
+          "enableConnector": "Enable connector",
+          "disableConnector": "Disable connector",
+          "unlockConnector": "Unlock connector",
+          "loading": {
+            "startCharge": "Starting charge...",
+            "stopCharge": "Stopping charge...",
+            "prioritizeCharge": "Prioritizing charge...",
+            "enableConnector": "Enabling...",
+            "disableConnector": "Disabling...",
+            "unlockConnector": "Unlocking..."
+          }
+        },
+        "placeholders": {
+          "time": "Time"
+        },
+        "timeOptions": {
+          "5sec": "5 sec",
+          "10sec": "10 sec",
+          "15sec": "15 sec",
+          "30sec": "30 sec"
+        }
+      },
+      "communication": {
+        "title": "Charger communication",
+        "online": "Online",
+        "offline": "Offline",
+        "error": "Error"
+      },
+      "states": {
+        "title": "Connector states"
+      },
+      "filterGrid": {
+        "sorting": {
+          "title": "Sort by",
+          "subtitle": "Select the column and sorting type",
+          "columnPlaceholder": "Column",
+          "orderLabel": "Order",
+          "orderPlaceholder": "Sorting type",
+          "noOrder": "— No order —",
+          "ascending": "Ascending",
+          "descending": "Descending"
+        },
+        "filters": {
+          "title": "Apply filters",
+          "subtitle": "Select the columns and data fields you want to view",
+          "searchPlaceholder": "Search",
+          "selectedLabel": "selected",
+          "noRangeLabel": "No range",
+          "showAllColumns": "Show all columns",
+          "selectAll": "Select all"
+        },
+        "actions": {
+          "apply": "Apply",
+          "reset": "Reset",
+          "filtersAndSort": "Edit columns and filters"
+        }
+      }
+    }
+  },
+  "entityManagement": {
+    "chargers": {
+      "navigation": {
+        "breadcrumb": {
+          "siteview": "Site view",
+          "chargers": "My chargers"
+        },
+        "tabs": {
+          "chargersList": "My chargers",
+          "chargingSessions": "Charging sessions"
+        }
+      },
+      "chargingSessions": {
+        "subtitle": "Charging sessions history and monitoring"
+      },
+      "chargersList": {
+        "title": "List of chargers",
+        "subtitle": "Monitor and control in real time your charging infrastructure.",
+        "buttons": {
+          "createCharger": "Create charger",
+          "filtersAndSort": "Sort and filter columns"
+        },
+        "search": {
+          "placeholder": "Search"
+        },
+        "emptyState": {
+          "message": "No charger data available at this time"
+        },
+        "tableHeaders": {
+          "status": "",
+          "chargerNameId": "Name / ID",
+          "site": "Site",
+          "connectors": "Connectors",
+          "maxPower": "Max power",
+          "alarms": "Alarms",
+          "errors": "Errors",
+          "resets": "Resets",
+          "manufacturer": "Manufacturer",
+          "model": "Model",
+          "address": "Address",
+          "group": "Group",
+          "actions": ""
+        },
+        "sorting": {
+          "noOrder": "— No order —",
+          "ascending": "Ascending",
+          "descending": "Descending"
+        },
+        "filters": {
+          "title": "Filters",
+          "labels": {
+            "chargerStatus": "Charger status",
+            "chargerNameId": "Name / ID",
+            "site": "Site",
+            "connectors": "Connectors",
+            "maxPower": "Max power",
+            "alarms": "Alarms",
+            "errors": "Errors",
+            "resets": "Resets",
+            "manufacturer": "Manufacturer",
+            "model": "Model",
+            "address": "Address",
+            "group": "Group"
+          }
+        },
+        "values": {
+          "connectorsCount": "connectors",
+          "noData": "No data",
+          "empty": "-",
+          "kilowatts": "kW",
+          "unknown": "Unknown",
+          "notAvailable": "Not available"
+        }
+      }
+    }
+  },
+  "chargerSessionSite": {
+    "viewsTable": {
+      "emptyState": {
+        "message": "Perform your first charge to view data"
+      }
+    },
+    "tableHeaders": {
+      "chargerNameId": "OCPP ID",
+      "connector": "Connector",
+      "site": "Site",
+      "licensePlate": "License Plate",
+      "nameVehicle": "Vehicle Name",
+      "initialDate": "Start date",
+      "hourStart": "Start time",
+      "initialSoc": "SoC start",
+      "endDate": "End date",
+      "hourEnd": "End time",
+      "endSoc": "SoC end",
+      "energyDelivered": "Energy delivered",
+      "timeSession": "Session time",
+      "users": "Users",
+      "minPower": "Minimum recorded power",
+      "maxPower": "Maximum recorded power",
+      "rfid": "RFID",
+      "cost": "Cost",
+      "driver": "Driver",
+      "startMeter": "Start meter",
+      "endMeter": "End meter"
+    },
+    "filters": {
+      "labels": {
+        "chargerNameId": "OCPP ID",
+        "connector": "Connector",
+        "site": "Site",
+        "licensePlate": "License Plate",
+        "nameVehicle": "Vehicle Name",
+        "initialDate": "Start date",
+        "hourStart": "Start time",
+        "initialSoc": "SoC start",
+        "endDate": "End date",
+        "hourEnd": "End time",
+        "endSoc": "SoC end",
+        "energyDelivered": "Energy delivered",
+        "timeSession": "Session time",
+        "users": "Users",
+        "minPower": "Minimum recorded power",
+        "maxPower": "Maximum recorded power",
+        "rfid": "RFID",
+        "vin": "VIN",
+        "evccid": "EVCCID",
+        "cost": "Cost",
+        "driver": "Driver",
+        "startMeter": "Start meter",
+        "endMeter": "End meter"
+      }
+    }
+  },
+  "chargerLive": {
+    "connectors": {
+      "table": {
+        "name": "Name",
+        "connectorNumber": "Connector No.",
+        "status": "Status",
+        "vehicle": "Vehicle",
+        "socInProgress": "SOC in progress",
+        "powerInProgress": "Power in progress",
+        "emptyMessage": "No connectors available"
+      },
+      "gauge": {
+        "title": "Power in Use",
+        "subtitle": "vs maximum available power",
+        "of": "of"
+      },
+      "names": {
+        "connector1": "Connector 1",
+        "connector2": "Connector 2",
+        "connector3": "Connector 3",
+        "connector4": "Connector 4"
+      }
+    },
+    "charts": {
+      "energyDelivered": "Energy Delivered",
+      "connectorSelector": {
+        "placeholder": "Connectors",
+        "selectAll": "All connectors"
+      },
+      "alarms": {
+        "title": "Alarms",
+        "restarts": "Restarts",
+        "stationsFaulted": "Faulted Stations",
+        "connectorsFaulted": "Faulted Connectors"
+      },
+      "chargingSessions": "Charging Sessions",
+      "sessions": "Sessions",
+      "totalSessions": "Total Sessions",
+      "powerCurve": "Power Curve",
+      "maxPower": "Max Power",
+      "powerInUse": "Power in Use",
+      "powerAxisTitle": "Power (kW)",
+      "sessionsAxisTitle": "#",
+      "sessionsSeriesName": "Sessions",
+      "energyVariables": "Energy Variables",
+      "noDataForConnector": "No data available for {{connectorName}}",
+      "noData": "No data",
+      "simulateNoData": "Simulate no data",
+      "dateRangeTooltip": "You can select up to 3 days of information for this chart",
+      "errors": "Errors",
+      "resets": "Resets",
+      "series": {
+        "powerA": "Power A (kW)",
+        "powerB": "Power B (kW)",
+        "sessions": "Sessions"
+      },
+      "comparisons": {
+        "inPeriod": "in the period",
+        "vsLastMonth": "vs last month",
+        "vsLastWeek": "vs last week",
+        "vsPreviousPeriod": "vs previous period",
+        "lastYear": "last year"
+      }
+    },
+    "transactions": {
+      "chargingStarted": "Charging started",
+      "available": "Available",
+      "chargingStopped": "Charging stopped",
+      "chargingFailed": "Charging failed",
+      "chargingCompleted": "Charging completed",
+      "chargingPaused": "Charging paused"
+    }
+  },
+  "shared": {
+    "charts": {
+      "variables": {
+        "temperature": "Temperature",
+        "power": "Power",
+        "soc": "SoC",
+        "current": "Current",
+        "voltage": "Voltage",
+        "energy": "Energy"
+      }
+    }
+  },
+  "header": {
+    "userProfile": "User Profile",
+    "notifications": "Notifications",
+    "newNotifications": "new",
+    "seeAllNotifications": "See all notifications",
+    "subsidiarySelector": {
+      "placeholder": "Select a company"
+    },
+    "siteSelector": {
+      "placeholder": "Select a site",
+      "selectAll": "Select all",
+      "applyButton": "Apply"
+    },
+    "profileMenu": {
+      "myProfile": {
+        "title": "My Profile",
+        "subtitle": "Account Settings"
+      },
+      "myInbox": {
+        "title": "My Inbox",
+        "subtitle": "Messages & Email"
+      },
+      "myTasks": {
+        "title": "My Tasks",
+        "subtitle": "To-do and Daily Tasks"
+      }
+    },
+    "userInfo": {
+      "defaultName": "User",
+      "defaultRole": "Administrator",
+      "defaultEmail": "user@dhemax.com"
+    },
+    "logoutDialog": {
+      "title": "Confirm logout",
+      "text": "Are you sure you want to log out?",
+      "confirm": "Yes, log out",
+      "cancel": "Cancel"
+    }
+  },
+  "profile": {
+    "title": "My Profile",
+    "breadcrumb": "My profile",
+    "greeting": "Hi",
+    "tabs": {
+      "myProfile": "My profile"
+    },
+    "sections": {
+      "user": "User"
+    },
+    "actions": {
+      "saving": "Saving...",
+      "changing": "Changing...",
+      "updating": "Updating..."
+    },
+    "personalInfo": {
+      "title": "Personal information",
+      "subtitle": "Update your name",
+      "username": "Username",
+      "role": "Role",
+      "company": "Company",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email"
+    },
+    "errors": {
+      "firstNameRequired": "First name is required.",
+      "firstNameMinLength": "First name should be at least {{min}} characters.",
+      "lastNameRequired": "Last name is required.",
+      "lastNameMinLength": "Last name should be at least {{min}} characters.",
+      "emailRequired": "Email is required.",
+      "emailInvalid": "Please enter a valid email address.",
+      "emailTooLong": "Email is too long (maximum 254 characters).",
+      "emailInvalidFormat": "Invalid email format.",
+      "emailWithSpaces": "Email cannot contain spaces.",
+      "emailConsecutiveDots": "Email cannot have consecutive dots.",
+      "passwordMinLength": "Must be at least 8 characters",
+      "passwordPattern": "Must include at least one number and one symbol",
+      "passwordMismatch": "Passwords do not match.",
+      "confirmPasswordRequired": "Password confirmation is required",
+      "currentPasswordRequired": "Current password is required",
+      "newPasswordRequired": "New password is required",
+      "invalidCurrentPassword": "Incorrect password.",
+      "languageUpdateFailed": "Error changing language",
+      "languageUpdateFailedText": "Could not update language. Please try again.",
+      "saveError": "Error saving",
+      "saveErrorText": "Could not update your information. Please try again.",
+      "passwordChangeError": "Error changing password",
+      "passwordChangeErrorText": "Verify that your current password is correct and try again.",
+      "noPermission": "Error",
+      "noPermissionRestart": "Error",
+      "validationFallback": "Validation error",
+      "saveInfo": "Error saving information"
+    },
+    "hints": {
+      "validatingPassword": "Verifying password..."
+    },
+    "confirmations": {
+      "saveProfile": {
+        "title": "Confirm changes?",
+        "text": "Your personal information will be updated."
+      },
+      "changePasswordConfirm": {
+        "title": "Are you sure you want to change the password?",
+        "text": "This action cannot be undone.",
+        "confirm": "Change"
+      },
+      "changePassword": {
+        "title": "Are you sure you want to change the password?",
+        "text": "This action cannot be undone.",
+        "confirm": "Change"
+      },
+      "changeLanguage": {
+        "title": "Are you sure you want to change the language?",
+        "text": "",
+        "confirm": "Change"
+      },
+      "logout": {
+        "title": "Log out?",
+        "text": "Are you sure you want to log out?",
+        "confirm": "Log out"
+      }
+    },
+    "success": {
+      "languageUpdated": "Language updated!",
+      "languageUpdatedText": "The application language has been changed.",
+      "languageChanged": "Language has been changed successfully",
+      "profileUpdated": "Profile updated!",
+      "profileUpdatedText": "Your personal information has been saved successfully.",
+      "passwordUpdated": "Password updated!",
+      "passwordUpdatedText": "Your password has been changed successfully.",
+      "passwordChanged": "Password has been changed successfully",
+      "logoutSuccess": "Logged out!",
+      "logoutSuccessText": "You have successfully logged out."
+    },
+    "changePassword": {
+      "title": "Change password",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmNewPassword": "Confirm new password",
+      "hint": "Password must be at least 8 characters and include a number and a symbol."
+    },
+    "language": {
+      "title": "Change language",
+      "label": "Language"
+    },
+    "languageSelector": {
+      "currentLanguage": "Current language",
+      "alreadySelected": "You already have this language selected."
+    },
+    "logout": {
+      "title": "Log out",
+      "subtitle": "Close your current session",
+      "button": "Log out"
+    },
+    "genericError": "An error occurred. Please try again.",
+    "languages": {
+      "english": "English",
+      "spanish": "Spanish"
+    }
+  },
+  "users": {
+    "messages": {
+      "deleteSuccessTitle": "Success",
+      "deleteSuccessText": "User deleted successfully",
+      "deleteErrorTitle": "Error",
+      "deleteErrorText": "Error deleting user",
+      "loadError": "Error loading users"
+    }
+  },
+  "configurationCharger": {
+    "readonly": "Read-only - Not editable",
+    "tabs": {
+      "profile": "Profile",
+      "ocpp": "OCPP",
+      "connectors": "Connectors"
+    },
+    "headers": {
+      "nameOcpp": "Name",
+      "valueOcpp": "Value"
+    },
+    "sync": {
+      "lastSync": "Last sync",
+      "unSync": "Unsychronized",
+      "buttonGet": "Get configuration",
+      "buttonSet": "Set configuration"
+    },
+    "messages": {
+      "saveSuccess": "Changes have been saved successfully",
+      "saveError": "Error saving changes - Please try again",
+      "configFetchedSuccess": "Configuration retrieved successfully",
+      "noChangesToSave": "There are no changes to save",
+      "noChargerSelected": "No charger selected",
+      "connectorNotFound": "Connector to delete was not found",
+      "connectorInvalidIds": "Connector does not have valid IDs for deletion",
+      "connectorDeleted": "Connector deleted successfully"
+    },
+    "connectors": {
+      "columns": {
+        "name": "Connector Name",
+        "id": "ID",
+        "connectorNumber": "Connector Number",
+        "connectorType": "Connector Type",
+        "maxPower": "Max Power",
+        "minPower": "Min Power",
+        "maxCurrent": "Max Current",
+        "maxVoltage": "Max Voltage",
+        "site": "Site"
+      },
+      "placeholders": {
+        "name": "E.g. Connector 1",
+        "id": "E.g. 58085699971111",
+        "connectorNumber": "E.g. 0001001",
+        "connectorType": "Select a type",
+        "maxPower": "E.g. 2000 kW",
+        "minPower": "E.g. 20 kW",
+        "maxCurrent": "E.g. 500 A",
+        "maxVoltage": "E.g. 1000 V",
+        "site": "Select a site"
+      },
+      "actions": {
+        "add": "Add another connector"
+      },
+      "deleteConfirm": "Yes, delete",
+      "deleteCancel": "Cancel",
+      "emptyMessage": "No connectors available",
+      "errors": {
+        "nameRequired": "The connector name is required",
+        "connectorTypeRequired": "The connector type is required",
+        "maxPowerExceeded": "Maximum power cannot exceed 2000 kW",
+        "minPowerExceeded": "Minimum power cannot exceed 50 kW",
+        "maxCurrentInvalid": "Maximum current must be a number greater than 0 and cannot exceed 1000 A",
+        "maxVoltageInvalid": "Maximum voltage must be a number greater than 0 and cannot exceed 1000 V"
+      }
+    },
+    "profile": {
+      "title": "Charger Profile",
+      "save": "Save",
+      "cancel": "Cancel",
+      "messages": {
+        "sectionSaved": "The information for {{section}} was saved successfully",
+        "authenticationModeUpdated": "Authentication mode has been updated successfully"
+      },
+      "hints": {
+        "lastFirmwareUpdate": "Last firmware update {{date}}."
+      },
+      "sections": {
+        "identification": "Identification",
+        "connectivity": "Connectivity and power",
+        "operation": "Operation and access",
+        "hardware": "Hardware",
+        "location": "Location",
+        "statistics": "Statistics",
+        "advanced": "Advanced Configuration"
+      },
+      "fields": {
+        "name": "Name",
+        "id": "ID",
+        "serialNumber": "Serial Number",
+        "status": "Status",
+        "manufacturer": "Manufacturer",
+        "model": "Model",
+        "description": "Description",
+        "adminNote": "Administrative Note",
+        "firmware": "Firmware Version",
+        "ocppVersion": "OCPP Version",
+        "maxPower": "Max Power",
+        "powerCurrent": "Current Power",
+        "loadSpeed": "Load Speed",
+        "connectorTypes": "Connector Types",
+        "networkConnection": "Network Connection",
+        "connectionType": "Connection Type",
+        "supportedProtocols": "Supported Protocols",
+        "site": "Site",
+        "address": "Address",
+        "group": "Group",
+        "accessType": "Access Type",
+        "smartChargingCompatible": "Smart Charging Compatible",
+        "authenticationMethods": "Authentication Method",
+        "authenticationMode": "Authentication Mode",
+        "installationDate": "Installation Date",
+        "lastMaintenance": "Last Maintenance",
+        "warrantyExpiration": "Warranty Expiration",
+        "calibrationDate": "Calibration Date",
+        "lastHeartbeat": "Last Heartbeat",
+        "totalSessions": "Total Sessions",
+        "totalEnergy": "Total Energy",
+        "averageSessionTime": "Average Session Time",
+        "peakPowerUsage": "Peak Power Usage",
+        "uptime": "Uptime",
+        "temperature": "Temperature",
+        "creationDate": "Creation Date",
+        "lastSessionDate": "Last Session Date",
+        "connectors": "Connectors",
+        "errors": "Errors",
+        "resets": "Resets"
+      },
+      "placeholders": {
+        "name": "Enter charger name",
+        "serialNumber": "Equipment serial number",
+        "description": "Detailed charger description",
+        "adminNote": "Administrator notes",
+        "selectManufacturer": "Select a manufacturer",
+        "selectModel": "Select a model",
+        "selectFirmware": "Select firmware version"
+      },
+      "validation": {
+        "required": "This field is required",
+        "invalidFormat": "Invalid format"
+      },
+      "noChargerSelected": "No charger selected"
+    }
+  },
+  "reporting": {
+    "views": {
+      "overview": {
+        "title": "Reports",
+        "subtitle": "Select an option from the drop-down menu above to view the data.",
+        "noData": "No data available"
+      }
+    },
+    "reportTypes": {
+      "chargingSessions": "Charging sessions",
+      "totalConsumptionPerUser": "Total consumption by user",
+      "totalConsumptionPerSite": "Total consumption by site",
+      "ocppMessages": "OCPP message",
+      "alarmsByCharger": "Alarms by charger",
+      "alarmsByConnector": "Alarms by connector",
+      "availability": "Availability",
+      "userLogs": "User logs",
+      "energyVariables": "Energy variables",
+      "uptime": "Uptime"
+    },
+    "filters": {
+      "reportType": "Select the report you wish to download",
+      "selectReport": "Select a report",
+      "charger": "Charger",
+      "selectCharger": "Select the charger",
+      "selectSite": "Select site",
+      "date": "Date",
+      "dateTooltip": "You can export up to one day of information for this report",
+      "dateTooltipEnergyVariables": "You can export up to 3 days of information for this report",
+      "customizeReport": "Customize report",
+      "customizeReportSubtitle": "Select the columns and data fields you want to view",
+      "searchColumnLabel": "Search columns:",
+      "searchColumnPlaceholder": "Name data/column",
+      "dateStart": "Start date",
+      "dateEnd": "End date",
+      "timeStart": "Start time",
+      "timeEnd": "End time",
+      "uptimeValue": "Uptime value",
+      "selectMessageType": "Select message type",
+      "selectOrigin": "Select origin"
+    },
+    "ocpp": {
+      "columns": {
+        "date": "Date",
+        "time": "Time",
+        "messageType": "Message Type",
+        "origin": "Origin",
+        "rawData": "RAW Data",
+        "charger": "OCPP ID"
+      },
+      "filters": {
+        "labels": {
+          "date": "Date",
+          "time": "Time",
+          "messageType": "Message Type",
+          "origin": "Origin",
+          "rawData": "RAW Data",
+          "charger": "OCPP ID"
+        }
+      },
+      "accions": {
+        "log": "Copy log"
+      },
+      "logCopySuccess": "Log copied to clipboard",
+      "logCopyError": "Error copying log"
+    },
+    "alarms": {
+      "columns": {
+        "date": "Date",
+        "alarmName": "Alarm",
+        "errorCode": "Error Code",
+        "chargerId": "Charger ID",
+        "manufacturerCode": "Manufacturer Code",
+        "manufacturerId": "Manufacturer ID",
+        "errorInfo": "Error Info",
+        "errorInfoShort": "Error Info",
+        "chargerName": "Charger Name",
+        "location": "Location",
+        "chargerAlias": "Charger Alias",
+        "connector": "Connector",
+        "code": "code",
+        "updatedAt": "Updated at"
+      },
+      "filters": {
+        "labels": {
+          "date": "Date",
+          "updatedAt": "Updated at",
+          "alarmName": "Alarm",
+          "errorCode": "Error Code",
+          "chargerId": "Charger ID",
+          "manufacturerCode": "Manufacturer Code",
+          "manufacturerId": "Manufacturer ID",
+          "errorInfo": "Error Info",
+          "chargerName": "Charger Name",
+          "location": "Location",
+          "chargerAlias": "Charger Alias",
+          "connector": "Label"
+        }
+      }
+    },
+    "chargingSessions": {
+      "columns": {
+        "statusSession": "Session Status",
+        "dateTimeStart": "Start Date",
+        "timeStart": "Start Time",
+        "dateTimeEnd": "End Date",
+        "timeEnd": "End Time",
+        "energyDelivered": "Energy Delivered",
+        "sessionDuration": "",
+        "chargerId": "OCPP ID",
+        "connector": "Connector number",
+        "connectorName": "Connector",
+        "driver": "Driver",
+        "assignedDriver": "Driver",
+        "rfid": "RFID",
+        "rfidUsed": "RFID",
+        "rfidCode": "RFID Code",
+        "manufacturer": "Manufacturer",
+        "model": "Model",
+        "connectorType": "Connector Type",
+        "initialSoc": "Start SoC",
+        "endSoc": "End SoC",
+        "finalKwh": "End kWh",
+        "minPower": "Minimum Recorded Power",
+        "min_power": "Minimum Recorded Power",
+        "maxPower": "Maximum Recorded Power",
+        "max_power": "Maximum Recorded Power",
+        "cost": "Cost",
+        "paymentStatus": "Payment Status",
+        "maxSitePower": "Max Power",
+        "site": "Site",
+        "address": "Address",
+        "city": "City",
+        "country": "Country",
+        "vehicle": "Vehicle",
+        "licensePlate": "License Plate",
+        "vin": "VIN",
+        "evccid": "EVCCID"
+      },
+      "filters": {
+        "labels": {
+          "statusSession": "Session Status",
+          "dateTimeStart": "Start Date",
+          "timeStart": "Start Time",
+          "dateTimeEnd": "End Date",
+          "timeEnd": "End Time",
+          "energyDelivered": "Energy Delivered",
+          "sessionDuration": "Duration",
+          "chargerId": "Charger ID",
+          "connector": "Connector ID",
+          "connectorName": "Connector",
+          "driver": "Driver",
+          "assignedDriver": "Driver",
+          "rfid": "RFID",
+          "rfidUsed": "RFID",
+          "rfidCode": "RFID Code",
+          "manufacturer": "Manufacturer",
+          "model": "Model",
+          "connectorType": "Connector Type",
+          "initialSoc": "Start SoC",
+          "endSoc": "End SoC",
+          "finalKwh": "End kWh",
+          "minPower": "Minimum Recorded Power",
+          "min_power": "Minimum Recorded Power",
+          "maxPower": "Maximum Recorded Power",
+          "max_power": "Maximum Recorded Power",
+          "cost": "Cost",
+          "paymentStatus": "Payment Status",
+          "maxSitePower": "Max Power",
+          "site": "Site",
+          "address": "Address",
+          "city": "City",
+          "country": "Country",
+          "vehicle": "Vehicle",
+          "licensePlate": "License Plate",
+          "vin": "VIN",
+          "evccid": "EVCCID"
+        }
+      },
+      "errors": {
+        "fetchError": "No charging sessions found in the selected date range",
+        "loadError": "Error loading charging sessions"
+      }
+    },
+    "totalConsumptionPerUser": {
+      "columns": {
+        "user": "User",
+        "totalSessions": "Total Sessions",
+        "energyDelivered": "Energy (kWh)",
+        "totalTime": "Total Time",
+        "totalCost": "Total Cost"
+      },
+      "filters": {
+        "labels": {
+          "user": "User",
+          "totalSessions": "Total Sessions",
+          "energyDelivered": "Energy (kWh)",
+          "totalTime": "Total Time",
+          "totalCost": "Total Cost"
+        }
+      }
+    },
+    "totalConsumptionPerSite": {
+      "columns": {
+        "site": "Site",
+        "totalSessions": "Total Sessions",
+        "energyDelivered": "Energy (kWh)",
+        "totalTime": "Total Time",
+        "totalCost": "Total Cost"
+      },
+      "filters": {
+        "labels": {
+          "site": "Site",
+          "totalSessions": "Total Sessions",
+          "energyDelivered": "Energy (kWh)",
+          "totalTime": "Total Time",
+          "totalCost": "Total Cost"
+        },
+        "placeholders": {
+          "searchSite": "Placeholder",
+          "minimum": "Placeholder",
+          "maximum": "Placeholder",
+          "from": "Placeholder",
+          "to": "Placeholder"
+        }
+      }
+    },
+    "energyVariables": {
+      "columns": {
+        "date": "Date",
+        "connector": "Connector",
+        "connectorNumber": "Connector No.",
+        "current": "Current",
+        "energy": "Energy",
+        "power": "Power",
+        "voltage": "Voltage",
+        "soc": "SoC",
+        "temperature": "Temperature",
+        "timestamp": "Date/Time",
+        "connectorId": "Connector ID",
+        "variableType": "Variable Type",
+        "value": "Value",
+        "unit": "Unit"
+      },
+      "filters": {
+        "labels": {
+          "date": "Date",
+          "connector": "Connector",
+          "connectorNumber": "Connector No.",
+          "current": "Current",
+          "energy": "Energy",
+          "power": "Power",
+          "voltage": "Voltage",
+          "soc": "SoC",
+          "temperature": "Temperature"
+        }
+      }
+    },
+    "userLogs": {
+      "columns": {
+        "date": "Date",
+        "user": "User",
+        "charger": "Charger",
+        "log": "Log",
+        "detail": "Detail"
+      },
+      "filters": {
+        "labels": {
+          "date": "Date",
+          "user": "User",
+          "charger": "Charger",
+          "log": "Log",
+          "detail": "Detail"
+        }
+      }
+    },
+    "uptime": {
+      "columns": {
+        "chargerId": "Charger ID",
+        "date": "Date",
+        "time": "Time",
+        "uptimePercent": "Uptime (%)",
+        "site": "Site"
+      },
+      "filters": {
+        "labels": {
+          "chargerId": "Charger ID",
+          "date": "Date",
+          "time": "Time",
+          "uptimePercent": "Uptime (%)",
+          "site": "Site"
+        }
+      }
+    },
+    "errors": {
+      "RESOURCE_NOT_FOUND": "Data not found",
+      "VALIDATION_ERROR": "Validation error in parameters",
+      "UNAUTHORIZED": "You are not authorized to view this report",
+      "INTERNAL_ERROR": "Internal server error",
+      "dataNotFound": "No data found for the selected period",
+      "fetchError": "Error fetching report data",
+      "fetchErrorByUser": "Error fetching consumption data by user",
+      "fetchErrorBySite": "Error fetching consumption data by site"
+    }
+  },
+  "ERROR_PAGES": {
+    "500": {
+      "TITLE": "Server Error",
+      "MESSAGE": "Something went wrong. Please try again or go back to home.",
+      "RETRY_BUTTON": "Retry"
+    },
+    "GO_HOME": "Go Home"
+  },
+  "ERROR_HANDLING_EXAMPLE": {
+    "TITLE": "Error Handling Example",
+    "SUBTITLE": "Example component for error handling",
+    "DEMO_TITLE": "Demo",
+    "DEMO_DESCRIPTION": "This is a demo component for error handling",
+    "EMAIL_LABEL": "Email",
+    "NAME_LABEL": "Name",
+    "SUBMIT": "Submit",
+    "FORM_VALID": "Form is valid",
+    "SIMULATE_401": "Simulate 401",
+    "SIMULATE_403": "Simulate 403",
+    "SIMULATE_404": "Simulate 404",
+    "SIMULATE_409": "Simulate 409",
+    "SIMULATE_500": "Simulate 500"
+  }
+}

@@ -1,0 +1,2129 @@
+{
+  "common": {
+    "ui": {
+      "actions": {
+        "back": "Volver",
+        "cancel": "Cancelar",
+        "continue": "Continuar",
+        "close": "Cerrar",
+        "ok": "Aceptar",
+        "save": "Guardar",
+        "restart": "Reiniciar",
+        "confirm": "Confirmar",
+        "download": "Descargar",
+        "add": "Agregar",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "view": "Ver",
+        "required": "Requerido",
+        "copy": "copy"
+      },
+      "responses": {
+        "yes": "Sí",
+        "no": "No"
+      },
+      "messages": {
+        "success": "Éxito",
+        "error": "Error",
+        "warning": "Advertencia",
+        "info": "Información",
+        "googleServicesError": "No se pudo conectar a los servicios de Google",
+        "notAvailable": "No disponible",
+        "locationNotAvailable": "Ubicación no disponible",
+        "modelNotAvailable": "Modelo no disponible",
+        "manufacturerNotAvailable": "Fabricante no disponible"
+      },
+      "understood": "Entendido",
+      "placeholders": {
+        "enterValue": "Ingrese valor",
+        "enterNumber": "Ingrese número"
+      },
+      "export": {
+        "excel": "Excel",
+        "csv": "CSV"
+      },
+      "tooltips": {
+        "exportData": "Exportar datos"
+      },
+      "search": {
+        "placeholder": "Buscar",
+        "noResults": "Sin resultados"
+      },
+      "noData": "Sin datos",
+      "modals": {
+        "confirmDelete": {
+          "title": "¿Deseas eliminar este elemento?",
+          "confirmButton": "Sí, eliminar"
+        }
+      },
+      "navigation": {
+        "home": "Inicio",
+        "administration": "Administración",
+        "chargers": "Cargadores",
+        "users": "Usuarios",
+        "sites": "Sitios",
+        "dashboard": "Dashboard",
+        "products": "Productos",
+        "siteView": "Site view",
+        "profile": "Perfil",
+        "reporting": "Reportería",
+        "otherAssets": "Otros activos",
+        "credentials": "Credenciales",
+        "energyResources": "Recursos energéticos",
+        "siteview": "siteview"
+      },
+      "pageTitles": {
+        "dashboard": "Dashboard",
+        "chargers": "Cargadores",
+        "chargersList": "Listado de cargadores",
+        "chargingSessions": "Sesiones de carga",
+        "live": "En vivo",
+        "chargerDetail": "Detalle de cargador",
+        "chargerConfiguration": "Configuración de cargador",
+        "sites": "Sitios",
+        "sitesList": "Listado de sitios",
+        "siteProfile": "Perfil de sitio",
+        "users": "Usuarios",
+        "reporting": "Reportería",
+        "credentials": "Credenciales",
+        "credentialsRfid": "Credenciales RFID",
+        "credentialsEvccid": "Credenciales EVCCID",
+        "energyResources": "Recursos energéticos",
+        "profile": "Perfil",
+        "designSystem": "Design System",
+        "login": "Iniciar sesión",
+        "register": "Registro",
+        "error": "Error",
+        "unauthorized": "No autorizado",
+        "forbidden": "Prohibido",
+        "notFound": "No encontrado",
+        "serverError": "Error del servidor"
+      },
+      "menu": {
+        "sections": {
+          "home": "Inicio",
+          "administration": "Administración",
+          "other": "Otros"
+        },
+        "items": {
+          "login": "Iniciar sesión",
+          "register": "Registrarse",
+          "menuLevel": "Nivel de menú",
+          "menu1": "Menú 1",
+          "menu2": "Menú 2",
+          "disabled": "Deshabilitado",
+          "chip": "Chip",
+          "outlined": "Delineado",
+          "externalLink": "Enlace externo"
+        }
+      },
+      "pagination": {
+        "rowsPerPage": "Filas por página",
+        "selectPlaceholder": "Seleccionar",
+        "of": "de",
+        "previousPageLabel": "Anterior",
+        "nextPageLabel": "Siguiente"
+      },
+      "table": {
+        "sorting": {
+          "title": "Ordenar por",
+          "subtitle": "Elige la columna y el tipo de ordenamiento",
+          "columnPlaceholder": "Columna",
+          "orderLabel": "Orden",
+          "orderPlaceholder": "Tipo de ordenamiento",
+          "noOrder": "— Sin orden —",
+          "ascending": "Ascendente",
+          "descending": "Descendente"
+        },
+        "filters": {
+          "title": "Aplicar filtros",
+          "subtitle": "Selecciona las columnas y los campos de datos que deseas visualizar",
+          "searchPlaceholder": "Buscar",
+          "selectedLabel": "seleccionados",
+          "noRangeLabel": "Sin rango",
+          "showAllColumns": "Mostrar todas las columnas",
+          "selectAll": "Seleccionar todos"
+        },
+        "actions": {
+          "apply": "Aplicar",
+          "reset": "Restablecer",
+          "filtersAndSort": "Editar columnas y filtros",
+          "export": "Exportar datos",
+          "downloadExcel": "Descargar Excel",
+          "personalize": "Personalizar"
+        },
+        "filterPlaceholders": {
+          "minimum": "Mínimo",
+          "maximum": "Máximo",
+          "from": "Desde",
+          "to": "Hasta",
+          "searchSite": "Buscar por nombre de sitio...",
+          "minimumKwh": "Mínimo (kWh)",
+          "maximumKwh": "Máximo (kWh)"
+        },
+        "errorState": "Error al cargar los datos"
+      },
+      "visualGuide": {
+        "title": "Guía visual",
+        "subtitle": "Simbología de colores"
+      },
+      "select": {
+        "notFoundText": "No existen elementos",
+        "loading": "Cargando..."
+      },
+      "loading": "Cargando...",
+      "validation": {
+        "errors": {
+          "required": "Requerido",
+          "strictEmail": "Correo inválido",
+          "nameMaxLength": "Máximo 30 caracteres",
+          "nameInvalidFormat": "Formato inválido. Solo se permiten letras, números, tildes, guiones, guion bajo y espacios",
+          "nameEmojiNotAllowed": "No se permiten emojis",
+          "nameInvisibleChars": "No se permiten caracteres invisibles",
+          "whitespace": "Campo requerido",
+          "descriptiveMaxLength": "Máximo 100 caracteres",
+          "descriptiveInvalidFormat": "Formato inválido. Solo se permiten letras, números, tildes, guiones, guion bajo, espacios, puntos y comas",
+          "descriptiveEmojiNotAllowed": "No se permiten emojis",
+          "descriptiveInvisibleChars": "No se permiten caracteres invisibles",
+          "integerInvalidFormat": "Solo se permiten números",
+          "integerMaxLength": "Máximo 10 dígitos",
+          "decimalInvalidFormat": "Formato inválido. Solo se permiten números con punto decimal",
+          "decimalIntegerMaxLength": "Máximo 4 dígitos enteros",
+          "decimalMaxLength": "Máximo 2 decimales",
+          "numericIdInvalidFormat": "Solo se permiten números",
+          "numericIdLength": "Entre 10 y 20 dígitos",
+          "technicalIdLength": "Entre 3 y 30 caracteres",
+          "technicalIdInvalidFormat": "Formato inválido. Solo se permiten letras, números, guiones y guion bajo",
+          "chargerIdLength": "El ID debe tener entre 10 y 20 caracteres",
+          "chargerIdInvalidFormat": "Formato inválido. Solo se permiten letras, números, guiones y guion bajo",
+          "invalidDateFormat": "Fecha inválida. Utilizar formato DD/MM/YYYY",
+          "dateMinError": "La fecha no puede ser anterior a la fecha mínima permitida",
+          "dateMaxError": "La fecha no puede ser posterior a la fecha máxima permitida",
+          "serialMaxLength": "Máximo 40 caracteres",
+          "serialNoSpaces": "No se permiten espacios",
+          "serialInvalidFormat": "Formato inválido. Solo se permiten letras, números y guiones",
+          "percentageInvalidFormat": "Solo se permiten números",
+          "percentageRange": "Valor entre 1 y 100",
+          "urlMaxLength": "Máximo 255 caracteres",
+          "urlNoSpaces": "No se permiten espacios en la URL",
+          "urlInvalidFormat": "Debe comenzar con http:// o https://",
+          "ocppTextMaxLength": "Máximo 100 caracteres",
+          "ocppTextNoSpaces": "No se permiten espacios",
+          "ocppTextInvalidFormat": "Formato inválido. Solo se permiten letras, números, guiones, puntos y slashes",
+          "ocppInvalidMeasurand": "Valor inválido. Debe ser una lista separada por comas de Measurands válidos",
+          "ocppInvalidFeatureProfile": "Valor inválido. Debe ser una lista separada por comas de Feature Profiles válidos",
+          "latitudeInvalidFormat": "Formato inválido. Solo se permiten números",
+          "latitudeOutOfRange": "La latitud debe estar entre -90 y 90",
+          "longitudeInvalidFormat": "Formato inválido. Solo se permiten números",
+          "longitudeOutOfRange": "La longitud debe estar entre -180 y 180",
+          "invalidFormat": "Formato inválido",
+          "numbersOnly": "Solo números",
+          "spacesNotAllowed": "No se permiten espacios",
+          "emojisNotAllowed": "No se permiten emojis",
+          "invalidCharacters": "Caracteres no permitidos",
+          "greaterThanZero": "Debe ser un número mayor a 0",
+          "greaterThanOrEqualZero": "Debe ser un número mayor o igual a 0",
+          "maxPowerExceeded": "La potencia máxima no puede exceder 9999.99 kW",
+          "minPowerExceeded": "La potencia mínima no puede exceder 9999.99 kW",
+          "maxCurrentExceeded": "La corriente máxima no puede exceder 9999 A",
+          "maxVoltageExceeded": "El voltaje máximo no puede exceder 9999 V"
+        }
+      }
+    },
+    "errors": {
+      "loadSites": "Error al cargar los sitios",
+      "loadChargers": "Error al cargar los cargadores",
+      "loadData": "Error al cargar los datos",
+      "reviewData": "Por favor, revisa los datos e intenta nuevamente.",
+      "noSubsidiarySelected": "No hay subsidiaria seleccionada",
+      "noSubsidiaryForReport": "No hay subsidiaria seleccionada para el reporte",
+      "noCompanyIdAvailable": "No hay company_id disponible",
+      "noUserIdAvailable": "No hay user_id disponible",
+      "getAllLocations": "Obtener todas las ubicaciones",
+      "unexpectedError": "Ocurrió un error inesperado - Por favor vuelve a intentarlo",
+      "unexpectedErrorWithAction": "Ocurrió un error inesperado al {{action}} - Por favor vuelve a intentarlo",
+      "noPermission": "No tienes permiso para realizar esta acción",
+      "noPermissionRestart": "No tienes permiso para ejecutar el comando de reinicio",
+      "genericError": "Ocurrió un error inesperado",
+      "connectivityError": "Error de conectividad. Por favor, contacta con un administrador.",
+      "unknown": "Error desconocido"
+    },
+    "genericError": "Ocurrió un error inesperado",
+    "table": {
+      "emptyState": "No se encontraron registros",
+      "emptyStateAlt": "Sin datos",
+      "errorState": "Error al cargar los datos"
+    },
+    "languages": {
+      "english": "Inglés",
+      "spanish": "Español"
+    },
+    "entities": {
+      "charger": {
+        "states": {
+          "available": "Disponible",
+          "unavailable": "No Disponible",
+          "error": "Error"
+        }
+      },
+      "connector": {
+        "states": {
+          "available": "Disponible",
+          "preparing": "Preparando",
+          "charging": "Cargando",
+          "suspendedEvse": "Suspendido por Cargador",
+          "suspendedEv": "Suspendido por Vehículo",
+          "finishing": "Finalizando",
+          "reserved": "Reservado",
+          "unavailable": "No Disponible",
+          "faulted": "Con Fallas",
+          "offline": "Desconectado"
+        }
+      }
+    },
+    "actions": {
+      "restart": {
+        "confirm": "¿Estás seguro que quieres reiniciar el cargador {{chargerName}}?",
+        "success": "Se ha reiniciado correctamente el cargador {{cargador}}",
+        "notFound": "Cargador no encontrado o desconectado",
+        "timeout": "Timeout: El cargador no respondió a tiempo"
+      },
+      "delete": {
+        "confirm": "¿Estás seguro que quieres eliminar el cargador {{chargerName}}?",
+        "warning": "Esta acción no se puede deshacer.",
+        "success": "Se ha eliminado correctamente el cargador {{cargador}}",
+        "error": "Error al eliminar el cargador"
+      },
+      "enable": {
+        "confirm": "¿Estás seguro que quieres habilitar el {{connectorName}}?",
+        "success": "Se ha habilitado correctamente el Conector {{conector}} - {{cargador}}",
+        "error": "No se pudo habilitar el conector. Intenta nuevamente."
+      },
+      "disable": {
+        "confirm": "¿Estás seguro que quieres inhabilitar el {{connectorName}}?",
+        "success": "Se ha inhabilitado correctamente el Conector {{conector}} - {{cargador}}",
+        "error": "No se pudo inhabilitar el conector. Intenta nuevamente."
+      },
+      "unlock": {
+        "confirm": "¿Estás seguro que quieres desbloquear el {{connectorName}}?",
+        "success": "Se ha desbloqueado correctamente el Conector {{conector}} - {{cargador}}",
+        "error": "No se pudo desbloquear el conector. Intenta nuevamente."
+      },
+      "prioritize": {
+        "confirm": "¿Estás seguro que quieres priorizar la carga en el {{connectorName}}?",
+        "success": "Se ha priorizado correctamente la carga en el Conector {{conector}} - {{cargador}}",
+        "error": "No se pudo priorizar la carga. Intenta nuevamente."
+      },
+      "startCharge": {
+        "confirm": "¿Estás seguro que quieres iniciar la carga en el {{connectorName}}?",
+        "success": "Se ha iniciado correctamente la carga en el Conector {{conector}} - {{cargador}}",
+        "error": "No se pudo iniciar la carga. Intenta nuevamente."
+      },
+      "stopCharge": {
+        "confirm": "¿Estás seguro que quieres detener la carga en el {{connectorName}}?",
+        "success": "Se ha detenido correctamente la carga en el Conector {{conector}} - {{cargador}}",
+        "error": "No se pudo detener la carga. Intenta nuevamente."
+      },
+      "confirmDelete": "Sí, eliminar"
+    }
+  },
+  "auth": {
+    "login": {
+      "welcome": "Bienvenido",
+      "welcomeTo": "a Dhemax",
+      "loginTitle": "Bienvenido",
+      "subtitle": "a Dhemax",
+      "signIn": "Iniciar sesión",
+      "logIn": "Iniciar sesión",
+      "username": "Correo electrónico",
+      "password": "Contraseña",
+      "rememberMe": "Recordarme",
+      "forgotPassword": "¿Olvidó su contraseña?",
+      "loginWithGoogle": "Iniciar sesión con Google",
+      "loginWithFacebook": "Iniciar sesión con Facebook",
+      "loginWithGitHub": "Iniciar sesión con GitHub",
+      "loginSuccess": "¡Inicio de sesión exitoso!",
+      "loginSuccessMessage": "¡Inicio de sesión exitoso!",
+      "loginError": "Error de inicio de sesión",
+      "authenticationError": "Credenciales inválidas",
+      "nameRequired": "El nombre es obligatorio.",
+      "nameMinLength": "El nombre debe tener 6 caracteres.",
+      "passwordRequired": "La contraseña es obligatoria.",
+      "rememberDevice": "Recordar este dispositivo",
+      "newToApp": "¿Nuevo en UI Dhemax?",
+      "createAccount": "Crear una cuenta",
+      "usernameInvalid": "Nombre de usuario inválido",
+      "invalidCredentials": "Credenciales inválidas",
+      "signingIn": "Iniciando sesión...",
+      "forgotPasswordConfirm": "¿Estás seguro de que quieres recuperar tu contraseña?",
+      "emailPlaceholder": "Ingrese su correo",
+      "passwordPlaceholder": "Ingrese su contraseña"
+    },
+    "error": {
+      "title": "¡Ups!",
+      "subtitle": "No se pudo encontrar la página que buscas.",
+      "goBackHome": "Volver al inicio"
+    },
+    "maintenance": {
+      "title": "¡Modo de mantenimiento!",
+      "subtitle": "El sitio web está en construcción. ¡Vuelve más tarde!",
+      "goBackHome": "Volver al inicio"
+    },
+    "register": {
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "nameRequired": "El nombre es obligatorio",
+      "nameMinLength": "El nombre debe tener al menos 6 caracteres",
+      "emailRequired": "El correo electrónico es obligatorio",
+      "passwordRequired": "La contraseña es obligatoria",
+      "signUp": "Registrarse",
+      "signIn": "Iniciar sesión",
+      "subtitle": "Crea una cuenta para comenzar",
+      "welcome": "Bienvenido",
+      "alreadyHaveAccount": "¿Ya tienes una cuenta?"
+    },
+    "forgotPassword": {
+      "instructions": "Introduce tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña",
+      "emailAddress": "Correo electrónico",
+      "emailRequired": "El correo electrónico es obligatorio",
+      "resetPassword": "Restablecer contraseña",
+      "backToLogin": "Volver al inicio de sesión",
+      "title": "Recuperar Contraseña",
+      "subtitle": "Introduce tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña",
+      "emailInvalid": "Introduce un correo electrónico válido",
+      "sendLink": "Enviar enlace de recuperación",
+      "emailSent": "Correo enviado",
+      "emailSentMessage": "Se ha enviado un enlace de recuperación a tu correo electrónico. Revisa tu bandeja de entrada y sigue las instrucciones.",
+      "recoveryEmailSentTitle": "Para recuperar tu contraseña te enviamos un correo a",
+      "yourEmailPlaceholder": "tu correo",
+      "emailNotFound": "El correo electrónico no está registrado en el sistema",
+      "tryAgain": "Intentar de nuevo"
+    },
+    "resetPassword": {
+      "title": "Recuperar contraseña",
+      "passwordSendEmail": "Contraseña enviada al correo electrónico",
+      "newPassword": "Nueva contraseña",
+      "confirmPassword": "Confirmar nueva contraseña",
+      "passwordRequired": "La contraseña es obligatoria",
+      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
+      "passwordPattern": "La contraseña debe tener al menos una mayúscula, una minúscula, un número y un símbolo",
+      "passwordsNotMatch": "Las contraseñas no coinciden",
+      "verificationCodeRequired": "El código de verificación es obligatorio",
+      "verificationCodeMinLength": "El código de verificación debe tener al menos 6 caracteres",
+      "genericError": "Ocurrió un error. Por favor, intenta nuevamente.",
+      "resetPassword": "Restablecer contraseña",
+      "passwordReset": "Contraseña restablecida",
+      "passwordResetMessage": "Tu contraseña ha sido restablecida exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.",
+      "goToLogin": "Ir al Login",
+      "linkExpired": "Enlace expirado",
+      "linkExpiredMessage": "El enlace de recuperación ha expirado. Solicita un nuevo enlace.",
+      "requestNewLink": "Solicitar nuevo enlace"
+    },
+    "session": {
+      "expirationTitle": "Tu sesión está por expirar",
+      "renewQuestion": "¿Deseas permanecer conectado?",
+      "expiresIn": "La sesión expirará en:",
+      "renewButton": "Permanecer conectado",
+      "closeButton": "Cerrar sesión",
+      "renewSuccess": "Sesión extendida correctamente",
+      "renewError": "No pudimos renovar tu sesión. Por favor, inicia sesión nuevamente."
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "tabsDate": {
+      "today": "24 hrs",
+      "lastWeek": "1 semana",
+      "month": "1 mes",
+      "months": "3 meses",
+      "ariaLabel": "Rango de tiempo"
+    },
+    "errors": {
+      "dateRangeExceedsMax": "No puede seleccionar un rango de fechas mayor a 3 meses.",
+      "invalidDateRangeTitle": "Rango de fechas inválido"
+    },
+    "charts": {
+      "sessions": "Sesiones de carga",
+      "sessionsSeriesName": "Sesiones",
+      "peakPower": "Peak de potencia",
+      "connectors": {
+        "title": "Conectores",
+        "subtitle": "Estado actual",
+        "available": "Disponibles",
+        "charging": "Cargando",
+        "faulted": "Con fallas"
+      }
+    }
+  },
+  "chargers": {
+    "tooltips": {
+      "status": {
+        "online": "Cargador conectado",
+        "offline": "Cargador desconectado",
+        "error": "Cargador con error"
+      },
+      "session": {
+        "success": "Carga finalizada",
+        "charging": "Carga en curso",
+        "interrupted": "Carga interrumpida"
+      }
+    },
+    "views": {
+      "list": {
+        "title": "Gestión de cargadores",
+        "subtitle": "Monitoreo y control en tiempo real de la infraestructura de carga.",
+        "buttons": {
+          "createCharger": "Crear",
+          "filtersAndSort": "Ordenar y filtrar columnas"
+        },
+        "search": {
+          "placeholder": "Buscar"
+        },
+        "emptyState": {
+          "message": "No hay datos de cargadores en este momento"
+        },
+        "tableHeaders": {
+          "status": "",
+          "chargerNameId": "Nombre / ID",
+          "site": "Sitio",
+          "connectors": "Conectores",
+          "maxPower": "Potencia máxima",
+          "alarms": "Alarmas",
+          "errors": "Errores",
+          "errorsTooltip": "Errores del cargador",
+          "resets": "Reinicios",
+          "resetsTooltip": "Reinicios del cargador",
+          "maxPowerTooltip": "Potencia máxima del cargador y sus conectores",
+          "manufacturer": "Fabricante",
+          "model": "Modelo",
+          "address": "Dirección",
+          "group": "Grupo",
+          "actions": ""
+        },
+        "filters": {
+          "title": "Filtros",
+          "labels": {
+            "chargerStatus": "Estado de cargador",
+            "chargerNameId": "Nombre / ID",
+            "site": "Sitio",
+            "connectors": "Conectores",
+            "maxPower": "Potencia máxima",
+            "alarms": "Alarmas",
+            "errors": "Errores",
+            "resets": "Reinicios",
+            "manufacturer": "Fabricante",
+            "model": "Modelo",
+            "address": "Dirección",
+            "group": "Grupo"
+          }
+        },
+        "values": {
+          "connectorsCount": "conectores",
+          "noData": "Sin datos",
+          "empty": "-",
+          "kilowatts": "kW",
+          "unknown": "Desconocido",
+          "notAvailable": "No disponible"
+        }
+      },
+      "navigation": {
+        "tabs": {
+          "chargersList": "Lista de cargadores",
+          "chargingSessions": "Sesiones de carga"
+        }
+      },
+      "chargingSessions": {
+        "tableHeaders": {
+          "timeStart": "Hora inicio",
+          "timeEnd": "Hora fin"
+        },
+        "subtitle": "Title"
+      },
+      "create": {
+        "title": "Crear cargador",
+        "subtitle": "Agrega tu cargador y ponlo en marcha.",
+        "steps": {
+          "step1": {
+            "label": "Tipo de cargador",
+            "title": "Tipo de cargador y sitio",
+            "subtitle": "Selecciona el tipo y ubicación del cargador"
+          },
+          "step2": {
+            "label": "Sitio del cargador",
+            "title": "Información del fabricante"
+          },
+          "step3": {
+            "label": "Crear sitio",
+            "title": "Información del sitio"
+          },
+          "step4": {
+            "label": "Configuración del cargador",
+            "title": "Configuración del cargador"
+          },
+          "step5": {
+            "label": "Configuración de conectores",
+            "title": "Configuración de conectores"
+          },
+          "connectors": {
+            "table": {
+              "name": "Nombre",
+              "type": "Tipo de conector",
+              "maxPower": "Potencia máxima",
+              "minPower": "Potencia mínima",
+              "maxCurrent": "Corriente máxima",
+              "maxVoltage": "Voltaje máximo"
+            },
+            "placeholders": {
+              "name": "Nombre",
+              "type": "Tipo de conector",
+              "maxPower": "Potencia máxima",
+              "minPower": "Potencia mínima",
+              "maxCurrent": "Corriente máxima",
+              "maxVoltage": "Voltaje máximo"
+            },
+            "actions": {
+              "add": "Agregar conector",
+              "delete": "Eliminar conector"
+            },
+            "emptyMessage": "No hay conectores. Agrega el primero.",
+            "messages": {
+              "siteCreatedSuccess": "Sitio creado exitosamente"
+            },
+            "errors": {
+              "nameRequired": "El nombre es obligatorio",
+              "nameMaxLength": "El nombre no puede exceder 30 caracteres",
+              "typeRequired": "El tipo es obligatorio",
+              "maxPowerRequired": "La potencia máxima es obligatoria",
+              "minPowerRequired": "La potencia mínima es obligatoria",
+              "minPowerExceeded": "La potencia mínima no puede exceder 9999.99 kW",
+              "maxCurrentRequired": "La corriente máxima es obligatoria",
+              "maxVoltageRequired": "El voltaje máximo es obligatorio"
+            }
+          }
+        },
+        "fields": {
+          "chargerType": {
+            "label": "Tipo de cargador",
+            "options": {
+              "public": "Público",
+              "private": "Privado"
+            },
+            "errors": {
+              "required": "El tipo de cargador es requerido"
+            }
+          },
+          "site": {
+            "label": "Sitio del cargador",
+            "placeholder": "Selecciona un sitio",
+            "options": {
+              "newSite": "Añadir cargador a un nuevo sitio",
+              "existingSite": "Añadir cargador a un sitio existente"
+            },
+            "messages": {
+              "newSiteFlow": "Flujo de creación de nuevo sitio en desarrollo",
+              "existingSiteFlow": "Selección de sitio existente en desarrollo"
+            },
+            "errors": {
+              "required": "El sitio es requerido"
+            }
+          },
+          "manufacturer": {
+            "label": "Fabricante",
+            "placeholder": "Selecciona un fabricante",
+            "errors": {
+              "required": "El fabricante es requerido"
+            }
+          },
+          "model": {
+            "label": "Modelo",
+            "placeholder": "Selecciona un modelo",
+            "hint": "Primero selecciona un fabricante",
+            "errors": {
+              "required": "El modelo es requerido"
+            }
+          },
+          "siteName": {
+            "label": "Nombre nuevo sitio",
+            "placeholder": "Sitio 3",
+            "errors": {
+              "required": "El nombre del sitio es requerido"
+            }
+          },
+          "siteLocation": {
+            "label": "Dirección",
+            "placeholder": "Manuel Antonio Prieto 191",
+            "searchOr": "Dirección no encontrada, ",
+            "selectOnMap": "selecciona dirección aquí",
+            "errors": {
+              "required": "La dirección es requerida"
+            }
+          },
+          "chargerName": {
+            "label": "Nombre",
+            "placeholder": "Cargador 1"
+          },
+          "chargerId": {
+            "label": "ID",
+            "placeholder": "1234568975321"
+          },
+          "accessType": {
+            "label": "Tipo de acceso",
+            "placeholder": "Privado, público, mixto"
+          },
+          "maxPower": {
+            "label": "Potencia máxima",
+            "placeholder": "kW",
+            "errors": {
+              "required": "Error"
+            }
+          }
+        },
+        "mapSelection": {
+          "title": "Seleccionar ubicación en el mapa",
+          "errorLoading": "Error al cargar Google Maps",
+          "errorInitializing": "Error al inicializar el mapa",
+          "searchPlaceholder": "Buscar dirección..."
+        },
+        "errors": {
+          "title": "Error al crear cargador",
+          "message": "No se pudo crear el cargador. Intenta nuevamente.",
+          "invalidForm": "Por favor completa todos los campos requeridos",
+          "invalidCompanyId": "ID de empresa inválido",
+          "invalidManufacturerOrModel": "Fabricante o modelo inválido",
+          "missingCompanyId": "ID de empresa faltante",
+          "missingCountryId": "ID de país faltante",
+          "missingLocationData": "Datos de ubicación faltantes",
+          "missingSiteName": "Nombre de sitio faltante",
+          "noConnectors": "No hay conectores configurados",
+          "addressFoundSuccess": "Dirección encontrada correctamente",
+          "addressProcessError": "Error al procesar la dirección encontrada",
+          "serverEmptyResponse": "La respuesta del servidor está vacía",
+          "locationIdError": "No se pudo obtener el ID de la ubicación creada",
+          "addressSearchError": "Error al buscar la dirección",
+          "addressDetailsError": "Error al procesar los detalles de la dirección seleccionada",
+          "addressServiceError": "Error al cargar el servicio de búsqueda de direcciones",
+          "unknownError": "Error desconocido"
+        },
+        "modals": {
+          "confirmCreate": {
+            "title": "¿Estás seguro que quieres crear este cargador?",
+            "text": ""
+          },
+          "confirmCreateWithSite": {
+            "title": "¿Estás seguro que quieres crear este sitio y cargador?",
+            "text": ""
+          },
+          "confirmCancel": {
+            "title": "¿Estás seguro que quieres cancelar la creación de este cargador?",
+            "text": ""
+          },
+          "confirmCancelWithSite": {
+            "title": "¿Estás seguro que quieres cancelar la creación de este sitio y cargador?",
+            "text": ""
+          },
+          "successCreate": {
+            "title": "Se ha creado correctamente el cargador",
+            "text": ""
+          },
+          "successCreateWithSite": {
+            "title": "Se ha creado correctamente el sitio y cargador",
+            "text": ""
+          },
+          "successCancel": {
+            "title": "Se ha cancelado correctamente la creación de este cargador",
+            "text": ""
+          },
+          "successCancelWithSite": {
+            "title": "Se ha cancelado correctamente la creación del sitio y cargador",
+            "text": ""
+          },
+          "errorValidation": {
+            "title": "No se pudo crear el cargador",
+            "text": "Por favor, completa todos los campos obligatorios"
+          },
+          "errorValidationWithSite": {
+            "title": "No se pudo crear el sitio y cargador",
+            "text": "Por favor, completa todos los campos obligatorios"
+          },
+          "errorCreate": {
+            "title": "Error al crear el cargador",
+            "text": "No se pudo crear el cargador. Por favor, intente más tarde."
+          }
+        },
+        "success": {
+          "title": "Cargador creado exitosamente",
+          "message": "El cargador ha sido agregado al sistema"
+        }
+      }
+    }
+  },
+  "connectors": {
+    "views": {
+      "detail": {
+        "status": {
+          "available": "Disponible",
+          "charging": "Cargando",
+          "offline": "Desconectado",
+          "error": "Con fallas"
+        },
+        "actions": {
+          "enable": "Habilitar",
+          "disable": "Inhabilitar",
+          "unlock": "Desbloquear",
+          "startCharge": "Iniciar carga",
+          "stopCharge": "Detener carga",
+          "priorityCharge": "Carga prioritaria"
+        },
+        "labels": {
+          "connectorNumber": "Conector",
+          "status": "Estado",
+          "date": "Fecha:",
+          "chargeStart": "Inicio carga:",
+          "chargeEnd": "Fin carga:",
+          "vehicle": "Vehículo:",
+          "socTarget": "SoC objetivo:",
+          "frameId": "Frame ID",
+          "siteName": "Sitio",
+          "manufacturer": "Fabricante",
+          "model": "Modelo",
+          "power": "Potencia"
+        },
+        "metrics": {
+          "currentSoc": "SoC en curso",
+          "currentPower": "Potencia en curso",
+          "energyDelivered": "Energía entregada",
+          "sessionTime": "Tiempo sesión"
+        },
+        "sections": {
+          "tecle": "Tecle",
+          "charge": "Carga",
+          "commands": "Comandos"
+        },
+        "buttons": {
+          "startCharge": "Iniciar carga",
+          "stopCharge": "Detener carga",
+          "prioritizeCharge": "Priorizar carga",
+          "enableConnector": "Habilitar conector",
+          "disableConnector": "Inhabilitar conector",
+          "unlockConnector": "Desbloquear conector",
+          "loading": {
+            "startCharge": "Iniciando carga...",
+            "stopCharge": "Deteniendo carga...",
+            "prioritizeCharge": "Priorizando carga...",
+            "enableConnector": "Habilitando...",
+            "disableConnector": "Inhabilitando...",
+            "unlockConnector": "Desbloqueando..."
+          }
+        },
+        "placeholders": {
+          "time": "Tiempo"
+        },
+        "timeOptions": {
+          "5sec": "5 seg",
+          "10sec": "10 seg",
+          "15sec": "15 seg",
+          "30sec": "30 seg"
+        }
+      },
+      "communication": {
+        "title": "Comunicación del cargador",
+        "online": "Conectado",
+        "offline": "Desconectado",
+        "error": "Con fallas"
+      },
+      "states": {
+        "title": "Estados de conectores"
+      },
+      "filterGrid": {
+        "sorting": {
+          "title": "Title",
+          "subtitle": "Title",
+          "columnPlaceholder": "Placeholder",
+          "orderLabel": "Label",
+          "orderPlaceholder": "Placeholder",
+          "noOrder": "noOrder",
+          "ascending": "ascending",
+          "descending": "descending"
+        },
+        "filters": {
+          "title": "Title",
+          "subtitle": "Title",
+          "searchPlaceholder": "Placeholder",
+          "selectedLabel": "Label",
+          "noRangeLabel": "Label",
+          "showAllColumns": "showAllColumns",
+          "selectAll": "selectAll"
+        },
+        "actions": {
+          "apply": "apply",
+          "reset": "reset",
+          "filtersAndSort": "filtersAndSort"
+        }
+      }
+    }
+  },
+  "sites": {
+    "views": {
+      "create": {
+        "title": "Crear sitio",
+        "subtitle": "Agrega tu sitio y ponlo en marcha.",
+        "fields": {
+          "name": {
+            "label": "Nombre del sitio",
+            "placeholder": "Ingresa el nombre del sitio",
+            "errors": {
+              "required": "El nombre del sitio es requerido",
+              "maxLength": "El nombre no puede exceder 30 caracteres",
+              "invalidFormat": "Formato inválido. Solo se permiten letras, números, tildes, guiones, guion bajo y espacios",
+              "emojiNotAllowed": "No se permiten emojis",
+              "invisibleChars": "No se permiten caracteres invisibles",
+              "whitespace": "El nombre no puede estar vacío"
+            }
+          },
+          "address": {
+            "label": "Dirección",
+            "placeholder": "Ingresa la dirección",
+            "enterManually": "Ingresar dirección manualmente",
+            "searchAddress": "Buscar dirección",
+            "useAsAddress": "Usar esta dirección",
+            "errors": {
+              "required": "La dirección es requerida",
+              "maxLength": "La dirección no puede exceder 100 caracteres",
+              "invalidFormat": "Formato inválido. Solo se permiten letras, números, tildes, guiones, guion bajo, espacios, puntos y comas",
+              "emojiNotAllowed": "No se permiten emojis",
+              "invisibleChars": "No se permiten caracteres invisibles",
+              "whitespace": "La dirección no puede estar vacía"
+            }
+          },
+          "country": {
+            "label": "País",
+            "placeholder": "Selecciona un país"
+          },
+          "region": {
+            "label": "Región",
+            "placeholder": "Selecciona una región"
+          },
+          "comuna": {
+            "label": "Comuna",
+            "placeholder": "Selecciona una comuna"
+          },
+          "selectOnMap": "seleccionar dirección aquí"
+        },
+        "errors": {
+          "loadRegions": "Error al cargar regiones. Por favor, intenta nuevamente.",
+          "loadCommunes": "Error al cargar comunas. Por favor, intenta nuevamente."
+        },
+        "modals": {
+          "confirmCreate": {
+            "title": "¿Estás seguro que quieres crear este sitio?",
+            "text": ""
+          },
+          "successCreate": {
+            "title": "Se ha creado correctamente el sitio",
+            "text": ""
+          },
+          "errorValidation": {
+            "title": "Error de validación",
+            "text": "Por favor, completa todos los campos obligatorios"
+          },
+          "errorCreate": {
+            "title": "Error al crear el sitio",
+            "text": "No se pudo crear el sitio. Por favor, intenta nuevamente."
+          }
+        }
+      },
+      "list": {
+        "buttons": {
+          "createSite": "Crear"
+        },
+        "emptyState": {
+          "message": "Aún no has creado tu primer sitio"
+        },
+        "tableHeaders": {
+          "name": "Nombre del sitio",
+          "connectorCount": "Número de conectores",
+          "address": "Dirección",
+          "comuna": "Comuna",
+          "region": "Región",
+          "country": "País",
+          "timezone": "Zona horaria"
+        },
+        "filters": {
+          "labels": {
+            "name": "Nombre del sitio",
+            "connectorCount": "Número de conectores",
+            "address": "Dirección",
+            "comuna": "Comuna",
+            "region": "Región",
+            "country": "País",
+            "timezone": "Zona horaria"
+          }
+        }
+      },
+      "navigation": {
+        "tabs": {
+          "sitesList": "Listado de sitios"
+        }
+      }
+    },
+    "detail": {
+      "tabs": {
+        "profile": "Perfil",
+        "energyManagement": "Gestión energética"
+      }
+    },
+    "energyManagement": {
+      "subTabs": {
+        "powerIntervals": "Intervalos de potencia",
+        "scheduledDisabling": "Inhabilitación programada"
+      },
+      "allocationTypes": {
+        "title": "Tipos de reparto",
+        "description": "Define la estrategia de gestión energética que se aplicará en cada intervalo, según el nivel de control y dinamismo que requiera tu operación.",
+        "protectedStart": "Inicio protegido",
+        "protectedStartDesc": "Restringe el inicio de nuevas cargas cuando la potencia máxima del intervalo se encuentra comprometida.",
+        "equalShare": "Reparto equitativo",
+        "equalShareDesc": "Reparte equitativamente la potencia máxima del intervalo entre todas las cargas activas, ajustándose dinámicamente.",
+        "loadPlan": "Plan de carga",
+        "loadPlanDesc": "Prioriza la asignación de potencia según el plan de carga de cada vehículo (SoC, energía requerida y hora objetivo)."
+      },
+      "powerIntervals": {
+        "title": "Intervalos horarios de potencia",
+        "description": "Define rangos de fecha y horarios en los que se aplicará potencia máxima según el tipo de reparto seleccionado.",
+        "createInterval": "Crear intervalo",
+        "columns": {
+          "name": "Nombre",
+          "allocationType": "Tipo de reparto",
+          "dateRange": "Fecha",
+          "schedule": "Horario",
+          "activeDays": "Días de activación",
+          "maxPower": "Potencia máxima",
+          "status": "Estado"
+        },
+        "statusActive": "Activo",
+        "statusScheduled": "Programado",
+        "footnote": "Nota: Cualquier rango horario no planificado utilizará la potencia máxima disponible."
+      },
+      "scheduledDisabling": {
+        "placeholder": "Contenido de inhabilitación programada en desarrollo."
+      }
+    },
+    "profile": {
+      "sections": {
+        "identification": "Identificación"
+      },
+      "fields": {
+        "name": "Nombre del sitio",
+        "region": "Región",
+        "address": "Dirección",
+        "country": "País",
+        "commune": "Comuna",
+        "comuna": "Comuna",
+        "latitude": "Latitud",
+        "longitude": "Longitud",
+        "timezone": "Zona horaria"
+      },
+      "placeholders": {
+        "name": "Ingrese el nombre del sitio",
+        "address": "Ingrese la dirección",
+        "selectRegion": "Seleccionar región",
+        "selectCountry": "Seleccionar país",
+        "selectCommune": "Seleccionar comuna",
+        "selectComuna": "Seleccionar comuna",
+        "latitude": "Ingrese la latitud",
+        "longitude": "Ingrese la longitud",
+        "selectTimezone": "Seleccionar zona horaria"
+      },
+      "messages": {
+        "sectionSaved": "La información de {{section}} se ha guardado correctamente"
+      },
+      "errors": {
+        "saveError": "Ocurrió un error inesperado - Por favor vuelve a intentarlo"
+      }
+    }
+  },
+  "products": {
+    "siteView": {
+      "title": "Vista de Site",
+      "description": "Módulo de gestión y visualización de productos en site."
+    },
+    "siteview": {
+      "title": "Vista de Site",
+      "description": "Módulo de gestión y visualización de productos en site."
+    }
+  },
+  "credentials": {
+    "views": {
+      "navigation": {
+        "tabs": {
+          "rfid": "RFID",
+          "evccid": "EVCCID"
+        }
+      },
+      "list": {
+        "buttons": {
+          "createCredential": "Crear"
+        },
+        "emptyState": {
+          "message": "Aún no has creado tu primera credencial"
+        },
+        "tableHeaders": {
+          "name": "Nombre",
+          "code": "Código",
+          "status": "Status",
+          "associatedChargers": "Cargadores asociados",
+          "expirationDate": "Fecha expiración"
+        },
+        "status": {
+          "available": "Disponible",
+          "unavailable": "No disponible"
+        },
+        "filters": {
+          "labels": {
+            "status": "Estado",
+            "associatedChargers": "Cargadores asociados",
+            "expirationDate": "Fecha de expiración"
+          }
+        }
+      },
+      "detail": {
+        "sections": {
+          "associatedChargers": "Cargadores asociados"
+        },
+        "labels": {
+          "validity": "Vigencia",
+          "allChargers": "Todos los cargadores",
+          "selected": "seleccionados"
+        }
+      }
+    },
+    "modals": {
+      "create": {
+        "title": {
+          "rfid": "Crear tarjeta RFID",
+          "evccid": "Crear EVCCID"
+        },
+        "subtitle": "Completa los datos para crear una nueva credencial",
+        "success": {
+          "rfid": "Tarjeta RFID creada exitosamente",
+          "evccid": "EVCCID creado exitosamente"
+        }
+      },
+      "edit": {
+        "title": {
+          "rfid": "Editar tarjeta RFID",
+          "evccid": "Editar EVCCID"
+        },
+        "subtitle": "Actualiza los datos de la credencial",
+        "success": {
+          "rfid": "Tarjeta RFID actualizada exitosamente",
+          "evccid": "EVCCID actualizado exitosamente"
+        }
+      },
+      "fields": {
+        "name": "Nombre",
+        "code": "Código/ID",
+        "validity": "Vigencia",
+        "expirationDate": "Fecha de expiración"
+      },
+      "placeholders": {
+        "name": "Credencial RFID 001",
+        "code": "ABC123456"
+      },
+      "errors": {
+        "expirationDateRequired": "La fecha de expiración es obligatoria"
+      }
+    }
+  },
+  "energyResources": {
+    "views": {
+      "list": {
+        "buttons": {
+          "createEnergyResource": "Crear"
+        },
+        "emptyState": {
+          "message": "Aún no has creado tu primer recurso energético"
+        },
+        "tableHeaders": {
+          "name": "Nombre",
+          "type": "Tipo",
+          "site": "Sitio",
+          "status": "Status",
+          "associatedChargers": "Cargadores asociados",
+          "maxPower": "Potencia máxima"
+        },
+        "status": {
+          "available": "Disponible",
+          "unavailable": "No disponible"
+        },
+        "filters": {
+          "labels": {
+            "status": "Estado",
+            "site": "Sitio",
+            "type": "Tipo",
+            "associatedChargers": "Cargadores asociados",
+            "maxPower": "Potencia máxima"
+          }
+        }
+      },
+      "detail": {
+        "sections": {
+          "associatedChargers": "Cargadores asociados"
+        },
+        "labels": {
+          "type": "Tipo",
+          "allChargers": "Todos los cargadores",
+          "selected": "seleccionados"
+        }
+      }
+    },
+    "modals": {
+      "create": {
+        "title": "Crear recurso energético",
+        "subtitle": "Completa los datos para crear un nuevo recurso energético",
+        "success": "Recurso energético creado exitosamente"
+      },
+      "edit": {
+        "title": "Editar recurso energético",
+        "subtitle": "Actualiza los datos del recurso energético",
+        "success": "Recurso energético actualizado exitosamente"
+      },
+      "fields": {
+        "name": "Nombre",
+        "type": "Tipo",
+        "site": "Sitio",
+        "maxPower": "Potencia máxima (kW)"
+      },
+      "placeholders": {
+        "name": "Recurso Energético 001",
+        "type": "Selecciona un tipo",
+        "site": "Selecciona un sitio"
+      }
+    }
+  },
+  "chargerDetail": {
+    "sessionsCharger": {
+      "title": "Cargador",
+      "subtitle": "Consulta las sesiones de carga de tu cargador."
+    },
+    "emptyStateCharger": {
+      "message": "Realiza tu primera carga para visualizar los datos"
+    },
+    "actions": {
+      "loading": {
+        "restart": "Reiniciando..."
+      }
+    },
+    "tabs": {
+      "live": "En vivo",
+      "configuration": "Configuración",
+      "history": "Historial"
+    },
+    "navigation": {
+      "breadcrumb": {
+        "history": "Historial",
+        "sessionsCharger": "Sesiones de carga"
+      }
+    },
+    "tableHeaders": {
+      "connector": "Conector",
+      "vehicle": "Vehiculo",
+      "statusSession": "Estado sesión",
+      "dateTimeStart": "Fecha inicio",
+      "hourStart": "Hora inicio",
+      "initialSoc": "SoC inicial",
+      "dateTimeEnd": "Fecha fin",
+      "hourEnd": "Hora fin",
+      "endSoc": "SoC final",
+      "energyDelivered": "Energía entregada",
+      "sessionDuration": "Tiempo sesión",
+      "user": "Usuario",
+      "rfidUsed": "RFID",
+      "assignedDriver": "Conductor",
+      "min_power": "Potencia mínima",
+      "max_power": "Potencia máxima",
+      "cost": "Costo"
+    },
+    "filters": {
+      "labels": {
+        "connector": "Conector",
+        "vehicle": "Vehículo",
+        "statusSession": "Estado sesión",
+        "dateTimeStart": "Fecha inicio",
+        "hourStart": "Hora inicio",
+        "initialSoc": "SoC inicial",
+        "dateTimeEnd": "Fecha fin",
+        "hourEnd": "Hora fin",
+        "endSoc": "SoC final",
+        "energyDelivered": "Energía entregada",
+        "sessionDuration": "Tiempo sesión",
+        "user": "Usuario",
+        "rfidUsed": "RFID",
+        "assignedDriver": "Conductor",
+        "min_power": "Potencia mínima",
+        "max_power": "Potencia máxima",
+        "cost": "Costo"
+      }
+    }
+  },
+  "chargerSessionSite": {
+    "viewsTable": {
+      "emptyState": {
+        "message": "Realiza tu primera carga para visualizar los datos"
+      }
+    },
+    "tableHeaders": {
+      "chargerNameId": "OCPP ID",
+      "connector": "Conector",
+      "site": "Sitio",
+      "licensePlate": "Patente",
+      "nameVehicle": "Nombre vehículo",
+      "initialDate": "Fecha inicio",
+      "hourStart": "Hora inicio",
+      "initialSoc": "SoC inicio",
+      "endDate": "Fecha fin",
+      "hourEnd": "Hora fin",
+      "endSoc": "SoC fin",
+      "energyDelivered": "Energía entregada",
+      "timeSession": "Tiempo sesión",
+      "users": "Usuarios",
+      "minPower": "Potencia mínima registrada",
+      "maxPower": "Potencia máxima registrada",
+      "rfid": "RFID",
+      "cost": "Costo",
+      "driver": "Conductor",
+      "startMeter": "Inicio medidor",
+      "endMeter": "Fin medidor"
+    },
+    "filters": {
+      "labels": {
+        "chargerNameId": "OCPP ID",
+        "connector": "Conector",
+        "site": "Sitio",
+        "licensePlate": "Patente",
+        "nameVehicle": "Nombre vehículo",
+        "initialDate": "Fecha inicio",
+        "hourStart": "Hora inicio",
+        "initialSoc": "SoC inicio",
+        "endDate": "Fecha fin",
+        "hourEnd": "Hora fin",
+        "endSoc": "SoC fin",
+        "energyDelivered": "Energía entregada",
+        "timeSession": "Tiempo sesión",
+        "users": "Usuarios",
+        "minPower": "Potencia mínima registrada",
+        "maxPower": "Potencia máxima registrada",
+        "rfid": "RFID",
+        "vin": "VIN",
+        "evccid": "EVCCID",
+        "cost": "Costo",
+        "driver": "Conductor",
+        "startMeter": "Inicio medidor",
+        "endMeter": "Fin medidor"
+      }
+    }
+  },
+  "chargerLive": {
+    "connectors": {
+      "table": {
+        "name": "Nombre",
+        "connectorNumber": "N° Conector",
+        "status": "Estado",
+        "vehicle": "Vehículo",
+        "socInProgress": "SOC en curso",
+        "powerInProgress": "Potencia en curso",
+        "emptyMessage": "No hay conectores disponibles"
+      },
+      "gauge": {
+        "title": "Potencia en uso",
+        "subtitle": "vs la potencia máxima disponible",
+        "of": "de"
+      },
+      "names": {
+        "connector1": "Conector 1",
+        "connector2": "Conector 2",
+        "connector3": "Conector 3",
+        "connector4": "Conector 4"
+      }
+    },
+    "charts": {
+      "energyDelivered": "Energía entregada",
+      "connectorSelector": {
+        "placeholder": "Conectores",
+        "selectAll": "Todos los conectores"
+      },
+      "alarms": {
+        "title": "Alarmas",
+        "restarts": "Reinicios",
+        "stationsFaulted": "Cargadores con falla",
+        "connectorsFaulted": "Conectores con falla"
+      },
+      "chargingSessions": "Sesiones de carga",
+      "sessions": "Sesiones",
+      "totalSessions": "Total de sesiones",
+      "powerCurve": "Curva de potencia",
+      "maxPower": "Potencia máxima",
+      "powerInUse": "Potencia en uso",
+      "powerAxisTitle": "Potencia (kW)",
+      "sessionsAxisTitle": "#",
+      "sessionsSeriesName": "Sesiones",
+      "energyVariables": "Variables energéticas",
+      "noDataForConnector": "No hay datos disponibles para {{connectorName}}",
+      "noData": "Sin datos",
+      "simulateNoData": "Simular sin datos",
+      "dateRangeTooltip": "Puedes seleccionar hasta 3 días de información para este gráfico",
+      "errors": "Errores",
+      "resets": "Reinicios",
+      "series": {
+        "powerA": "Potencia A (kW)",
+        "powerB": "Potencia B (kW)",
+        "sessions": "Sesiones"
+      },
+      "comparisons": {
+        "inPeriod": "en el periodo",
+        "vsLastMonth": "vs mes anterior",
+        "vsLastWeek": "vs semana pasada",
+        "vsPreviousPeriod": "vs periodo anterior",
+        "lastYear": "año pasado"
+      }
+    },
+    "transactions": {
+      "chargingStarted": "Carga iniciada",
+      "available": "Disponible",
+      "chargingStopped": "Carga detenida",
+      "chargingFailed": "Carga con fallas",
+      "chargingCompleted": "Carga completada",
+      "chargingPaused": "Carga pausada"
+    }
+  },
+  "shared": {
+    "charts": {
+      "variables": {
+        "temperature": "Temperatura",
+        "power": "Potencia",
+        "soc": "SoC",
+        "current": "Corriente",
+        "voltage": "Voltaje",
+        "energy": "Energía"
+      }
+    }
+  },
+  "header": {
+    "userProfile": "Perfil de Usuario",
+    "notifications": "Notificaciones",
+    "newNotifications": "nuevas",
+    "seeAllNotifications": "Ver todas las notificaciones",
+    "subsidiarySelector": {
+      "placeholder": "Selecciona una empresa"
+    },
+    "siteSelector": {
+      "placeholder": "Selecciona un sitio",
+      "selectAll": "Seleccionar todos",
+      "applyButton": "Aplicar"
+    },
+    "profileMenu": {
+      "myProfile": {
+        "title": "Mi Perfil",
+        "subtitle": "Configuración de Cuenta"
+      },
+      "myInbox": {
+        "title": "Mi Bandeja de Entrada",
+        "subtitle": "Mensajes y Correo Electrónico"
+      },
+      "myTasks": {
+        "title": "Mis Tareas",
+        "subtitle": "Tareas Pendientes y Diarias"
+      }
+    },
+    "userInfo": {
+      "defaultName": "Usuario",
+      "defaultRole": "Administrador",
+      "defaultEmail": "usuario@dhemax.com"
+    },
+    "logoutDialog": {
+      "title": "Confirmar cierre de sesión",
+      "text": "¿Estás seguro de que quieres cerrar sesión?",
+      "confirm": "Sí, cerrar sesión",
+      "cancel": "Cancelar"
+    }
+  },
+  "profile": {
+    "title": "Mi Perfil",
+    "breadcrumb": "Mi perfil",
+    "greeting": "¡Hola",
+    "tabs": {
+      "myProfile": "Mi perfil"
+    },
+    "sections": {
+      "user": "Usuario"
+    },
+    "actions": {
+      "saving": "Guardando...",
+      "changing": "Cambiando...",
+      "updating": "Actualizando..."
+    },
+    "personalInfo": {
+      "title": "Datos personales",
+      "subtitle": "Actualiza tu nombre",
+      "username": "Nombre de usuario",
+      "role": "Rol",
+      "company": "Empresa",
+      "firstName": "Nombre",
+      "lastName": "Apellidos",
+      "email": "Correo electrónico"
+    },
+    "errors": {
+      "firstNameRequired": "El nombre es obligatorio.",
+      "firstNameMinLength": "El nombre debe tener al menos {{min}} caracteres.",
+      "lastNameRequired": "Los apellidos son obligatorios.",
+      "lastNameMinLength": "Los apellidos deben tener al menos {{min}} caracteres.",
+      "emailRequired": "El correo electrónico es obligatorio.",
+      "emailInvalid": "Introduce un correo electrónico válido.",
+      "emailTooLong": "El correo electrónico es demasiado largo (máximo 254 caracteres).",
+      "emailInvalidFormat": "El formato del correo electrónico no es válido.",
+      "emailWithSpaces": "El correo electrónico no puede contener espacios.",
+      "emailConsecutiveDots": "El correo electrónico no puede tener puntos consecutivos.",
+      "passwordMinLength": "Debe tener al menos 8 caracteres",
+      "passwordPattern": "Debe incluir al menos un número y un símbolo",
+      "passwordMismatch": "Las contraseñas no coinciden.",
+      "confirmPasswordRequired": "La confirmación de contraseña es obligatoria",
+      "currentPasswordRequired": "La contraseña actual es obligatoria",
+      "newPasswordRequired": "La nueva contraseña es obligatoria",
+      "invalidCurrentPassword": "Contraseña incorrecta.",
+      "languageUpdateFailed": "Error al cambiar idioma",
+      "languageUpdateFailedText": "No se pudo actualizar el idioma. Inténtalo de nuevo.",
+      "saveError": "Error al guardar",
+      "saveErrorText": "No se pudo actualizar tu información. Por favor, inténtalo de nuevo.",
+      "passwordChangeError": "Error al cambiar contraseña",
+      "passwordChangeErrorText": "Verifica que tu contraseña actual sea correcta e inténtalo de nuevo.",
+      "noPermission": "No tienes permiso para realizar esta acción",
+      "noPermissionRestart": "No tienes permiso para ejecutar el comando de reinicio",
+      "validationFallback": "Error de validación",
+      "saveInfo": "Error al guardar la información"
+    },
+    "hints": {
+      "validatingPassword": "Verificando contraseña..."
+    },
+    "confirmations": {
+      "saveProfile": {
+        "title": "¿Confirmar cambios?",
+        "text": "Se actualizará tu información personal."
+      },
+      "changePasswordConfirm": {
+        "title": "¿Estás seguro que quieres cambiar la contraseña?",
+        "text": "Esta acción no se puede deshacer.",
+        "confirm": "Cambiar"
+      },
+      "changePassword": {
+        "title": "¿Estás seguro que quieres cambiar la contraseña?",
+        "text": "Esta acción no se puede deshacer.",
+        "confirm": "Cambiar"
+      },
+      "changeLanguage": {
+        "title": "¿Estás seguro que quieres cambiar el idioma?",
+        "text": "",
+        "confirm": "Cambiar"
+      },
+      "logout": {
+        "title": "¿Cerrar sesión?",
+        "text": "¿Estás seguro de que deseas cerrar tu sesión?",
+        "confirm": "Cerrar sesión"
+      }
+    },
+    "success": {
+      "languageUpdated": "¡Idioma actualizado!",
+      "languageUpdatedText": "El idioma de la aplicación ha sido cambiado.",
+      "languageChanged": "Se ha cambiado correctamente el idioma",
+      "profileUpdated": "¡Perfil actualizado!",
+      "profileUpdatedText": "Tu información personal ha sido guardada correctamente.",
+      "passwordUpdated": "¡Contraseña actualizada!",
+      "passwordUpdatedText": "Tu contraseña ha sido cambiada correctamente.",
+      "passwordChanged": "Se ha cambiado correctamente la contraseña",
+      "logoutSuccess": "¡Sesión cerrada!",
+      "logoutSuccessText": "Has cerrado sesión correctamente."
+    },
+    "changePassword": {
+      "title": "Cambio de contraseña",
+      "currentPassword": "Contraseña actual",
+      "newPassword": "Nueva contraseña",
+      "confirmNewPassword": "Confirmar nueva contraseña",
+      "hint": "La contraseña debe tener al menos 8 caracteres, un número y un símbolo."
+    },
+    "language": {
+      "title": "Cambio de idioma",
+      "label": "Idioma"
+    },
+    "languageSelector": {
+      "currentLanguage": "Idioma actual",
+      "alreadySelected": "Ya tienes este idioma seleccionado."
+    },
+    "logout": {
+      "title": "Cierre de sesión",
+      "subtitle": "Cerrar tu sesión actual",
+      "button": "Cerrar sesión"
+    },
+    "genericError": "Ha ocurrido un error. Intenta nuevamente.",
+    "languages": {
+      "english": "Inglés",
+      "spanish": "Español"
+    }
+  },
+  "users": {
+    "messages": {
+      "deleteSuccessTitle": "Éxito",
+      "deleteSuccessText": "Usuario eliminado exitosamente",
+      "deleteErrorTitle": "Error",
+      "deleteErrorText": "Error al eliminar el usuario",
+      "loadError": "Error al cargar usuarios"
+    }
+  },
+  "configurationCharger": {
+    "readonly": "Solo lectura - No editable",
+    "tabs": {
+      "profile": "Perfil",
+      "ocpp": "OCPP",
+      "connectors": "Conectores"
+    },
+    "headers": {
+      "nameOcpp": "Nombre",
+      "valueOcpp": "Valor"
+    },
+    "sync": {
+      "lastSync": "Última sincronización",
+      "unSync": "Sin sincronizar",
+      "buttonGet": "Get configuration",
+      "buttonSet": "Set configuration"
+    },
+    "messages": {
+      "saveSuccess": "Se han guardado correctamente los cambios",
+      "saveError": "Error al guardar los cambios - Por favor vuelve a intentarlo",
+      "configFetchedSuccess": "Configuraciones obtenidas correctamente",
+      "noChangesToSave": "No hay cambios para guardar",
+      "noChargerSelected": "No hay cargador seleccionado",
+      "connectorNotFound": "No se encontró el conector a eliminar",
+      "connectorInvalidIds": "El conector no tiene IDs válidos para eliminar",
+      "connectorDeleted": "Conector eliminado correctamente"
+    },
+    "connectors": {
+      "columns": {
+        "name": "Nombre del conector",
+        "id": "ID",
+        "connectorNumber": "Número de conector",
+        "connectorType": "Tipo de conector",
+        "maxPower": "Potencia máxima",
+        "minPower": "Potencia mínima",
+        "maxCurrent": "Corriente máxima",
+        "maxVoltage": "Voltaje máximo",
+        "site": "Sitio"
+      },
+      "placeholders": {
+        "name": "Ej. Conector 1",
+        "id": "Ej. 58085699971111",
+        "connectorNumber": "Ej. 0001001",
+        "connectorType": "Selecciona un tipo",
+        "maxPower": "Ej. 2000 kW",
+        "minPower": "Ej. 20 kW",
+        "maxCurrent": "Ej. 500 A",
+        "maxVoltage": "Ej. 1000 V",
+        "site": "Selecciona un sitio"
+      },
+      "actions": {
+        "add": "Agregar otro conector"
+      },
+      "deleteConfirm": "Sí, eliminar",
+      "deleteCancel": "Cancelar",
+      "emptyMessage": "No hay conectores disponibles",
+      "errors": {
+        "nameRequired": "El nombre del conector es obligatorio",
+        "connectorTypeRequired": "El tipo de conector es obligatorio",
+        "maxPowerExceeded": "La potencia máxima no puede exceder 2000 kW",
+        "minPowerExceeded": "La potencia mínima no puede exceder 50 kW",
+        "maxCurrentInvalid": "La corriente máxima no puede exceder 1000 A",
+        "maxVoltageInvalid": "El voltaje máximo no puede exceder 1000 V"
+      }
+    },
+    "profile": {
+      "title": "Perfil del Cargador",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "messages": {
+        "sectionSaved": "La información de {{section}} se ha guardado correctamente",
+        "authenticationModeUpdated": "El modo de autenticación se ha actualizado correctamente"
+      },
+      "hints": {
+        "lastFirmwareUpdate": "Última actualización firmware {{date}}."
+      },
+      "sections": {
+        "identification": "Identificación",
+        "connectivity": "Conectividad y potencia",
+        "operation": "Operación y acceso",
+        "hardware": "Hardware",
+        "location": "Ubicación",
+        "statistics": "Estadísticas",
+        "advanced": "Configuración Avanzada"
+      },
+      "fields": {
+        "name": "Nombre",
+        "id": "ID",
+        "serialNumber": "Número de Serie",
+        "status": "Estado",
+        "manufacturer": "Fabricante",
+        "model": "Modelo",
+        "description": "Descripción",
+        "adminNote": "Nota Administrativa",
+        "firmware": "Versión de Firmware",
+        "ocppVersion": "Versión OCPP",
+        "maxPower": "Potencia Máxima",
+        "powerCurrent": "Potencia Actual",
+        "loadSpeed": "Velocidad de Carga",
+        "connectorTypes": "Tipos de Conectores",
+        "networkConnection": "Conexión de Red",
+        "connectionType": "Tipo de Conexión",
+        "supportedProtocols": "Protocolos Soportados",
+        "site": "Sitio",
+        "address": "Dirección",
+        "group": "Grupo",
+        "accessType": "Tipo de Acceso",
+        "smartChargingCompatible": "Compatible con Carga Inteligente",
+        "authenticationMethods": "Método de autenticación",
+        "authenticationMode": "Modo de autenticación",
+        "installationDate": "Fecha de Instalación",
+        "lastMaintenance": "Último Mantenimiento",
+        "warrantyExpiration": "Vencimiento de Garantía",
+        "calibrationDate": "Fecha de Calibración",
+        "lastHeartbeat": "Último Heartbeat",
+        "totalSessions": "Sesiones Totales",
+        "totalEnergy": "Energía Total",
+        "averageSessionTime": "Tiempo Promedio de Sesión",
+        "peakPowerUsage": "Uso Pico de Potencia",
+        "uptime": "Tiempo de Actividad",
+        "temperature": "Temperatura",
+        "creationDate": "Fecha de Creación",
+        "lastSessionDate": "Última Sesión",
+        "connectors": "Conectores",
+        "errors": "Errores",
+        "resets": "Reinicios"
+      },
+      "placeholders": {
+        "name": "Ingrese el nombre del cargador",
+        "serialNumber": "Número de serie del equipo",
+        "description": "Descripción detallada del cargador",
+        "adminNote": "Notas del administrador",
+        "selectManufacturer": "Seleccione un fabricante",
+        "selectModel": "Seleccione un modelo",
+        "selectFirmware": "Seleccione una versión de firmware"
+      },
+      "validation": {
+        "required": "Este campo es obligatorio",
+        "invalidFormat": "Formato inválido"
+      },
+      "noChargerSelected": "No hay ningún cargador seleccionado"
+    }
+  },
+  "reporting": {
+    "views": {
+      "overview": {
+        "title": "Reportería",
+        "subtitle": "Selecciona una opción del menú desplegable superior para visualizar los datos.",
+        "noData": "No hay datos disponibles"
+      }
+    },
+    "reportTypes": {
+      "chargingSessions": "Sesiones de carga",
+      "totalConsumptionPerUser": "Consumo total por usuario",
+      "totalConsumptionPerSite": "Consumo total por sitio",
+      "ocppMessages": "Mensaje OCPP",
+      "alarmsByCharger": "Alarmas por cargador",
+      "alarmsByConnector": "Alarmas por conector",
+      "availability": "Disponibilidad",
+      "userLogs": "Logs de usuario",
+      "energyVariables": "Variables energéticas",
+      "uptime": "Uptime"
+    },
+    "filters": {
+      "reportType": "Selecciona el reporte que deseas descargar",
+      "selectReport": "Selecciona un reporte",
+      "charger": "Cargador",
+      "selectCharger": "Selecciona el cargador",
+      "selectSite": "Selecciona el sitio",
+      "date": "Fecha",
+      "dateTooltip": "Puedes exportar hasta un día de información para este reporte",
+      "dateTooltipEnergyVariables": "Puedes exportar hasta 3 días de información para este reporte",
+      "customizeReport": "Personalizar reporte",
+      "customizeReportSubtitle": "Selecciona las columnas y los campos de datos que deseas visualizar",
+      "searchColumnLabel": "Buscar columnas:",
+      "searchColumnPlaceholder": "Nombre dato/columna",
+      "dateStart": "Fecha inicio",
+      "dateEnd": "Fecha fin",
+      "timeStart": "Hora inicio",
+      "timeEnd": "Hora fin",
+      "uptimeValue": "Valor de Uptime",
+      "selectMessageType": "Seleccionar tipo de mensaje",
+      "selectOrigin": "Seleccionar origen"
+    },
+    "ocpp": {
+      "columns": {
+        "date": "Fecha",
+        "time": "Hora",
+        "messageType": "Tipo de mensaje",
+        "origin": "Origen",
+        "rawData": "RAW Data",
+        "charger": "OCPP ID"
+      },
+      "filters": {
+        "labels": {
+          "date": "Fecha",
+          "time": "Hora",
+          "messageType": "Tipo de mensaje",
+          "origin": "Origen",
+          "rawData": "RAW Data",
+          "charger": "OCPP ID"
+        }
+      },
+      "accions": {
+        "log": "Copiar log"
+      },
+      "logCopySuccess": "Log copiado al portapapeles",
+      "logCopyError": "Error al copiar el log"
+    },
+    "alarms": {
+      "columns": {
+        "date": "Fecha",
+        "alarmName": "Alarma",
+        "errorCode": "Código de error",
+        "code": "Código",
+        "chargerId": "ID Cargador",
+        "manufacturerCode": "Código fabricante",
+        "manufacturerId": "ID fabricante",
+        "errorInfo": "Información del error",
+        "errorInfoShort": "Info Error",
+        "chargerName": "Nombre cargador",
+        "location": "Sitio",
+        "chargerAlias": "Alias cargador",
+        "connector": "Conector",
+        "updatedAt": "Fecha actualización"
+      },
+      "filters": {
+        "labels": {
+          "date": "Fecha",
+          "updatedAt": "Fecha actualización",
+          "alarmName": "Alarma",
+          "errorCode": "Código de error",
+          "chargerId": "ID Cargador",
+          "manufacturerCode": "Código fabricante",
+          "manufacturerId": "ID fabricante",
+          "errorInfo": "Información del error",
+          "chargerName": "Nombre cargador",
+          "location": "Ubicación",
+          "chargerAlias": "Alias cargador",
+          "connector": "Conector"
+        }
+      }
+    },
+    "chargingSessions": {
+      "columns": {
+        "statusSession": "Estado sesión",
+        "dateTimeStart": "Fecha inicio",
+        "timeStart": "Hora inicio",
+        "dateTimeEnd": "Fecha fin",
+        "timeEnd": "Hora fin",
+        "energyDelivered": "Energía entregada",
+        "sessionDuration": "Tiempo sesión",
+        "chargerId": "Cargador / ID",
+        "connector": "Número conector",
+        "connectorName": "Conector",
+        "driver": "Conductor",
+        "assignedDriver": "Conductor",
+        "rfid": "RFID",
+        "rfidUsed": "RFID",
+        "rfidCode": "Código RFID",
+        "manufacturer": "Fabricante",
+        "model": "Modelo",
+        "connectorType": "Tipo de conector",
+        "initialSoc": "Inicio SoC",
+        "endSoc": "Fin SoC",
+        "finalKwh": "Fin kWh",
+        "minPower": "Potencia mínima registrada",
+        "min_power": "Potencia mínima registrada",
+        "maxPower": "Potencia máxima registrada",
+        "max_power": "Potencia máxima registrada",
+        "cost": "Costo",
+        "paymentStatus": "Estado de pago",
+        "maxSitePower": "Potencia máxima",
+        "site": "Sitio",
+        "address": "Dirección",
+        "city": "Ciudad",
+        "country": "País",
+        "vehicle": "Vehículo",
+        "licensePlate": "Patente",
+        "vin": "VIN",
+        "evccid": "EVCCID"
+      },
+      "filters": {
+        "labels": {
+          "statusSession": "Estado sesión",
+          "dateTimeStart": "Fecha inicio",
+          "timeStart": "Hora inicio",
+          "dateTimeEnd": "Fecha fin",
+          "timeEnd": "Hora fin",
+          "energyDelivered": "Energía entregada",
+          "sessionDuration": "Tiempo sesión",
+          "chargerId": "Cargador / ID",
+          "connector": "Número conector",
+          "connectorName": "Conector",
+          "driver": "Conductor",
+          "assignedDriver": "Conductor",
+          "rfid": "RFID",
+          "rfidUsed": "RFID",
+          "rfidCode": "Código RFID",
+          "manufacturer": "Fabricante",
+          "model": "Modelo",
+          "connectorType": "Tipo de conector",
+          "initialSoc": "Inicio SoC",
+          "endSoc": "Fin SoC",
+          "finalKwh": "Fin kWh",
+          "minPower": "Potencia mínima registrada",
+          "min_power": "Potencia mínima registrada",
+          "maxPower": "Potencia máxima registrada",
+          "max_power": "Potencia máxima registrada",
+          "cost": "Costo",
+          "paymentStatus": "Estado de pago",
+          "maxSitePower": "Potencia máxima",
+          "site": "Sitio",
+          "address": "Dirección",
+          "city": "Ciudad",
+          "country": "País",
+          "vehicle": "Vehículo",
+          "licensePlate": "Patente",
+          "vin": "VIN",
+          "evccid": "EVCCID"
+        }
+      },
+      "errors": {
+        "fetchError": "No se encontraron sesiones de carga en el rango de fechas seleccionado",
+        "loadError": "Error al cargar las sesiones de carga"
+      }
+    },
+    "totalConsumptionPerUser": {
+      "columns": {
+        "user": "Usuario",
+        "totalSessions": "N° de cargas",
+        "energyDelivered": "Energía (kWh)",
+        "totalTime": "Tiempo total",
+        "totalCost": "Costo total"
+      },
+      "filters": {
+        "labels": {
+          "user": "Usuario",
+          "totalSessions": "N° de cargas",
+          "energyDelivered": "Energía (kWh)",
+          "totalTime": "Tiempo total",
+          "totalCost": "Costo total"
+        }
+      }
+    },
+    "totalConsumptionPerSite": {
+      "columns": {
+        "site": "Sitio",
+        "totalSessions": "N° de cargas",
+        "energyDelivered": "Energía (kWh)",
+        "totalTime": "Tiempo total",
+        "totalCost": "Costo total"
+      },
+      "filters": {
+        "labels": {
+          "site": "Sitio",
+          "totalSessions": "N° de cargas",
+          "energyDelivered": "Energía (kWh)",
+          "totalTime": "Tiempo total",
+          "totalCost": "Costo total"
+        },
+        "placeholders": {
+          "searchSite": "Buscar por nombre de sitio...",
+          "minimum": "Mínimo",
+          "maximum": "Máximo",
+          "from": "Desde",
+          "to": "Hasta"
+        }
+      }
+    },
+    "energyVariables": {
+      "columns": {
+        "date": "Fecha",
+        "connector": "Conector",
+        "connectorNumber": "Nº de conector",
+        "current": "Corriente",
+        "energy": "Energía",
+        "power": "Potencia",
+        "voltage": "Voltaje",
+        "soc": "SoC",
+        "temperature": "Temperatura",
+        "timestamp": "Fecha/Hora",
+        "connectorId": "ID Conector",
+        "variableType": "Tipo de Variable",
+        "value": "Valor",
+        "unit": "Unidad"
+      },
+      "filters": {
+        "labels": {
+          "date": "Fecha",
+          "connector": "Conector",
+          "connectorNumber": "Nº de conector",
+          "current": "Corriente",
+          "energy": "Energía",
+          "power": "Potencia",
+          "voltage": "Voltaje",
+          "soc": "SoC",
+          "temperature": "Temperatura"
+        }
+      }
+    },
+    "userLogs": {
+      "columns": {
+        "date": "Fecha",
+        "user": "Usuario",
+        "charger": "Cargador",
+        "log": "Log",
+        "detail": "Detalle"
+      },
+      "filters": {
+        "labels": {
+          "date": "Fecha",
+          "user": "Usuario",
+          "charger": "Cargador",
+          "log": "Log",
+          "detail": "Detalle"
+        }
+      }
+    },
+    "uptime": {
+      "columns": {
+        "chargerId": "ID Cargador",
+        "date": "Fecha",
+        "time": "Tiempo",
+        "uptimePercent": "Uptime (%)",
+        "site": "Sitio"
+      },
+      "filters": {
+        "labels": {
+          "chargerId": "ID Cargador",
+          "date": "Fecha",
+          "time": "Tiempo",
+          "uptimePercent": "Uptime (%)",
+          "site": "Sitio"
+        }
+      }
+    },
+    "errors": {
+      "RESOURCE_NOT_FOUND": "No se encontraron datos",
+      "VALIDATION_ERROR": "Error de validación en los parámetros",
+      "UNAUTHORIZED": "No tiene autorización para ver este reporte",
+      "INTERNAL_ERROR": "Error interno del servidor",
+      "dataNotFound": "No se encontraron datos para el período seleccionado",
+      "fetchError": "Error al obtener datos del reporte",
+      "fetchErrorByUser": "Error al obtener datos de consumo por usuario",
+      "fetchErrorBySite": "Error al obtener datos de consumo por sitio"
+    }
+  },
+  "ERROR_PAGES": {
+    "500": {
+      "TITLE": "Error del servidor",
+      "MESSAGE": "Algo salió mal. Por favor, intenta nuevamente o vuelve al inicio.",
+      "RETRY_BUTTON": "Reintentar"
+    },
+    "GO_HOME": "Volver al inicio"
+  },
+  "ERROR_HANDLING_EXAMPLE": {
+    "TITLE": "Ejemplo de Manejo de Errores",
+    "SUBTITLE": "Componente de ejemplo para manejo de errores",
+    "DEMO_TITLE": "Demo",
+    "DEMO_DESCRIPTION": "Este es un componente de demostración para manejo de errores",
+    "EMAIL_LABEL": "Correo electrónico",
+    "NAME_LABEL": "Nombre",
+    "SUBMIT": "Enviar",
+    "FORM_VALID": "El formulario es válido",
+    "SIMULATE_401": "Simular 401",
+    "SIMULATE_403": "Simular 403",
+    "SIMULATE_404": "Simular 404",
+    "SIMULATE_409": "Simular 409",
+    "SIMULATE_500": "Simular 500"
+  },
+  "starter": "starter",
+  "entityManagement": {
+    "chargers": {
+      "navigation": {
+        "breadcrumb": {
+          "siteview": "siteview",
+          "chargers": "chargers"
+        },
+        "tabs": {
+          "chargersList": "chargersList",
+          "chargingSessions": "chargingSessions"
+        }
+      },
+      "chargingSessions": {
+        "subtitle": "Title"
+      },
+      "chargersList": {
+        "title": "Title",
+        "subtitle": "Title",
+        "buttons": {
+          "createCharger": "createCharger",
+          "filtersAndSort": "filtersAndSort"
+        },
+        "search": {
+          "placeholder": "Placeholder"
+        },
+        "emptyState": {
+          "message": "Message"
+        },
+        "tableHeaders": {
+          "status": "",
+          "chargerNameId": "chargerNameId",
+          "site": "site",
+          "connectors": "connectors",
+          "maxPower": "maxPower",
+          "alarms": "alarms",
+          "errors": "errors",
+          "resets": "resets",
+          "manufacturer": "manufacturer",
+          "model": "model",
+          "address": "address",
+          "group": "group",
+          "actions": ""
+        },
+        "sorting": {
+          "noOrder": "noOrder",
+          "ascending": "ascending",
+          "descending": "descending"
+        },
+        "filters": {
+          "title": "Title",
+          "labels": {
+            "chargerStatus": "Label",
+            "chargerNameId": "Label",
+            "site": "Label",
+            "connectors": "Label",
+            "maxPower": "Label",
+            "alarms": "Label",
+            "errors": "Error",
+            "resets": "Label",
+            "manufacturer": "Label",
+            "model": "Label",
+            "address": "Label",
+            "group": "Label"
+          }
+        },
+        "values": {
+          "connectorsCount": "connectorsCount",
+          "noData": "noData",
+          "empty": "empty",
+          "kilowatts": "kilowatts",
+          "unknown": "unknown",
+          "notAvailable": "notAvailable"
+        }
+      }
+    }
+  }
+}

@@ -9,7 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.evca.admin"
     },
     "android": {
       "adaptiveIcon": {
@@ -19,7 +20,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.evca.admin"
     },
     "web": {
       "output": "static",
@@ -38,11 +40,19 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "expo-secure-store",
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "BFF_URL": "https://emobility-bff.dev.dhemax.link",
+      "USER_MGMT_URL": "https://user-management.dev.dhemax.link/api",
+      "ENCRYPTION_KEY": "H6pLB2FvN0y9M/RoH08zrXZyJl/gN8PEZQdzVTlwxeBvulpY+5y18Jhi11cTpN8nQ1FE6yVcl5HngGMHB24Y8Q==",
+      "HMAC_SECRET": "JMzs4PDKaxdxS1ykXs5yyPWWI1mJ8OurUx43d4QHxygvRsfHltTJNa0pEe5lbW3rdJBISoQwyl+vOZt6uKo34A=="
     }
   }
 }
