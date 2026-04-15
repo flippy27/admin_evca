@@ -36,25 +36,25 @@ export default function DashboardScreen() {
     fetchSites(1, 100); // Fetch all sites for stats
   }, []);
 
-  // Calculate statistics from real data
-  const chargingCount = chargers.filter(
+  // Calculate statistics from real data (with defaults for loading state)
+  const chargingCount = chargers?.filter(
     (c) => c.status === "charging"
-  ).length;
-  const availableCount = chargers.filter(
+  ).length || 0;
+  const availableCount = chargers?.filter(
     (c) => c.status === "available"
-  ).length;
-  const faultedCount = chargers.filter(
+  ).length || 0;
+  const faultedCount = chargers?.filter(
     (c) => c.status === "faulted"
-  ).length;
-  const totalPower = chargers.reduce((sum, c) => sum + (c.power || 0), 0);
-  const activeSites = sites.filter((s) => s.status === "active").length;
+  ).length || 0;
+  const totalPower = chargers?.reduce((sum, c) => sum + (c.power || 0), 0) || 0;
+  const activeSites = sites?.filter((s) => s.status === "active").length || 0;
 
   const stats = {
-    totalChargers: chargers.length,
+    totalChargers: chargers?.length || 0,
     activeCharging: chargingCount,
     available: availableCount,
     faulted: faultedCount,
-    totalSites: sites.length,
+    totalSites: sites?.length || 0,
     activeSites,
     totalPower: totalPower.toFixed(1),
   };
