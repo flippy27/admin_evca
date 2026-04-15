@@ -83,10 +83,7 @@ export default function LoginScreen() {
       if (!success) {
         toast.show(t("auth.login.invalidCredentials"), "error");
       } else {
-        // Router will handle navigation via root layout redirect
-        //router.replace('/(app)');
-        //TODO: dis maybe wrong
-        router.replace("/chargers");
+        // Root layout will handle navigation to /(app)/dashboard when sessionState becomes 'authenticated'
       }
     } catch (error) {
       console.error("Login error:", error);
