@@ -9,8 +9,8 @@ const apiUrl = extra.apiUrl || process.env.API_BASE_URL || 'http://localhost:300
 export const ENV = {
   // Main API - can be configured via .env or app.config.js
   API_URL: apiUrl,
-  BFF_URL: apiUrl,  // For backward compatibility
-  USER_MGMT_URL: extra.userMgmtUrl || process.env.USER_MGMT_URL || 'http://localhost:3001/api',
+  BFF_URL: apiUrl,
+  USER_MGMT_URL: extra.userMgmtUrl || process.env.USER_MGMT_URL || apiUrl,
 
   // Security keys - should be stored securely
   ENCRYPTION_KEY: extra.encryptionKey || process.env.TOKEN_ENCRYPTION_KEY || 'H6pLB2FvN0y9M/RoH08zrXZyJl/gN8PEZQdzVTlwxeBvulpY+5y18Jhi11cTpN8nQ1FE6yVcl5HngGMHB24Y8Q==',
