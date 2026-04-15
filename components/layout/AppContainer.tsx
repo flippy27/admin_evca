@@ -4,7 +4,7 @@
  */
 
 import React, { ReactNode, useState } from "react";
-import { View, TouchableOpacity, Dimensions } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { Sidebar } from "./Sidebar";
 import { getThemeColors } from "@/theme";
 

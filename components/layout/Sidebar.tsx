@@ -16,7 +16,7 @@ import {
 import { Text } from "@/components/ui/Text";
 import { usePermissions } from "@/lib/hooks/use-permissions";
 import { useAuthStore } from "@/lib/stores/auth.store";
-import { AuthPermissionsEnum } from "@/lib/types/auth.types";
+import { AuthPermissionsEnum } from "@/lib/config/permissions";
 import { getThemeColors, spacing } from "@/theme";
 
 interface SidebarProps {
