@@ -7,7 +7,7 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-import { colors, spacing } from '../theme';
+import { colors, spacing } from '../../theme';
 import { Text } from './Text';
 import { Separator } from './Separator';
 

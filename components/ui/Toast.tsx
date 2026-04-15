@@ -8,7 +8,7 @@ import React, { useEffect } from 'react';
 import { Animated, View, TouchableOpacity } from 'react-native';
 import { create } from 'zustand';
 import { Alert } from './Alert';
-import { spacing, radius } from '../theme';
+import { spacing, radius } from '../../theme';
 
 export type ToastVariant = 'success' | 'error' | 'info' | 'warning' | 'default';
 
