@@ -85,7 +85,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const isActive = (route: string) => currentRoute === route;
 
   const handleNavPress = (route: string) => {
-    router.push(`/(app)/${route}` as any);
+    const externalRoutes = ["reporting", "credentials", "energy-resources"];
+    const path = externalRoutes.includes(route) ? `/${route}` : `/(app)/${route}`;
+    router.push(path as any);
     onClose();
   };
 
