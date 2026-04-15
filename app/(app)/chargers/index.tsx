@@ -14,6 +14,7 @@ import { Alert } from "@/components/ui/Alert";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent } from "@/components/ui/Card";
 import { SearchBar } from "@/components/ui/SearchBar";
+import { SkeletonCard } from "@/components/ui/Skeleton";
 import { Text } from "@/components/ui/Text";
 import { usePermissionGuard } from "@/lib/hooks/usePermissionGuard";
 import { useChargersStore } from "@/lib/stores/chargers.store";
@@ -239,13 +240,19 @@ export default function ChargersScreen() {
           />
         }
         ListEmptyComponent={
-          !chargersLoading ? (
+          chargersLoading ? (
+            <View style={{ paddingHorizontal: spacing.lg, paddingVertical: spacing.lg }}>
+              {Array.from({ length: 3 }).map((_, idx) => (
+                <SkeletonCard key={idx} lines={2} style={{ marginBottom: spacing.md }} />
+              ))}
+            </View>
+          ) : (
             <View style={{ alignItems: "center", paddingVertical: spacing.xl }}>
               <Text variant="body" style={{ color: colors.mutedForeground }}>
                 {searchText ? "No chargers found" : "No data. Pull to refresh."}
               </Text>
             </View>
-          ) : null
+          )
         }
         onEndReached={() => {
           if (page < totalPages) handleNextPage();

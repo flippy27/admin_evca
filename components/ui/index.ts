@@ -36,3 +36,5 @@ export { List } from './List';
 export { SearchBar } from './SearchBar';
 export { Pagination } from './Pagination';
 export { Chart } from './Chart';
+
+export { Skeleton, SkeletonCard } from './Skeleton';
