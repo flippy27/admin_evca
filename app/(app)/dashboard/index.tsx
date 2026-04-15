@@ -6,15 +6,22 @@ import { Ionicons } from "@expo/vector-icons";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Text } from "@/components/ui/Text";
+import { usePermissionGuard } from "@/lib/hooks/usePermissionGuard";
 import { useAuthStore } from "@/lib/stores/auth.store";
 import { useChargersStore } from "@/lib/stores/chargers.store";
 import { useSitesStore } from "@/lib/stores/sites.store";
+import { AuthPermissionsEnum } from "@/lib/types/auth.types";
 import { getThemeColors, spacing } from "@/theme";
 
 export default function DashboardScreen() {
   const { t } = useTranslation();
   const user = useAuthStore((state) => state.user);
   const colors = getThemeColors("light");
+
+  // Permission guard
+  const hasAccess = usePermissionGuard({
+    requiredPermissions: [AuthPermissionsEnum.DASHBOARD_VIEW],
+  });
 
   // Chargers store
   const {
@@ -29,6 +36,8 @@ export default function DashboardScreen() {
     sitesLoading,
     fetchSites,
   } = useSitesStore();
+
+  if (!hasAccess) return null;
 
   // Fetch data on mount
   useEffect(() => {
