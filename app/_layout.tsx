@@ -10,6 +10,7 @@ import { I18nextProvider } from "react-i18next";
 import "react-native-reanimated";
 
 import { LoadingOverlayComponent } from "@/components/ui/LoadingOverlay";
+import { OfflineIndicator } from "@/components/ui/OfflineIndicator";
 import { ToastContainer } from "@/components/ui/Toast";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import i18n from "@/lib/i18n";
@@ -76,6 +77,7 @@ export default function RootLayout() {
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(app)" options={{ headerShown: false }} />
         </Stack>
+        <OfflineIndicator />
         <ToastContainer />
         <LoadingOverlayComponent />
         <StatusBar style="auto" />

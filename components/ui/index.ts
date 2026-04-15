@@ -38,3 +38,5 @@ export { Pagination } from './Pagination';
 export { Chart } from './Chart';
 
 export { Skeleton, SkeletonCard } from './Skeleton';
+
+export { OfflineIndicator } from './OfflineIndicator';
