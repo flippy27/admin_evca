@@ -21,12 +21,16 @@ export default function AppLayout() {
         screenOptions={{
           headerShown: false,
           tabBarActiveTintColor: colors.primary,
-          tabBarInactiveTintColor: colors.muted,
+          tabBarInactiveTintColor: colors.mutedForeground,
           tabBarStyle: {
             backgroundColor: colors.card,
             borderTopColor: colors.border,
             paddingBottom: spacing.sm,
             height: 60,
+          },
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: "500",
           },
         }}
       >
