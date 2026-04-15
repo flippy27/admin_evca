@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { getThemeColors } from '@/theme';
+import { getThemeColors } from '../../../theme';
 
 export default function SiteDetailLayout() {
   const colors = getThemeColors('light');

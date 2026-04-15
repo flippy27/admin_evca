@@ -6,7 +6,7 @@
 import React from 'react';
 import { ActivityIndicator, Modal, View } from 'react-native';
 import { create } from 'zustand';
-import { getThemeColors } from '@/theme';
+import { getThemeColors } from '../theme';
 
 interface LoadingStore {
   isVisible: boolean;

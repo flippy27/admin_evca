@@ -1,9 +1,9 @@
 import { SafeAreaView, ScrollView, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { Text } from '@/components/ui/Text';
-import { Card, CardContent, CardHeader } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
-import { getThemeColors, spacing } from '@/theme';
+import { Text } from '../../../components/ui/Text';
+import { Card, CardContent, CardHeader } from '../../../components/ui/Card';
+import { Badge } from '../../../components/ui/Badge';
+import { getThemeColors, spacing } from '../../../theme';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function ChargerLiveScreen() {

@@ -1,6 +1,6 @@
 import { View } from 'react-native';
-import { Text } from '@/components/ui/Text';
-import { getThemeColors } from '@/theme';
+import { Text } from '../../components/ui/Text';
+import { getThemeColors } from '../../theme';
 
 export default function ChargersScreen() {
   const colors = getThemeColors('light');

@@ -5,12 +5,12 @@ import { StatusBar } from 'expo-status-bar';
 import { I18nextProvider } from 'react-i18next';
 import 'react-native-reanimated';
 
-import i18n from '@/lib/i18n';
-import { useAuthStore } from '@/lib/stores/auth.store';
-import { useAppStore } from '@/lib/stores/app.store';
-import { useColorScheme } from '@/hooks/use-color-scheme';
-import { ToastContainer } from '@/components/ui/Toast';
-import { LoadingOverlayComponent } from '@/components/ui/LoadingOverlay';
+import i18n from 'lib/i18n';
+import { useAuthStore } from 'lib/stores/auth.store';
+import { useAppStore } from 'lib/stores/app.store';
+import { useColorScheme } from 'hooks/use-color-scheme';
+import { ToastContainer } from 'components/ui/Toast';
+import { LoadingOverlayComponent } from 'components/ui/LoadingOverlay';
 
 export const unstable_settings = {
   anchor: '(tabs)',

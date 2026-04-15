@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { getThemeColors } from '@/theme';
+import { getThemeColors } from '../../../theme';
 
 export default function ChargerDetailLayout() {
   const colors = getThemeColors('light');

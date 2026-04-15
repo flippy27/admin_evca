@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { ScrollView, View, SafeAreaView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { Text } from '@/components/ui/Text';
-import { Card, CardContent } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
-import { useAuthStore } from '@/lib/stores/auth.store';
-import { getThemeColors, spacing } from '@/theme';
+import { Text } from '../../components/ui/Text';
+import { Card, CardContent } from '../../components/ui/Card';
+import { Badge } from '../../components/ui/Badge';
+import { useAuthStore } from '../../lib/stores/auth.store';
+import { getThemeColors, spacing } from '../../theme';
 
 export default function DashboardScreen() {
   const { t } = useTranslation();
