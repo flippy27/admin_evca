@@ -10,7 +10,7 @@ import { usePermissionGuard } from "@/lib/hooks/usePermissionGuard";
 import { useAuthStore } from "@/lib/stores/auth.store";
 import { useChargersStore } from "@/lib/stores/chargers.store";
 import { useSitesStore } from "@/lib/stores/sites.store";
-import { AuthPermissionsEnum } from "@/lib/types/auth.types";
+import { AuthPermissionsEnum } from "@/lib/config/permissions";
 import { getThemeColors, spacing } from "@/theme";
 
 export default function DashboardScreen() {

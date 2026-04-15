@@ -21,7 +21,7 @@ import { Text } from "@/components/ui/Text";
 import { usePermissionGuard } from "@/lib/hooks/usePermissionGuard";
 import { useApiErrorToast } from "@/lib/hooks/useApiErrorToast";
 import { useSitesStore } from "@/lib/stores/sites.store";
-import { AuthPermissionsEnum } from "@/lib/types/auth.types";
+import { AuthPermissionsEnum } from "@/lib/config/permissions";
 import { getThemeColors, spacing } from "@/theme";
 
 type SitesTab = "list" | "activity";

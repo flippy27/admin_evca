@@ -21,7 +21,7 @@ import { Text } from "@/components/ui/Text";
 import { usePermissionGuard } from "@/lib/hooks/usePermissionGuard";
 import { useApiErrorToast } from "@/lib/hooks/useApiErrorToast";
 import { useChargersStore } from "@/lib/stores/chargers.store";
-import { AuthPermissionsEnum } from "@/lib/types/auth.types";
+import { AuthPermissionsEnum } from "@/lib/config/permissions";
 import { getThemeColors, spacing } from "@/theme";
 
 type ChargersTab = "list" | "sessions";

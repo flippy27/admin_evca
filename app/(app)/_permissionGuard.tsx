@@ -1,4 +1,4 @@
-import { AuthPermissionsEnum } from "@/lib/types/auth.types";
+import { AuthPermissionsEnum } from "@/lib/config/permissions";
 
 /**
  * Permission config for (app) routes
