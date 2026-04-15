@@ -119,7 +119,7 @@ export default function LoginScreen() {
           e-Mobility Admin
         </Text>
         <Text variant="body" style={{ color: colors.mutedForeground }}>
-          {t("common.ui.pageTitles.login")}
+          {t("auth.login.loginTitle")}
         </Text>
       </View>
 
@@ -133,13 +133,13 @@ export default function LoginScreen() {
               required: t("common.ui.validation.errors.required"),
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: t("common.ui.validation.errors.invalidEmail"),
+                message: t("common.ui.validation.errors.strictEmail"),
               },
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label={t("common.ui.fields.email") || "Email"}
-                placeholder={t("common.ui.placeholders.emailPlaceholder") || "user@example.com"}
+                label={t("auth.login.username")}
+                placeholder={t("auth.login.emailPlaceholder")}
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
@@ -161,8 +161,8 @@ export default function LoginScreen() {
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label={t("common.ui.fields.password") || "Password"}
-                placeholder={t("common.ui.placeholders.passwordPlaceholder") || "••••••••"}
+                label={t("auth.login.password")}
+                placeholder={t("auth.login.passwordPlaceholder")}
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
@@ -180,7 +180,7 @@ export default function LoginScreen() {
             name="rememberMe"
             render={({ field: { onChange, value } }) => (
               <Switch
-                label={t("common.ui.actions.remember") || "Remember me"}
+                label={t("auth.login.rememberMe")}
                 value={value}
                 onValueChange={onChange}
                 disabled={isLoading}
@@ -192,7 +192,7 @@ export default function LoginScreen() {
           {/* Login button */}
           <Button
             label={
-              isLoading ? "" : t("common.ui.actions.signIn") || "Sign in"
+              isLoading ? "" : t("auth.login.signIn")
             }
             onPress={handleSubmit(onSubmit)}
             disabled={isLoading}
@@ -210,7 +210,7 @@ export default function LoginScreen() {
                 textAlign: "center",
               }}
             >
-              {t("common.ui.links.forgotPassword") || "Forgot password?"}
+              {t("auth.login.forgotPassword")}
             </Text>
           </TouchableOpacity>
         </View>
