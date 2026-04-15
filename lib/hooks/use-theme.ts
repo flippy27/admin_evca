@@ -3,9 +3,9 @@
  * Returns theme colors and utilities based on app settings
  */
 
+import { getThemeColors } from '@/theme';
 import { useColorScheme } from 'react-native';
 import { useAppStore } from '../stores/app.store';
-import { getThemeColors } from '../theme';
 
 export function useTheme() {
   const { colorScheme: setting } = useAppStore();

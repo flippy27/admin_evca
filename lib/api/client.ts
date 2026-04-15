@@ -6,9 +6,21 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { ENV } from '../config/env';
 import { ENDPOINTS, AUTH_WHITELIST } from './endpoints';
+import { logger } from '../services/logger';
+import { extractErrorMessage } from '../services/errorHandler';
 
 // In-flight refresh token to prevent concurrent refresh requests
 let refreshTokenPromise: Promise<string | null> | null = null;
+
+// Callback for handling 401 + refresh
+let onRefreshFailedCallback: (() => void) | null = null;
+
+/**
+ * Register callback when token refresh fails (logout)
+ */
+export function onRefreshFailed(callback: () => void) {
+  onRefreshFailedCallback = callback;
+}
 
 /**
  * Create an axios instance with base URL and interceptors
@@ -35,12 +47,20 @@ function createAuthenticatedClient(baseURL: string, isBff: boolean = false): Axi
     (error) => Promise.reject(error)
   );
 
-  // Response interceptor: handle 401 with refresh logic
+  // Response interceptor: handle errors + 401 refresh
   client.interceptors.response.use(
     (response) => response,
     async (error: AxiosError) => {
       const originalRequest = error.config as any;
+      const apiError = extractErrorMessage(error);
 
+      // Log all errors
+      logger.error(`API Error: ${error.config?.url}`, {
+        status: error.response?.status,
+        message: apiError.message,
+      });
+
+      // Handle 401: try to refresh token
       if (error.response?.status === 401 && !originalRequest._retried) {
         originalRequest._retried = true;
 
@@ -53,10 +73,12 @@ function createAuthenticatedClient(baseURL: string, isBff: boolean = false): Axi
 
         try {
           await refreshTokenPromise;
-          // Token has been refreshed, retry original request
+          // Token refreshed, retry original request
           return client(originalRequest);
         } catch (refreshError) {
-          // Refresh failed — logout handled by auth store
+          // Refresh failed — logout
+          logger.error('Token refresh failed');
+          onRefreshFailedCallback?.();
           return Promise.reject(refreshError);
         }
       }

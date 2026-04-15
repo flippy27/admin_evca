@@ -4,15 +4,15 @@
  * Each tab routes to a feature module
  */
 
-import { Tabs } from 'expo-router';
-import { usePermissions } from '../../lib/hooks/use-permissions';
-import { AuthPermissionsEnum } from '../../lib/config/permissions';
-import { Ionicons } from '@expo/vector-icons';
-import { getThemeColors, spacing } from '../../theme';
+import { AuthPermissionsEnum } from "@/lib/config/permissions";
+import { usePermissions } from "@/lib/hooks/use-permissions";
+import { getThemeColors, spacing } from "@/theme";
+import { Ionicons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
 
 export default function AppLayout() {
   const { hasPermission } = usePermissions();
-  const colors = getThemeColors('light');
+  const colors = getThemeColors("light");
 
   return (
     <Tabs
@@ -33,7 +33,7 @@ export default function AppLayout() {
         <Tabs.Screen
           name="dashboard"
           options={{
-            title: 'Dashboard',
+            title: "Dashboard",
             tabBarIcon: ({ color }) => (
               <Ionicons name="home" size={24} color={color} />
             ),
@@ -46,7 +46,7 @@ export default function AppLayout() {
         <Tabs.Screen
           name="chargers"
           options={{
-            title: 'Chargers',
+            title: "Chargers",
             tabBarIcon: ({ color }) => (
               <Ionicons name="flash-sharp" size={24} color={color} />
             ),
@@ -59,7 +59,7 @@ export default function AppLayout() {
         <Tabs.Screen
           name="sites"
           options={{
-            title: 'Sites',
+            title: "Sites",
             tabBarIcon: ({ color }) => (
               <Ionicons name="location" size={24} color={color} />
             ),
@@ -72,7 +72,7 @@ export default function AppLayout() {
         <Tabs.Screen
           name="reporting"
           options={{
-            title: 'Reports',
+            title: "Reports",
             tabBarIcon: ({ color }) => (
               <Ionicons name="bar-chart" size={24} color={color} />
             ),
@@ -85,7 +85,7 @@ export default function AppLayout() {
         <Tabs.Screen
           name="credentials"
           options={{
-            title: 'Credentials',
+            title: "Credentials",
             tabBarIcon: ({ color }) => (
               <Ionicons name="key" size={24} color={color} />
             ),
@@ -97,7 +97,7 @@ export default function AppLayout() {
       <Tabs.Screen
         name="energy-resources"
         options={{
-          title: 'Energy',
+          title: "Energy",
           tabBarIcon: ({ color }) => (
             <Ionicons name="leaf" size={24} color={color} />
           ),
@@ -108,7 +108,7 @@ export default function AppLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: "Profile",
           tabBarIcon: ({ color }) => (
             <Ionicons name="person" size={24} color={color} />
           ),

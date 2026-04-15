@@ -1,34 +1,38 @@
-import { Stack } from 'expo-router';
-import { getThemeColors } from '../../../../theme';
+import { getThemeColors } from "@/theme";
+import { Stack } from "expo-router";
 
 export default function ChargerDetailLayout() {
-  const colors = getThemeColors('light');
+  const colors = getThemeColors("light");
 
   return (
     <Stack
       screenOptions={{
         headerShown: true,
         headerTintColor: colors.primary,
-        headerStyle: { backgroundColor: colors.card, borderBottomColor: colors.border, borderBottomWidth: 1 },
+        headerStyle: {
+          backgroundColor: colors.card,
+          borderBottomColor: colors.border,
+          borderBottomWidth: 1,
+        },
         contentStyle: { backgroundColor: colors.background },
       }}
     >
       <Stack.Screen
         name="live"
         options={{
-          title: 'Live View',
+          title: "Live View",
         }}
       />
       <Stack.Screen
         name="history"
         options={{
-          title: 'History',
+          title: "History",
         }}
       />
       <Stack.Screen
         name="configuration"
         options={{
-          title: 'Configuration',
+          title: "Configuration",
         }}
       />
     </Stack>

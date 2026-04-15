@@ -4,9 +4,9 @@
  * Ported from ui-emobility-web EncryptionService
  */
 
-import { gcm } from '@noble/ciphers/aes';
-import { sha256 } from '@noble/hashes/sha256';
-import { hmac } from '@noble/hashes/hmac';
+import { gcm } from '@noble/ciphers/aes.js';
+import { hmac } from '@noble/hashes/hmac.js';
+import { sha256 } from '@noble/hashes/sha2.js';
 import { ENV } from '../config/env';
 import { EncryptedPayload, PermissionsData } from '../types/auth.types';
 

@@ -25,3 +25,14 @@ export { Toast, ToastContainer, useToast, useToastStore } from './Toast';
 export type { ToastVariant } from './Toast';
 
 export { LoadingOverlayComponent, useLoadingOverlay, useLoadingStore } from './LoadingOverlay';
+
+export { Modal } from './Modal';
+export { Tabs } from './Tabs';
+export { Table } from './Table';
+export { Select } from './Select';
+export { Checkbox } from './Checkbox';
+export { ErrorBoundary } from './ErrorBoundary';
+export { List } from './List';
+export { SearchBar } from './SearchBar';
+export { Pagination } from './Pagination';
+export { Chart } from './Chart';

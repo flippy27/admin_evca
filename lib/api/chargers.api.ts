@@ -1,57 +1,75 @@
 /**
  * Chargers API endpoints
- * (Stubs for now — will add real endpoints as we build)
+ * Full implementation: list, detail, live, history, configuration
  */
 
 import { bffClient } from './client';
+import {
+  Charger,
+  ChargersListResponse,
+  ChargerDetailResponse,
+  ChargerLiveResponse,
+  ChargerSessionsResponse,
+  OcppConfigResponse,
+  UpdateOcppConfigRequest,
+} from '../types/charger.types';
 
-// Placeholder types
-export interface Charger {
-  id: string;
-  name: string;
-  status: 'available' | 'charging' | 'faulted' | 'offline';
-  power: number;
-  connectors: Connector[];
-  siteId: string;
-}
-
-export interface Connector {
-  id: string;
-  status: 'available' | 'occupied' | 'faulted';
-  power: number;
-  sessionId?: string;
-}
-
-export interface ChargingSession {
-  id: string;
-  chargerId: string;
-  connectorId: string;
-  startTime: string;
-  endTime?: string;
-  energyDelivered: number;
-  status: 'active' | 'completed' | 'failed';
-}
+// Re-export types for backward compatibility
+export { Charger, Connector, ChargerSession } from '../types/charger.types';
 
 export const chargersApi = {
-  // List all chargers
-  list: () => bffClient.get<{ data: Charger[] }>('/chargers'),
+  /**
+   * GET /api/chargers - List with pagination + filters
+   */
+  list: (params?: {
+    page?: number;
+    pageSize?: number;
+    siteId?: string;
+    status?: string;
+    search?: string;
+  }) => bffClient.get<ChargersListResponse>('/api/chargers', { params }),
 
-  // Get charger detail
-  getDetail: (id: string) => bffClient.get<{ data: Charger }>(`/chargers/${id}`),
+  /**
+   * GET /api/chargers/:id - Detail
+   */
+  detail: (id: string) => bffClient.get<ChargerDetailResponse>(`/api/chargers/${id}`),
 
-  // Get charger live data
-  getLiveData: (id: string) => bffClient.get(`/chargers/${id}/live`),
+  /**
+   * GET /api/chargers/:id/live - Real-time data
+   */
+  live: (id: string) => bffClient.get<ChargerLiveResponse>(`/api/chargers/${id}/live`),
 
-  // Get charger sessions
-  getSessions: (id: string) => bffClient.get<{ data: ChargingSession[] }>(`/chargers/${id}/sessions`),
+  /**
+   * GET /api/chargers/:id/history - Sessions + history
+   */
+  history: (id: string, params?: { startDate?: string; endDate?: string; page?: number }) =>
+    bffClient.get<ChargerSessionsResponse>(`/api/chargers/${id}/history`, { params }),
 
-  // Get charger configuration
-  getConfiguration: (id: string) => bffClient.get(`/chargers/${id}/configuration`),
+  /**
+   * GET /api/chargers/:id/configuration - OCPP config
+   */
+  getConfiguration: (id: string) =>
+    bffClient.get<OcppConfigResponse>(`/api/chargers/${id}/configuration`),
 
-  // Update charger configuration
-  updateConfiguration: (id: string, config: any) => bffClient.post(`/chargers/${id}/configuration`, config),
+  /**
+   * POST /api/chargers/:id/configuration - Update OCPP config
+   */
+  updateConfiguration: (id: string, payload: UpdateOcppConfigRequest) =>
+    bffClient.post<OcppConfigResponse>(`/api/chargers/${id}/configuration`, payload),
 
-  // Send OCPP command
-  sendCommand: (id: string, command: string, payload: any) =>
-    bffClient.post(`/chargers/${id}/commands/${command}`, payload),
+  /**
+   * POST /api/chargers - Create
+   */
+  create: (payload: Partial<Charger>) => bffClient.post<ChargerDetailResponse>('/api/chargers', payload),
+
+  /**
+   * PUT /api/chargers/:id - Update
+   */
+  update: (id: string, payload: Partial<Charger>) =>
+    bffClient.put<ChargerDetailResponse>(`/api/chargers/${id}`, payload),
+
+  /**
+   * DELETE /api/chargers/:id - Delete
+   */
+  delete: (id: string) => bffClient.delete(`/api/chargers/${id}`),
 };

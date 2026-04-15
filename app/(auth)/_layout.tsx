@@ -3,11 +3,11 @@
  * Blank background, no header
  */
 
-import { Stack } from 'expo-router';
-import { getThemeColors } from '../../theme';
+import { getThemeColors } from "@/theme";
+import { Stack } from "expo-router";
 
 export default function AuthLayout() {
-  const colors = getThemeColors('light');
+  const colors = getThemeColors("light");
 
   return (
     <Stack

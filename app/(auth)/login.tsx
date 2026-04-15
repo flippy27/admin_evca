@@ -3,22 +3,22 @@
  * 2-step auth: step 1 gets tokens, step 2 decrypts permissions
  */
 
-import { useEffect, useState } from 'react';
-import { View, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useForm, Controller } from 'react-hook-form';
-import { useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
-import i18n from '../../lib/i18n';
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { ScrollView, TouchableOpacity, View } from "react-native";
+import i18n from "../../lib/i18n";
 
-import { useAuthStore } from '../../lib/stores/auth.store';
-import { useAppStore } from '../../lib/stores/app.store';
-import { useToast } from '../../components/ui/Toast';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
-import { Switch } from '../../components/ui/Switch';
-import { Text } from '../../components/ui/Text';
-import { Card } from '../../components/ui/Card';
-import { getThemeColors, spacing } from '../../theme';
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Input } from "@/components/ui/Input";
+import { Switch } from "@/components/ui/Switch";
+import { Text } from "@/components/ui/Text";
+import { useToast } from "@/components/ui/Toast";
+import { useAppStore } from "@/lib/stores/app.store";
+import { useAuthStore } from "@/lib/stores/auth.store";
+import { getThemeColors, spacing } from "@/theme";
 
 interface LoginForm {
   email: string;
@@ -36,7 +36,7 @@ export default function LoginScreen() {
   const setLanguage = useAppStore((state) => state.setLanguage);
 
   const [isLoading, setIsLoading] = useState(false);
-  const colors = getThemeColors('light');
+  const colors = getThemeColors("light");
 
   const {
     control,
@@ -45,8 +45,8 @@ export default function LoginScreen() {
     formState: { errors },
   } = useForm<LoginForm>({
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
       rememberMe: false,
     },
   });
@@ -55,23 +55,24 @@ export default function LoginScreen() {
   useEffect(() => {
     const loadRememberedEmail = async () => {
       try {
-        const AsyncStorage = await import('@react-native-async-storage/async-storage').then(
-          (m) => m.default
-        );
-        const saved = await AsyncStorage.getItem('auth_remember_email');
+        const AsyncStorage =
+          await import("@react-native-async-storage/async-storage").then(
+            (m) => m.default,
+          );
+        const saved = await AsyncStorage.getItem("auth_remember_email");
         if (saved) {
           // Can't directly set the form value here, it's handled by react-hook-form
           // For now, we'll skip this — a more robust approach would use a state variable
         }
       } catch (error) {
-        console.error('Failed to load remembered email:', error);
+        console.error("Failed to load remembered email:", error);
       }
     };
 
     loadRememberedEmail();
   }, []);
 
-  const emailField = watch('email');
+  const emailField = watch("email");
 
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
@@ -80,26 +81,29 @@ export default function LoginScreen() {
       const success = await login(data.email, data.password, data.rememberMe);
 
       if (!success) {
-        toast.show(t('auth.login.invalidCredentials'), 'error');
+        toast.show(t("auth.login.invalidCredentials"), "error");
       } else {
         // Router will handle navigation via root layout redirect
-        router.replace('/(app)');
+        //router.replace('/(app)');
+        //TODO: dis maybe wrong
+        router.replace("/chargers");
       }
     } catch (error) {
-      console.error('Login error:', error);
-      toast.show(t('common.ui.messages.error'), 'error');
+      console.error("Login error:", error);
+      toast.show(t("common.ui.messages.error"), "error");
     } finally {
       setIsLoading(false);
     }
   };
 
   const toggleLanguage = async () => {
-    const newLang = language === 'es' ? 'en' : 'es';
+    const newLang = language === "es" ? "en" : "es";
     await setLanguage(newLang);
     await i18n.changeLanguage(newLang);
   };
 
-  const isForgotPasswordEnabled = !!emailField && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField);
+  const isForgotPasswordEnabled =
+    !!emailField && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField);
 
   return (
     <ScrollView
@@ -107,15 +111,15 @@ export default function LoginScreen() {
         flexGrow: 1,
         backgroundColor: colors.background,
         padding: spacing.lg,
-        justifyContent: 'center',
+        justifyContent: "center",
       }}
     >
-      <View style={{ alignItems: 'center', marginBottom: spacing.xl }}>
+      <View style={{ alignItems: "center", marginBottom: spacing.xl }}>
         <Text variant="h1" weight="bold" style={{ marginBottom: spacing.md }}>
           e-Mobility Admin
         </Text>
         <Text variant="body" style={{ color: colors.mutedForeground }}>
-          {t('common.ui.pageTitles.login')}
+          {t("common.ui.pageTitles.login")}
         </Text>
       </View>
 
@@ -126,15 +130,15 @@ export default function LoginScreen() {
             control={control}
             name="email"
             rules={{
-              required: t('common.ui.validation.errors.required'),
+              required: t("common.ui.validation.errors.required"),
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: t('common.ui.validation.errors.invalidEmail'),
+                message: t("common.ui.validation.errors.invalidEmail"),
               },
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label={t('authentication.login.email') || 'Email'}
+                label={t("authentication.login.email") || "Email"}
                 placeholder="user@example.com"
                 onChangeText={onChange}
                 onBlur={onBlur}
@@ -153,11 +157,11 @@ export default function LoginScreen() {
             control={control}
             name="password"
             rules={{
-              required: t('common.ui.validation.errors.required'),
+              required: t("common.ui.validation.errors.required"),
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label={t('authentication.login.password') || 'Password'}
+                label={t("authentication.login.password") || "Password"}
                 placeholder="••••••••"
                 onChangeText={onChange}
                 onBlur={onBlur}
@@ -176,7 +180,7 @@ export default function LoginScreen() {
             name="rememberMe"
             render={({ field: { onChange, value } }) => (
               <Switch
-                label={t('authentication.login.rememberMe') || 'Remember me'}
+                label={t("authentication.login.rememberMe") || "Remember me"}
                 value={value}
                 onValueChange={onChange}
                 disabled={isLoading}
@@ -187,7 +191,9 @@ export default function LoginScreen() {
 
           {/* Login button */}
           <Button
-            label={isLoading ? '' : t('authentication.login.signIn') || 'Sign in'}
+            label={
+              isLoading ? "" : t("authentication.login.signIn") || "Sign in"
+            }
             onPress={handleSubmit(onSubmit)}
             disabled={isLoading}
             loading={isLoading}
@@ -201,10 +207,10 @@ export default function LoginScreen() {
               variant="caption"
               style={{
                 color: isForgotPasswordEnabled ? colors.primary : colors.muted,
-                textAlign: 'center',
+                textAlign: "center",
               }}
             >
-              {t('authentication.login.forgotPassword') || 'Forgot password?'}
+              {t("authentication.login.forgotPassword") || "Forgot password?"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -213,8 +219,8 @@ export default function LoginScreen() {
       {/* Language switcher */}
       <View
         style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
+          flexDirection: "row",
+          justifyContent: "center",
           gap: spacing.md,
           marginTop: spacing.xl,
         }}
@@ -225,14 +231,14 @@ export default function LoginScreen() {
             paddingHorizontal: spacing.md,
             paddingVertical: spacing.sm,
             borderRadius: 6,
-            backgroundColor: language === 'es' ? colors.primary : colors.muted,
+            backgroundColor: language === "es" ? colors.primary : colors.muted,
           }}
         >
           <Text
             variant="caption"
             weight="semibold"
             style={{
-              color: language === 'es' ? colors.background : colors.foreground,
+              color: language === "es" ? colors.background : colors.foreground,
             }}
           >
             ES
@@ -245,14 +251,14 @@ export default function LoginScreen() {
             paddingHorizontal: spacing.md,
             paddingVertical: spacing.sm,
             borderRadius: 6,
-            backgroundColor: language === 'en' ? colors.primary : colors.muted,
+            backgroundColor: language === "en" ? colors.primary : colors.muted,
           }}
         >
           <Text
             variant="caption"
             weight="semibold"
             style={{
-              color: language === 'en' ? colors.background : colors.foreground,
+              color: language === "en" ? colors.background : colors.foreground,
             }}
           >
             EN

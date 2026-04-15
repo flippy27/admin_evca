@@ -9,7 +9,8 @@ import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authApi } from '../api/auth.api';
 import { decryptAndValidate } from '../crypto/encryption';
-import { injectAuthToken, clearAuthToken } from '../api/client';
+import { injectAuthToken, clearAuthToken, onRefreshFailed } from '../api/client';
+import { logger } from '../services/logger';
 import {
   SessionState,
   ProcessedUserData,
@@ -280,3 +281,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     return Date.now() >= tokenTimestamp + refreshExpiresIn * 1000;
   },
 }));
+
+// Register callback for when token refresh fails (API client will call this)
+onRefreshFailed(() => {
+  logger.error('Token refresh failed in API interceptor — forcing logout');
+  useAuthStore.getState().logout();
+});

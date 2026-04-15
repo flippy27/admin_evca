@@ -5,6 +5,39 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "@/lib/*": [
+        "./lib/*"
+      ],
+      "@/lib/hooks/*": [
+        "./lib/hooks/*"
+      ],
+      "@/lib/stores/*": [
+        "./lib/stores/*"
+      ],
+      "@/lib/api/*": [
+        "./lib/api/*"
+      ],
+      "@/lib/config/*": [
+        "./lib/config/*"
+      ],
+      "@/lib/types/*": [
+        "./lib/types/*"
+      ],
+      "@/lib/crypto/*": [
+        "./lib/crypto/*"
+      ],
+      "@/lib/i18n/*": [
+        "./lib/i18n/*"
+      ],
+      "@/components/*": [
+        "./components/*"
+      ],
+      "@/theme": [
+        "./theme"
+      ],
+      "@/shared-types/*": [
+        "../shared-types/*"
       ]
     }
   },

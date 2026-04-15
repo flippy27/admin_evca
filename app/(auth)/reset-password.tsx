@@ -1,13 +1,25 @@
-import { View } from 'react-native';
-import { Text } from '../../components/ui/Text';
-import { getThemeColors } from '../../theme';
+import { Text } from "@/components/ui/Text";
+import { View } from "react-native";
+import { getThemeColors } from "../../theme";
 
 export default function ResetPasswordScreen() {
-  const colors = getThemeColors('light');
+  const colors = getThemeColors("light");
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center' }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: colors.background,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Text variant="h2">Reset Password</Text>
-      <Text variant="caption" style={{ color: colors.mutedForeground, marginTop: 8 }}>Coming soon...</Text>
+      <Text
+        variant="caption"
+        style={{ color: colors.mutedForeground, marginTop: 8 }}
+      >
+        Coming soon...
+      </Text>
     </View>
   );
 }

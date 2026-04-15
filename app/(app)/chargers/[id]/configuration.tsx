@@ -1,156 +1,190 @@
-import { SafeAreaView, ScrollView, View } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
-import { Text } from '../../../../components/ui/Text';
-import { Card, CardContent, CardHeader } from '../../../../components/ui/Card';
-import { Button } from '../../../../components/ui/Button';
-import { Input } from '../../../../components/ui/Input';
-import { Switch } from '../../../../components/ui/Switch';
-import { getThemeColors, spacing } from '../../../../theme';
+import { useLocalSearchParams } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { RefreshControl, SafeAreaView, ScrollView, View } from "react-native";
+
+import { Alert } from "@/components/ui/Alert";
+import { Button } from "@/components/ui/Button";
+import { Card, CardContent } from "@/components/ui/Card";
+import { Input } from "@/components/ui/Input";
+import {
+  LoadingOverlayComponent,
+  useLoadingOverlay,
+} from "@/components/ui/LoadingOverlay";
+import { Text } from "@/components/ui/Text";
+import { useToast } from "@/components/ui/Toast";
+import { useChargersStore } from "@/lib/stores/chargers.store";
+import { getThemeColors, spacing } from "@/theme";
 
 export default function ChargerConfigurationScreen() {
-  const { id } = useLocalSearchParams();
-  const colors = getThemeColors('light');
-  const [name, setName] = useState('Charger ' + id);
-  const [maxCurrent, setMaxCurrent] = useState('32');
-  const [enableRemote, setEnableRemote] = useState(true);
-  const [enableScheduling, setEnableScheduling] = useState(true);
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const colors = getThemeColors("light");
+  const { showToast } = useToast();
+  const { show: showLoading, hide: hideLoading } = useLoadingOverlay();
+
+  const {
+    selectedCharger,
+    config,
+    configLoading,
+    configError,
+    fetchChargerDetail,
+    fetchConfiguration,
+    updateConfiguration,
+    clearError,
+  } = useChargersStore();
+
+  const [formData, setFormData] = useState<Record<string, string>>({});
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (id) {
+      fetchChargerDetail(id);
+      fetchConfiguration(id);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (config) {
+      setFormData({
+        heartbeatInterval: String(config.heartbeatInterval),
+        meterInterval: String(config.meterInterval),
+        maxEnergy: String(config.maxEnergy || ""),
+        minEnergy: String(config.minEnergy || ""),
+      });
+    }
+  }, [config]);
+
+  const handleSave = async () => {
+    if (!id) return;
+
+    setIsSaving(true);
+    showLoading();
+
+    try {
+      await updateConfiguration(id, formData);
+      showToast("Configuration saved");
+    } catch (error) {
+      showToast("Failed to save configuration", "error");
+    } finally {
+      setIsSaving(false);
+      hideLoading();
+    }
+  };
+
+  if (!selectedCharger) {
+    return (
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: colors.background,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text>Loading...</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <ScrollView contentContainerStyle={{ padding: spacing.lg, gap: spacing.lg, paddingBottom: spacing.xl }}>
-        <Card>
-          <CardHeader>
-            <Text variant="h4" weight="bold">
-              Basic Settings
-            </Text>
-          </CardHeader>
-          <CardContent style={{ gap: spacing.md }}>
-            <View>
-              <Text variant="caption" style={{ color: colors.mutedForeground, marginBottom: spacing.sm }}>
-                Charger Name
-              </Text>
-              <Input
-                placeholder="Enter charger name"
-                value={name}
-                onChangeText={setName}
-              />
-            </View>
-
-            <View>
-              <Text variant="caption" style={{ color: colors.mutedForeground, marginBottom: spacing.sm }}>
-                Serial Number
-              </Text>
-              <Input
-                placeholder="Serial number"
-                value={'WNBS-2024-' + id}
-                editable={false}
-              />
-            </View>
-
-            <View>
-              <Text variant="caption" style={{ color: colors.mutedForeground, marginBottom: spacing.sm }}>
-                Firmware Version
-              </Text>
-              <Input
-                placeholder="Firmware version"
-                value="v4.2.1"
-                editable={false}
-              />
-            </View>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <Text variant="h4" weight="bold">
-              Power Settings
-            </Text>
-          </CardHeader>
-          <CardContent style={{ gap: spacing.md }}>
-            <View>
-              <Text variant="caption" style={{ color: colors.mutedForeground, marginBottom: spacing.sm }}>
-                Max Current (Amperes)
-              </Text>
-              <Input
-                placeholder="Max current"
-                value={maxCurrent}
-                onChangeText={setMaxCurrent}
-                keyboardType="numeric"
-              />
-            </View>
-
-            <View>
-              <Text variant="caption" style={{ color: colors.mutedForeground, marginBottom: spacing.sm }}>
-                Rated Power
-              </Text>
-              <Input
-                placeholder="Rated power"
-                value="22 kW"
-                editable={false}
-              />
-            </View>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <Text variant="h4" weight="bold">
-              Features
-            </Text>
-          </CardHeader>
-          <CardContent style={{ gap: spacing.md }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-              <View style={{ flex: 1 }}>
-                <Text variant="body" weight="bold">
-                  Remote Control
-                </Text>
-                <Text variant="caption" style={{ color: colors.mutedForeground }}>
-                  Allow remote start/stop
-                </Text>
-              </View>
-              <Switch
-                value={enableRemote}
-                onValueChange={setEnableRemote}
-              />
-            </View>
-
-            <View style={{ borderTopWidth: 1, borderTopColor: colors.border, paddingTop: spacing.md }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <View style={{ flex: 1 }}>
-                  <Text variant="body" weight="bold">
-                    Scheduling
-                  </Text>
-                  <Text variant="caption" style={{ color: colors.mutedForeground }}>
-                    Enable charging schedules
-                  </Text>
-                </View>
-                <Switch
-                  value={enableScheduling}
-                  onValueChange={setEnableScheduling}
-                />
-              </View>
-            </View>
-          </CardContent>
-        </Card>
-
-        <View style={{ gap: spacing.md }}>
-          <Button
-            label="Save Configuration"
-            variant="primary"
-            onPress={() => {
-              // TODO: save configuration
+      <ScrollView
+        contentContainerStyle={{ padding: spacing.lg, gap: spacing.lg }}
+        refreshControl={
+          <RefreshControl
+            refreshing={configLoading}
+            onRefresh={() => {
+              clearError("config");
+              fetchConfiguration(id!);
             }}
           />
-          <Button
-            label="Restart Charger"
-            variant="outline"
-            onPress={() => {
-              // TODO: restart charger
-            }}
-          />
+        }
+      >
+        {/* Header */}
+        <View>
+          <Text variant="h2" weight="bold">
+            {selectedCharger.name}
+          </Text>
+          <Text
+            variant="body"
+            style={{ color: colors.mutedForeground, marginTop: spacing.sm }}
+          >
+            OCPP Configuration
+          </Text>
         </View>
+
+        {configError && (
+          <Alert variant="destructive" title="Error" message={configError} />
+        )}
+
+        {/* Config Form */}
+        <Card>
+          <CardContent style={{ gap: spacing.lg }}>
+            <Text variant="h3" weight="bold">
+              Settings
+            </Text>
+
+            <Input
+              label="Heartbeat Interval (s)"
+              placeholder="60"
+              value={formData.heartbeatInterval}
+              onChangeText={(val) =>
+                setFormData({ ...formData, heartbeatInterval: val })
+              }
+              keyboardType="numeric"
+            />
+
+            <Input
+              label="Meter Interval (s)"
+              placeholder="30"
+              value={formData.meterInterval}
+              onChangeText={(val) =>
+                setFormData({ ...formData, meterInterval: val })
+              }
+              keyboardType="numeric"
+            />
+
+            <Input
+              label="Max Energy (kWh)"
+              placeholder="100"
+              value={formData.maxEnergy}
+              onChangeText={(val) =>
+                setFormData({ ...formData, maxEnergy: val })
+              }
+              keyboardType="numeric"
+            />
+
+            <Input
+              label="Min Energy (kWh)"
+              placeholder="10"
+              value={formData.minEnergy}
+              onChangeText={(val) =>
+                setFormData({ ...formData, minEnergy: val })
+              }
+              keyboardType="numeric"
+            />
+
+            {/* Save Button */}
+            <Button
+              label={isSaving ? "Saving..." : "Save Configuration"}
+              variant="default"
+              onPress={handleSave}
+              disabled={isSaving || configLoading}
+            />
+          </CardContent>
+        </Card>
+
+        {/* Info */}
+        <Card>
+          <CardContent>
+            <Text variant="caption" style={{ color: colors.mutedForeground }}>
+              OCPP (Open Charge Point Protocol) configuration. Changes apply on
+              next charger restart.
+            </Text>
+          </CardContent>
+        </Card>
       </ScrollView>
+
+      <LoadingOverlayComponent />
     </SafeAreaView>
   );
 }

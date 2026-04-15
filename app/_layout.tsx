@@ -1,19 +1,23 @@
-import { useEffect } from 'react';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack, useRouter, useSegments } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { I18nextProvider } from 'react-i18next';
-import 'react-native-reanimated';
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
+import { Stack, useRouter, useSegments } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
+import { I18nextProvider } from "react-i18next";
+import "react-native-reanimated";
 
-import i18n from './lib/i18n';
-import { useAuthStore } from './lib/stores/auth.store';
-import { useAppStore } from './lib/stores/app.store';
-import { useColorScheme } from './lib/hooks/use-color-scheme';
-import { ToastContainer } from './components/ui/Toast';
-import { LoadingOverlayComponent } from './components/ui/LoadingOverlay';
+import { LoadingOverlayComponent } from "@/components/ui/LoadingOverlay";
+import { ToastContainer } from "@/components/ui/Toast";
+import { useColorScheme } from "@/hooks/use-color-scheme";
+import i18n from "@/lib/i18n";
+import { useAppStore } from "@/lib/stores/app.store";
+import { useAuthStore } from "@/lib/stores/auth.store";
 
 export const unstable_settings = {
-  anchor: '(tabs)',
+  anchor: "(tabs)",
 };
 
 /**
@@ -41,28 +45,33 @@ export default function RootLayout() {
 
   // Redirect logic based on auth state
   useEffect(() => {
-    if (sessionState === 'restoring' || sessionState === 'idle') {
+    if (sessionState === "restoring" || sessionState === "idle") {
       return;
     }
 
-    const inAuthGroup = segments[0] === '(auth)';
-    const inAppGroup = segments[0] === '(app)';
+    const inAuthGroup = segments[0] === "(auth)";
+    const inAppGroup = segments[0] === "(app)";
 
-    if (sessionState === 'authenticated' && inAuthGroup) {
+    if (sessionState === "authenticated" && inAuthGroup) {
       // Authenticated but in auth screens → go to app
-      router.replace('/(app)');
-    } else if (sessionState !== 'authenticated' && inAppGroup) {
+      //TODO: FIX DIS SHAIT
+      router.replace("/chargers");
+    } else if (sessionState !== "authenticated" && inAppGroup) {
       // Not authenticated but in app screens → go to login
-      router.replace('/(auth)/login');
-    } else if (sessionState !== 'authenticated' && !inAuthGroup && !inAppGroup) {
+      router.replace("/(auth)/login");
+    } else if (
+      sessionState !== "authenticated" &&
+      !inAuthGroup &&
+      !inAppGroup
+    ) {
       // Not authenticated and not in a group → go to login
-      router.replace('/(auth)/login');
+      router.replace("/(auth)/login");
     }
   }, [sessionState, segments]);
 
   return (
     <I18nextProvider i18n={i18n}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(app)" options={{ headerShown: false }} />

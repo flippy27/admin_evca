@@ -1,450 +1,454 @@
-import React, { useState } from 'react';
 import {
-  ScrollView,
-  View,
-  SafeAreaView,
-  StyleSheet,
-  Switch as RNSwitch,
-} from 'react-native';
-import {
+  Alert,
+  Badge,
   Button,
   Card,
-  CardHeader,
   CardContent,
-  CardFooter,
+  Chart,
+  Checkbox,
+  Drawer,
+  ErrorBoundary,
   Input,
-  Badge,
-  Alert,
-  Switch,
+  LoadingOverlayComponent,
+  Modal,
+  Pagination,
+  SearchBar,
+  Select,
   Separator,
+  Switch,
+  Table,
+  Tabs,
   Text,
-  useToast,
-  useLoadingOverlay,
-} from '../../components/ui';
-import { colors, spacing } from '../../theme';
+  ToastContainer,
+  useToast
+} from "@/components/ui";
+import { getThemeColors, spacing } from "@/theme";
+import React, { useState } from "react";
+import {
+  Switch as RNSwitch,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
 
 export default function ComponentShowcase() {
   const [isDark, setIsDark] = useState(false);
+  const colors = getThemeColors(isDark ? "dark" : "light");
+
+  // Component states
   const [switchValue, setSwitchValue] = useState(false);
-  const [inputValue, setInputValue] = useState('');
-  const [inputError, setInputError] = useState('');
+  const [inputValue, setInputValue] = useState("");
+  const [checkboxValue, setCheckboxValue] = useState(false);
+  const [selectValue, setSelectValue] = useState("option1");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const { showToast } = useToast();
 
-  const themeColors = isDark ? colors.dark : colors.light;
+  const mockTableData = [
+    { id: "1", name: "Charger-001", status: "charging", power: 22.5 },
+    { id: "2", name: "Charger-002", status: "available", power: 0 },
+    { id: "3", name: "Charger-003", status: "faulted", power: 0 },
+  ];
 
-  const handleInputChange = (text: string) => {
-    setInputValue(text);
-    if (text.length < 3 && text.length > 0) {
-      setInputError('Mínimo 3 caracteres');
-    } else {
-      setInputError('');
-    }
-  };
+  const chartData = [
+    { label: "Mon", value: 45 },
+    { label: "Tue", value: 52 },
+    { label: "Wed", value: 48 },
+    { label: "Thu", value: 61 },
+    { label: "Fri", value: 55 },
+  ];
+
+  const selectOptions = [
+    { label: "Option 1", value: "option1" },
+    { label: "Option 2", value: "option2" },
+    { label: "Option 3", value: "option3" },
+  ];
+
+  const tabsData = [
+    {
+      label: "Tab 1",
+      key: "tab1",
+      content: (
+        <View style={{ padding: spacing.lg }}>
+          <Text>Content for tab 1</Text>
+        </View>
+      ),
+    },
+    {
+      label: "Tab 2",
+      key: "tab2",
+      content: (
+        <View style={{ padding: spacing.lg }}>
+          <Text>Content for tab 2</Text>
+        </View>
+      ),
+    },
+    {
+      label: "Tab 3",
+      key: "tab3",
+      content: (
+        <View style={{ padding: spacing.lg }}>
+          <Text>Content for tab 3</Text>
+        </View>
+      ),
+    },
+  ];
 
   return (
-    <SafeAreaView
-      style={[
-        styles.container,
-        {
-          backgroundColor: themeColors.background,
-        },
-      ]}
-    >
-      {/* Header */}
-      <View
+    <ErrorBoundary>
+      <SafeAreaView
         style={[
-          styles.header,
+          styles.container,
           {
-            backgroundColor: themeColors.card,
-            borderBottomColor: themeColors.border,
+            backgroundColor: colors.background,
           },
         ]}
       >
-        <Text variant="h2" isDark={isDark}>
-          Component Showcase
-        </Text>
-        <Text variant="caption" isDark={isDark} style={styles.subtitle}>
-          EVCA Admin - React Native Components
-        </Text>
-      </View>
+        {/* Header */}
+        <View
+          style={[
+            styles.header,
+            {
+              backgroundColor: colors.muted,
+              borderBottomColor: colors.border,
+            },
+          ]}
+        >
+          <Text variant="h2" weight="bold">
+            Component Showcase
+          </Text>
+          <Text
+            variant="caption"
+            style={{ color: colors.mutedForeground, marginTop: spacing.sm }}
+          >
+            EVCA Admin - React Native Components
+          </Text>
+        </View>
 
-      {/* Theme Toggle */}
-      <View
-        style={[
-          styles.themeToggle,
-          {
-            backgroundColor: themeColors.card,
-            borderColor: themeColors.border,
-          },
-        ]}
-      >
-        <Text isDark={isDark}>Dark Mode:</Text>
-        <RNSwitch value={isDark} onValueChange={setIsDark} />
-      </View>
+        {/* Theme Toggle */}
+        <View
+          style={[
+            styles.themeToggle,
+            {
+              backgroundColor: colors.muted,
+              borderColor: colors.border,
+            },
+          ]}
+        >
+          <Text>Dark Mode:</Text>
+          <RNSwitch value={isDark} onValueChange={setIsDark} />
+        </View>
 
-      {/* ScrollView with Components */}
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Buttons Section */}
-        <Text variant="h3" isDark={isDark} style={styles.sectionTitle}>
-          Buttons
-        </Text>
-        <Card isDark={isDark} style={styles.componentCard}>
-          <CardContent>
-            <View style={styles.buttonGrid}>
-              <Button
-                label="Primary"
-                variant="primary"
-                onPress={() => {}}
-                isDark={isDark}
-              />
-              <Button
-                label="Secondary"
-                variant="secondary"
-                onPress={() => {}}
-                isDark={isDark}
-              />
-            </View>
-            <View style={styles.buttonGrid}>
-              <Button
-                label="Outline"
-                variant="outline"
-                onPress={() => {}}
-                isDark={isDark}
-              />
-              <Button
-                label="Destructive"
-                variant="destructive"
-                onPress={() => {}}
-                isDark={isDark}
-              />
-            </View>
-            <View style={styles.buttonGrid}>
-              <Button
-                label="Ghost"
-                variant="ghost"
-                onPress={() => {}}
-                isDark={isDark}
-              />
-              <Button
-                label="Large Button"
-                variant="primary"
-                size="lg"
-                onPress={() => {}}
-                isDark={isDark}
-                fullWidth
-              />
-            </View>
-            <View style={styles.buttonGrid}>
-              <Button
-                label="Small"
-                variant="secondary"
-                size="sm"
-                onPress={() => {}}
-                isDark={isDark}
-              />
-              <Button
-                label="Disabled"
-                variant="primary"
-                onPress={() => {}}
-                isDark={isDark}
-                disabled
-              />
-            </View>
-          </CardContent>
-        </Card>
+        <ToastContainer />
+        <LoadingOverlayComponent />
 
-        <Separator isDark={isDark} />
-
-        {/* Badges Section */}
-        <Text variant="h3" isDark={isDark} style={styles.sectionTitle}>
-          Badges
-        </Text>
-        <Card isDark={isDark} style={styles.componentCard}>
-          <CardContent style={styles.badgeGrid}>
-            <Badge label="Default" isDark={isDark} />
-            <Badge label="Secondary" variant="secondary" isDark={isDark} />
-            <Badge label="Destructive" variant="destructive" isDark={isDark} />
-            <Badge label="Outline" variant="outline" isDark={isDark} />
-            <Badge label="Operador" isDark={isDark} />
-            <Badge label="Supervisor" variant="secondary" isDark={isDark} />
-          </CardContent>
-        </Card>
-
-        <Separator isDark={isDark} />
-
-        {/* Alerts Section */}
-        <Text variant="h3" isDark={isDark} style={styles.sectionTitle}>
-          Alerts
-        </Text>
-        <Card isDark={isDark} style={styles.componentCard}>
-          <CardContent style={styles.alertContainer}>
-            <Alert
-              title="Información"
-              message="Este es un mensaje de información para el usuario"
-              variant="info"
-              isDark={isDark}
-            />
-            <Alert
-              title="Éxito"
-              message="La operación se completó correctamente"
-              variant="success"
-              isDark={isDark}
-            />
-            <Alert
-              title="Error"
-              message="Ocurrió un error al procesar la solicitud"
-              variant="destructive"
-              isDark={isDark}
-            />
-            <Alert
-              message="Alerta por defecto sin título"
-              isDark={isDark}
-            />
-          </CardContent>
-        </Card>
-
-        <Separator isDark={isDark} />
-
-        {/* Input Section */}
-        <Text variant="h3" isDark={isDark} style={styles.sectionTitle}>
-          Input Fields
-        </Text>
-        <Card isDark={isDark} style={styles.componentCard}>
-          <CardContent style={styles.inputContainer}>
-            <Input
-              label="Basic Input"
-              placeholder="Enter text..."
-              value={inputValue}
-              onChangeText={handleInputChange}
-              isDark={isDark}
-            />
-            <Input
-              label="Input with Error"
-              placeholder="Minimum 3 characters"
-              value={inputValue}
-              onChangeText={handleInputChange}
-              error={inputError}
-              isDark={isDark}
-            />
-            <Input
-              label="Disabled Input"
-              placeholder="This field is disabled"
-              disabled
-              isDark={isDark}
-            />
-            <Input
-              label="Multiline Input"
-              placeholder="Write your message here..."
-              multiline
-              isDark={isDark}
-            />
-          </CardContent>
-        </Card>
-
-        <Separator isDark={isDark} />
-
-        {/* Switch Section */}
-        <Text variant="h3" isDark={isDark} style={styles.sectionTitle}>
-          Switch
-        </Text>
-        <Card isDark={isDark} style={styles.componentCard}>
-          <CardContent>
-            <Switch
-              label="Enable notifications"
-              value={switchValue}
-              onValueChange={setSwitchValue}
-              isDark={isDark}
-            />
-            <Separator isDark={isDark} />
-            <Switch
-              label="Auto-sync data"
-              value={!switchValue}
-              onValueChange={() => {}}
-              isDark={isDark}
-            />
-            <Separator isDark={isDark} />
-            <Switch
-              label="Disabled switch"
-              value={false}
-              onValueChange={() => {}}
-              disabled
-              isDark={isDark}
-            />
-          </CardContent>
-        </Card>
-
-        <Separator isDark={isDark} />
-
-        {/* Card Section */}
-        <Text variant="h3" isDark={isDark} style={styles.sectionTitle}>
-          Cards
-        </Text>
-        <Card isDark={isDark} style={styles.componentCard}>
-          <CardHeader>
-            <Text variant="h4" isDark={isDark}>
-              Card Title
+        {/* ScrollView */}
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={{ paddingBottom: spacing.xl }}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Buttons */}
+          <View style={styles.section}>
+            <Text variant="h3" weight="bold" style={styles.sectionTitle}>
+              Buttons
             </Text>
-            <Text variant="caption" isDark={isDark} style={styles.cardSubtitle}>
-              Card subtitle or description
+            <Card>
+              <CardContent style={{ gap: spacing.md }}>
+                <Button
+                  label="Primary"
+                  variant="default"
+                  onPress={() => showToast("Clicked!")}
+                />
+                <Button
+                  label="Secondary"
+                  variant="secondary"
+                  onPress={() => {}}
+                />
+                <Button label="Outline" variant="outline" onPress={() => {}} />
+                <Button
+                  label="Disabled"
+                  variant="default"
+                  disabled
+                  onPress={() => {}}
+                />
+              </CardContent>
+            </Card>
+          </View>
+
+          {/* Text & Typography */}
+          <View style={styles.section}>
+            <Text variant="h3" weight="bold" style={styles.sectionTitle}>
+              Typography
             </Text>
-          </CardHeader>
-          <CardContent>
-            <Text isDark={isDark}>
-              This is a card with header, content, and footer sections. Cards are reusable containers for grouping related information.
+            <Card>
+              <CardContent style={{ gap: spacing.md }}>
+                <Text variant="h1">Heading 1</Text>
+                <Text variant="h2">Heading 2</Text>
+                <Text variant="h3">Heading 3</Text>
+                <Text variant="h4">Heading 4</Text>
+                <Text variant="body">Body text</Text>
+                <Text variant="caption">Caption text</Text>
+              </CardContent>
+            </Card>
+          </View>
+
+          {/* Badges */}
+          <View style={styles.section}>
+            <Text variant="h3" weight="bold" style={styles.sectionTitle}>
+              Badges
             </Text>
-          </CardContent>
-          <CardFooter>
-            <Button
-              label="Action"
-              size="sm"
-              variant="primary"
-              onPress={() => {}}
-              isDark={isDark}
-            />
-          </CardFooter>
-        </Card>
+            <Card>
+              <CardContent
+                style={{
+                  flexDirection: "row",
+                  gap: spacing.md,
+                  flexWrap: "wrap",
+                }}
+              >
+                <Badge label="Default" variant="default" />
+                <Badge label="Secondary" variant="secondary" />
+                <Badge label="Outline" variant="outline" />
+                <Badge label="Charging" variant="default" />
+              </CardContent>
+            </Card>
+          </View>
 
-        {/* Role-based Badges */}
-        <Text variant="h3" isDark={isDark} style={styles.sectionTitle}>
-          Role Badges
-        </Text>
-        <Card isDark={isDark} style={styles.componentCard}>
-          <CardContent style={styles.roleGrid}>
-            <View style={styles.roleItem}>
-              <Badge label="Operador" isDark={isDark} />
-              <Text variant="caption" isDark={isDark} style={styles.roleLabel}>
-                Power Control
-              </Text>
-            </View>
-            <View style={styles.roleItem}>
-              <Badge label="Supervisor" variant="secondary" isDark={isDark} />
-              <Text variant="caption" isDark={isDark} style={styles.roleLabel}>
-                Monitoring
-              </Text>
-            </View>
-            <View style={styles.roleItem}>
-              <Badge label="Mantenedor" isDark={isDark} />
-              <Text variant="caption" isDark={isDark} style={styles.roleLabel}>
-                Maintenance
-              </Text>
-            </View>
-          </CardContent>
-        </Card>
-
-        {/* Typography Section */}
-        <Text variant="h3" isDark={isDark} style={styles.sectionTitle}>
-          Typography
-        </Text>
-        <Card isDark={isDark} style={styles.componentCard}>
-          <CardContent style={styles.typographyContainer}>
-            <Text variant="h1" isDark={isDark}>
-              Heading 1
+          {/* Inputs */}
+          <View style={styles.section}>
+            <Text variant="h3" weight="bold" style={styles.sectionTitle}>
+              Inputs & Forms
             </Text>
-            <Text variant="h2" isDark={isDark}>
-              Heading 2
+            <Card>
+              <CardContent style={{ gap: spacing.md }}>
+                <Input
+                  placeholder="Enter text"
+                  value={inputValue}
+                  onChangeText={setInputValue}
+                  label="Text Input"
+                />
+                <Switch
+                  value={switchValue}
+                  onValueChange={setSwitchValue}
+                  label="Toggle Switch"
+                />
+                <Checkbox
+                  checked={checkboxValue}
+                  onChange={setCheckboxValue}
+                  label="Checkbox"
+                />
+                <Select
+                  label="Select Option"
+                  options={selectOptions}
+                  value={selectValue}
+                  onChange={setSelectValue}
+                />
+              </CardContent>
+            </Card>
+          </View>
+
+          {/* Search Bar */}
+          <View style={styles.section}>
+            <Text variant="h3" weight="bold" style={styles.sectionTitle}>
+              Search Bar
             </Text>
-            <Text variant="h3" isDark={isDark}>
-              Heading 3
+            <Card>
+              <CardContent>
+                <SearchBar
+                  onSearch={setSearchText}
+                  placeholder="Search chargers..."
+                />
+                {searchText && (
+                  <Text style={{ marginTop: spacing.md }}>
+                    Searching for: {searchText}
+                  </Text>
+                )}
+              </CardContent>
+            </Card>
+          </View>
+
+          {/* Table */}
+          <View style={styles.section}>
+            <Text variant="h3" weight="bold" style={styles.sectionTitle}>
+              Table
             </Text>
-            <Text variant="h4" isDark={isDark}>
-              Heading 4
+            <Card>
+              <CardContent>
+                <Table
+                  columns={[
+                    { key: "name", label: "Name", width: "40%" },
+                    { key: "status", label: "Status", width: "30%" },
+                    { key: "power", label: "Power (kW)", width: "30%" },
+                  ]}
+                  data={mockTableData}
+                  keyExtractor={(item) => item.id}
+                  onRowPress={(row) => showToast(`Selected: ${row.name}`)}
+                />
+              </CardContent>
+            </Card>
+          </View>
+
+          {/* Tabs */}
+          <View style={styles.section}>
+            <Text variant="h3" weight="bold" style={styles.sectionTitle}>
+              Tabs
             </Text>
-            <Text variant="body" isDark={isDark}>
-              Body text - This is regular paragraph text used for content
+            <Card>
+              <CardContent style={{ height: 250 }}>
+                <Tabs tabs={tabsData} />
+              </CardContent>
+            </Card>
+          </View>
+
+          {/* Modal */}
+          <View style={styles.section}>
+            <Text variant="h3" weight="bold" style={styles.sectionTitle}>
+              Modal
             </Text>
-            <Text variant="caption" isDark={isDark}>
-              Caption text - Used for small labels and metadata
+            <Card>
+              <CardContent>
+                <Button
+                  label="Open Modal"
+                  variant="default"
+                  onPress={() => setModalVisible(true)}
+                />
+                <Modal
+                  visible={modalVisible}
+                  onClose={() => setModalVisible(false)}
+                  title="Modal Dialog"
+                  actions={[
+                    {
+                      label: "Cancel",
+                      onPress: () => {},
+                      variant: "secondary",
+                    },
+                    {
+                      label: "Confirm",
+                      onPress: () => showToast("Confirmed!"),
+                      variant: "default",
+                    },
+                  ]}
+                >
+                  <Text>
+                    This is a modal dialog. You can place any content here.
+                  </Text>
+                </Modal>
+              </CardContent>
+            </Card>
+          </View>
+
+          {/* Drawer */}
+          <View style={styles.section}>
+            <Text variant="h3" weight="bold" style={styles.sectionTitle}>
+              Drawer
             </Text>
-          </CardContent>
-        </Card>
+            <Card>
+              <CardContent>
+                <Button
+                  label="Open Drawer"
+                  variant="default"
+                  onPress={() => setDrawerVisible(true)}
+                />
+                <Drawer
+                  visible={drawerVisible}
+                  onClose={() => setDrawerVisible(false)}
+                >
+                  <View style={{ padding: spacing.lg }}>
+                    <Text variant="h3" weight="bold">
+                      Drawer Menu
+                    </Text>
+                    <Text style={{ marginTop: spacing.lg }}>Dashboard</Text>
+                    <Text style={{ marginTop: spacing.md }}>Chargers</Text>
+                    <Text style={{ marginTop: spacing.md }}>Sites</Text>
+                    <Text style={{ marginTop: spacing.md }}>Settings</Text>
+                  </View>
+                </Drawer>
+              </CardContent>
+            </Card>
+          </View>
 
-        {/* Toast Section */}
-        <Text variant="h3" isDark={isDark} style={styles.sectionTitle}>
-          Toast Notifications
-        </Text>
-        <Card isDark={isDark} style={styles.componentCard}>
-          <CardContent>
-            <ToastShowcase isDark={isDark} />
-          </CardContent>
-        </Card>
+          {/* Chart */}
+          <View style={styles.section}>
+            <Text variant="h3" weight="bold" style={styles.sectionTitle}>
+              Chart
+            </Text>
+            <Card>
+              <CardContent>
+                <Chart
+                  type="bar"
+                  data={chartData}
+                  title="Weekly Energy Usage"
+                />
+              </CardContent>
+            </Card>
+          </View>
 
-        {/* Loading Overlay Section */}
-        <Text variant="h3" isDark={isDark} style={styles.sectionTitle}>
-          Loading Overlay
-        </Text>
-        <Card isDark={isDark} style={styles.componentCard}>
-          <CardContent>
-            <LoadingOverlayShowcase isDark={isDark} />
-          </CardContent>
-        </Card>
+          {/* Pagination */}
+          <View style={styles.section}>
+            <Text variant="h3" weight="bold" style={styles.sectionTitle}>
+              Pagination
+            </Text>
+            <Card>
+              <CardContent>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={5}
+                  onPageChange={setCurrentPage}
+                />
+              </CardContent>
+            </Card>
+          </View>
 
-        {/* Spacing */}
-        <View style={{ height: spacing.xl }} />
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
+          {/* Alerts */}
+          <View style={styles.section}>
+            <Text variant="h3" weight="bold" style={styles.sectionTitle}>
+              Alerts
+            </Text>
+            <Card>
+              <CardContent style={{ gap: spacing.md }}>
+                <Alert
+                  variant="default"
+                  title="Info"
+                  message="This is an info alert"
+                />
+                <Alert
+                  variant="warning"
+                  title="Warning"
+                  message="This is a warning alert"
+                />
+                <Alert
+                  variant="destructive"
+                  title="Error"
+                  message="This is an error alert"
+                />
+                <Alert
+                  variant="success"
+                  title="Success"
+                  message="This is a success alert"
+                />
+              </CardContent>
+            </Card>
+          </View>
 
-function ToastShowcase({ isDark }: { isDark: boolean }) {
-  const toast = useToast();
-  const themeColors = isDark ? colors.dark : colors.light;
-
-  return (
-    <View style={{ gap: spacing.md }}>
-      <Button
-        label="Success Toast"
-        variant="secondary"
-        size="sm"
-        onPress={() => toast.show('Operation completed successfully!', 'success')}
-        isDark={isDark}
-      />
-      <Button
-        label="Error Toast"
-        variant="destructive"
-        size="sm"
-        onPress={() => toast.show('An error occurred!', 'error')}
-        isDark={isDark}
-      />
-      <Button
-        label="Info Toast"
-        variant="primary"
-        size="sm"
-        onPress={() => toast.show('This is an informational message.', 'info')}
-        isDark={isDark}
-      />
-      <Button
-        label="Warning Toast"
-        variant="outline"
-        size="sm"
-        onPress={() => toast.show('Please be careful!', 'warning')}
-        isDark={isDark}
-      />
-    </View>
-  );
-}
-
-function LoadingOverlayShowcase({ isDark }: { isDark: boolean }) {
-  const { show, hide } = useLoadingOverlay();
-
-  return (
-    <View style={{ gap: spacing.md }}>
-      <Button
-        label="Show Loading"
-        variant="primary"
-        size="sm"
-        onPress={() => {
-          show();
-          setTimeout(hide, 2000);
-        }}
-        isDark={isDark}
-      />
-      <Text variant="caption" isDark={isDark}>
-        Click to show a 2-second loading overlay
-      </Text>
-    </View>
+          {/* Separator */}
+          <View style={styles.section}>
+            <Text variant="h3" weight="bold" style={styles.sectionTitle}>
+              Separator
+            </Text>
+            <Card>
+              <CardContent style={{ gap: spacing.md }}>
+                <Text>Above separator</Text>
+                <Separator />
+                <Text>Below separator</Text>
+              </CardContent>
+            </Card>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </ErrorBoundary>
   );
 }
 
@@ -454,17 +458,13 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.lg,
+    paddingVertical: spacing.md,
     borderBottomWidth: 1,
   },
-  subtitle: {
-    marginTop: spacing.sm,
-    opacity: 0.7,
-  },
   themeToggle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
     borderBottomWidth: 1,
@@ -472,50 +472,11 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-  content: {
+  section: {
     padding: spacing.lg,
-    gap: spacing.lg,
+    gap: spacing.md,
   },
   sectionTitle: {
-    marginTop: spacing.lg,
-    marginBottom: spacing.md,
-  },
-  componentCard: {
-    gap: spacing.md,
-  },
-  buttonGrid: {
-    flexDirection: 'row',
-    gap: spacing.md,
-    marginBottom: spacing.md,
-  },
-  badgeGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.md,
-  },
-  alertContainer: {
-    gap: spacing.md,
-  },
-  inputContainer: {
-    gap: spacing.lg,
-  },
-  cardSubtitle: {
-    marginTop: spacing.xs,
-    opacity: 0.7,
-  },
-  roleGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    gap: spacing.md,
-  },
-  roleItem: {
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  roleLabel: {
-    marginTop: spacing.xs,
-  },
-  typographyContainer: {
-    gap: spacing.md,
+    marginBottom: spacing.sm,
   },
 });

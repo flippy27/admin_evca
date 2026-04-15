@@ -1,63 +1,224 @@
 /**
- * Chargers store — global chargers state (Zustand)
+ * Chargers store — manages chargers list, detail, live data, history, config
  */
 
 import { create } from 'zustand';
-import { chargersApi, Charger, ChargingSession } from '../api/chargers.api';
+import { chargersApi } from '../api/chargers.api';
+import {
+  Charger,
+  ChargerLiveData,
+  ChargerSession,
+  OcppConfig,
+} from '../types/charger.types';
+import { logger } from '../services/logger';
+import { handleError } from '../services/errorHandler';
 
 interface ChargersState {
+  // List state
   chargers: Charger[];
-  selectedChargerId: string | null;
-  sessions: ChargingSession[];
-  isLoading: boolean;
-  error: string | null;
+  chargersLoading: boolean;
+  chargersError: string | null;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+
+  // Detail state
+  selectedCharger: Charger | null;
+  detailLoading: boolean;
+  detailError: string | null;
+
+  // Live data state
+  liveData: ChargerLiveData | null;
+  liveLoading: boolean;
+  liveError: string | null;
+  liveRefreshInterval: number;
+
+  // History state
+  sessions: ChargerSession[];
+  sessionsLoading: boolean;
+  sessionsError: string | null;
+
+  // Config state
+  config: OcppConfig | null;
+  configLoading: boolean;
+  configError: string | null;
 
   // Actions
-  fetchChargers: () => Promise<void>;
-  selectCharger: (id: string) => void;
-  fetchSessions: (chargerId: string) => Promise<void>;
-  setLoading: (loading: boolean) => void;
-  setError: (error: string | null) => void;
+  fetchChargers: (page?: number, pageSize?: number, filters?: any) => Promise<void>;
+  fetchChargerDetail: (id: string) => Promise<void>;
+  fetchLiveData: (id: string) => Promise<void>;
+  fetchHistory: (id: string, params?: any) => Promise<void>;
+  fetchConfiguration: (id: string) => Promise<void>;
+  updateConfiguration: (id: string, config: any) => Promise<void>;
+  setLiveRefreshInterval: (interval: number) => void;
+  clearError: (key: 'chargers' | 'detail' | 'live' | 'sessions' | 'config') => void;
 }
 
-export const useChargersStore = create<ChargersState>((set) => ({
+export const useChargersStore = create<ChargersState>((set, get) => ({
+  // Initial state
   chargers: [],
-  selectedChargerId: null,
+  chargersLoading: false,
+  chargersError: null,
+  page: 1,
+  pageSize: 20,
+  totalPages: 1,
+
+  selectedCharger: null,
+  detailLoading: false,
+  detailError: null,
+
+  liveData: null,
+  liveLoading: false,
+  liveError: null,
+  liveRefreshInterval: 5000, // 5s default
+
   sessions: [],
-  isLoading: false,
-  error: null,
+  sessionsLoading: false,
+  sessionsError: null,
 
-  fetchChargers: async () => {
-    set({ isLoading: true, error: null });
+  config: null,
+  configLoading: false,
+  configError: null,
+
+  // ========== CHARGERS LIST ==========
+  fetchChargers: async (page = 1, pageSize = 20, filters = {}) => {
+    set({ chargersLoading: true, chargersError: null });
     try {
-      const res = await chargersApi.list();
-      set({ chargers: res.data.data, isLoading: false });
+      const res = await chargersApi.list({
+        page,
+        pageSize,
+        ...filters,
+      });
+
+      set({
+        chargers: res.data.data,
+        page,
+        pageSize,
+        totalPages: res.data.pagination?.totalPages || 1,
+        chargersLoading: false,
+      });
+
+      logger.info('Chargers fetched successfully', { count: res.data.data.length });
     } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Failed to fetch chargers';
-      set({ error: errorMsg, isLoading: false });
+      const apiError = handleError(error);
+      set({
+        chargersError: apiError.message,
+        chargersLoading: false,
+      });
     }
   },
 
-  selectCharger: (id: string) => {
-    set({ selectedChargerId: id });
-  },
-
-  fetchSessions: async (chargerId: string) => {
-    set({ isLoading: true, error: null });
+  // ========== CHARGER DETAIL ==========
+  fetchChargerDetail: async (id: string) => {
+    set({ detailLoading: true, detailError: null });
     try {
-      const res = await chargersApi.getSessions(chargerId);
-      set({ sessions: res.data.data, isLoading: false });
+      const res = await chargersApi.detail(id);
+      set({
+        selectedCharger: res.data.data,
+        detailLoading: false,
+      });
+      logger.info(`Charger detail fetched: ${id}`);
     } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Failed to fetch sessions';
-      set({ error: errorMsg, isLoading: false });
+      const apiError = handleError(error);
+      set({
+        detailError: apiError.message,
+        detailLoading: false,
+      });
     }
   },
 
-  setLoading: (loading: boolean) => {
-    set({ isLoading: loading });
+  // ========== LIVE DATA ==========
+  fetchLiveData: async (id: string) => {
+    set({ liveLoading: true, liveError: null });
+    try {
+      const res = await chargersApi.live(id);
+      set({
+        liveData: res.data.data,
+        liveLoading: false,
+      });
+      logger.debug(`Live data fetched: ${id}`);
+    } catch (error) {
+      const apiError = handleError(error);
+      set({
+        liveError: apiError.message,
+        liveLoading: false,
+      });
+    }
   },
 
-  setError: (error: string | null) => {
-    set({ error });
+  // ========== HISTORY / SESSIONS ==========
+  fetchHistory: async (id: string, params = {}) => {
+    set({ sessionsLoading: true, sessionsError: null });
+    try {
+      const res = await chargersApi.history(id, params);
+      set({
+        sessions: res.data.data,
+        sessionsLoading: false,
+      });
+      logger.info(`History fetched: ${id}`, { count: res.data.data.length });
+    } catch (error) {
+      const apiError = handleError(error);
+      set({
+        sessionsError: apiError.message,
+        sessionsLoading: false,
+      });
+    }
+  },
+
+  // ========== CONFIGURATION ==========
+  fetchConfiguration: async (id: string) => {
+    set({ configLoading: true, configError: null });
+    try {
+      const res = await chargersApi.getConfiguration(id);
+      set({
+        config: res.data.data,
+        configLoading: false,
+      });
+      logger.info(`Config fetched: ${id}`);
+    } catch (error) {
+      const apiError = handleError(error);
+      set({
+        configError: apiError.message,
+        configLoading: false,
+      });
+    }
+  },
+
+  updateConfiguration: async (id: string, newConfig: any) => {
+    set({ configLoading: true, configError: null });
+    try {
+      const res = await chargersApi.updateConfiguration(id, {
+        variables: newConfig,
+      });
+      set({
+        config: res.data.data,
+        configLoading: false,
+      });
+      logger.info(`Config updated: ${id}`);
+    } catch (error) {
+      const apiError = handleError(error);
+      set({
+        configError: apiError.message,
+        configLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  // ========== UTILITIES ==========
+  setLiveRefreshInterval: (interval: number) => {
+    set({ liveRefreshInterval: interval });
+  },
+
+  clearError: (key: 'chargers' | 'detail' | 'live' | 'sessions' | 'config') => {
+    const errorKey = {
+      chargers: 'chargersError',
+      detail: 'detailError',
+      live: 'liveError',
+      sessions: 'sessionsError',
+      config: 'configError',
+    }[key] as keyof ChargersState;
+
+    set({ [errorKey]: null } as any);
   },
 }));
