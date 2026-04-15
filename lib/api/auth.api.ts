@@ -2,7 +2,7 @@
  * Auth API endpoints
  */
 
-import { bffClient, userMgmtClient } from './client';
+import { bffClient } from './client';
 import { ENDPOINTS } from './endpoints';
 import {
   LoginRequest,
@@ -28,7 +28,7 @@ export const authApi = {
    * Step 2 of login: get encrypted permissions from user management service
    */
   getPermissions: () =>
-    userMgmtClient.get<PermissionsRawResponse>(ENDPOINTS.PERMISSIONS, {
+    bffClient.get<PermissionsRawResponse>(ENDPOINTS.PERMISSIONS, {
       params: { applicationCode: 'cms' },
     }),
 
@@ -36,7 +36,7 @@ export const authApi = {
    * Refresh access token using refresh token
    */
   refreshToken: (refreshToken: string) =>
-    userMgmtClient.post<LoginResponse>(ENDPOINTS.REFRESH_TOKEN, {
+    bffClient.post<LoginResponse>(ENDPOINTS.REFRESH_TOKEN, {
       refresh_token: refreshToken,
     }),
 
@@ -50,7 +50,7 @@ export const authApi = {
    * Reset password with token
    */
   resetPassword: (req: ResetPasswordRequest) =>
-    userMgmtClient.post(ENDPOINTS.RESET_PASSWORD, req),
+    bffClient.post(ENDPOINTS.RESET_PASSWORD, req),
 
   /**
    * Change password (temporary password on first login)
