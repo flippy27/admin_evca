@@ -13,25 +13,25 @@ import {
 
 export const profileApi = {
   /**
-   * GET /api/user/profile - Get current user profile
+   * GET /bff/user/profile - Get current user profile
    */
-  getProfile: () => bffClient.get<ProfileResponse>('/api/user/profile'),
+  getProfile: () => bffClient.get<ProfileResponse>('/bff/user/profile'),
 
   /**
-   * PUT /api/user/profile - Update user profile
+   * PUT /bff/user/profile - Update user profile
    */
   updateProfile: (payload: UpdateProfileRequest) =>
-    bffClient.put<ProfileResponse>('/api/user/profile', payload),
+    bffClient.put<ProfileResponse>('/bff/user/profile', payload),
 
   /**
-   * POST /api/user/change-password - Change password
+   * POST /bff/user/change-password - Change password
    */
   changePassword: (payload: ChangePasswordRequest) =>
-    bffClient.post<{ data: { success: boolean } }>('/api/user/change-password', payload),
+    bffClient.post<{ data: { success: boolean } }>('/bff/user/change-password', payload),
 
   /**
-   * POST /api/user/change-language - Change language preference
+   * POST /bff/user/change-language - Change language preference
    */
   changeLanguage: (payload: ChangeLanguageRequest) =>
-    bffClient.post<ProfileResponse>('/api/user/change-language', payload),
+    bffClient.post<ProfileResponse>('/bff/user/change-language', payload),
 };

@@ -7,29 +7,29 @@ import { Site, SiteDetail, SitesListResponse, SiteDetailResponse } from '../type
 
 export const sitesApi = {
   /**
-   * GET /api/sites - List sites
+   * GET /bff/sites - List sites
    */
   list: (params?: { page?: number; pageSize?: number; search?: string }) =>
-    bffClient.get<SitesListResponse>('/api/sites', { params }),
+    bffClient.get<SitesListResponse>('/bff/sites', { params }),
 
   /**
-   * GET /api/sites/:id - Site detail
+   * GET /bff/sites/:id - Site detail
    */
-  detail: (id: string) => bffClient.get<SiteDetailResponse>(`/api/sites/${id}`),
+  detail: (id: string) => bffClient.get<SiteDetailResponse>(`/bff/sites/${id}`),
 
   /**
-   * POST /api/sites - Create site
+   * POST /bff/sites - Create site
    */
-  create: (payload: Partial<Site>) => bffClient.post<SiteDetailResponse>('/api/sites', payload),
+  create: (payload: Partial<Site>) => bffClient.post<SiteDetailResponse>('/bff/sites', payload),
 
   /**
-   * PUT /api/sites/:id - Update site
+   * PUT /bff/sites/:id - Update site
    */
   update: (id: string, payload: Partial<Site>) =>
-    bffClient.put<SiteDetailResponse>(`/api/sites/${id}`, payload),
+    bffClient.put<SiteDetailResponse>(`/bff/sites/${id}`, payload),
 
   /**
-   * DELETE /api/sites/:id - Delete site
+   * DELETE /bff/sites/:id - Delete site
    */
-  delete: (id: string) => bffClient.delete(`/api/sites/${id}`),
+  delete: (id: string) => bffClient.delete(`/bff/sites/${id}`),
 };

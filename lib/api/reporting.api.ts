@@ -12,19 +12,19 @@ import {
 
 export const reportingApi = {
   /**
-   * GET /api/reports - List reports
+   * GET /bff/reports - List reports
    */
   list: (params?: { page?: number; pageSize?: number; type?: string; status?: string }) =>
-    bffClient.get<ReportsListResponse>('/api/reports', { params }),
+    bffClient.get<ReportsListResponse>('/bff/reports', { params }),
 
   /**
-   * GET /api/reports/:id - Report detail
+   * GET /bff/reports/:id - Report detail
    */
-  detail: (id: string) => bffClient.get<ReportDetailResponse>(`/api/reports/${id}`),
+  detail: (id: string) => bffClient.get<ReportDetailResponse>(`/bff/reports/${id}`),
 
   /**
-   * POST /api/reports/generate - Generate new report
+   * POST /bff/reports/generate - Generate new report
    */
   generate: (payload: GenerateReportRequest) =>
-    bffClient.post<ReportDetailResponse>('/api/reports/generate', payload),
+    bffClient.post<ReportDetailResponse>('/bff/reports/generate', payload),
 };

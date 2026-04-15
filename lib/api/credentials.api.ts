@@ -12,20 +12,20 @@ import {
 
 export const credentialsApi = {
   /**
-   * GET /api/credentials - List credentials
+   * GET /bff/credentials - List credentials
    */
   list: (params?: { page?: number; pageSize?: number }) =>
-    bffClient.get<CredentialsListResponse>('/api/credentials', { params }),
+    bffClient.get<CredentialsListResponse>('/bff/credentials', { params }),
 
   /**
-   * POST /api/credentials - Create credential
+   * POST /bff/credentials - Create credential
    */
   create: (payload: CreateCredentialRequest) =>
-    bffClient.post<CreateCredentialResponse>('/api/credentials', payload),
+    bffClient.post<CreateCredentialResponse>('/bff/credentials', payload),
 
   /**
-   * DELETE /api/credentials/:id - Revoke credential
+   * DELETE /bff/credentials/:id - Revoke credential
    */
   revoke: (id: string) =>
-    bffClient.delete(`/api/credentials/${id}`),
+    bffClient.delete(`/bff/credentials/${id}`),
 };

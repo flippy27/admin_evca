@@ -5,10 +5,10 @@
 export const ENDPOINTS = {
   // Auth
   LOGIN: '/bff/auth/login',
-  PERMISSIONS: '/auth/permissions',
-  REFRESH_TOKEN: '/auth/refresh-token',
+  PERMISSIONS: '/bff/auth/permissions',
+  REFRESH_TOKEN: '/bff/auth/refresh-token',
   FORGOT_PASSWORD: '/bff/users/reset-password',
-  RESET_PASSWORD: '/auth/reset-password',
+  RESET_PASSWORD: '/bff/auth/reset-password',
   CHANGE_PASSWORD: '/bff/users/change-password',
 } as const;
 

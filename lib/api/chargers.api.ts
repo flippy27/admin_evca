@@ -19,7 +19,7 @@ export { Charger, Connector, ChargerSession } from '../types/charger.types';
 
 export const chargersApi = {
   /**
-   * GET /api/chargers - List with pagination + filters
+   * GET /bff/chargers - List with pagination + filters
    */
   list: (params?: {
     page?: number;
@@ -27,49 +27,49 @@ export const chargersApi = {
     siteId?: string;
     status?: string;
     search?: string;
-  }) => bffClient.get<ChargersListResponse>('/api/chargers', { params }),
+  }) => bffClient.get<ChargersListResponse>('/bff/chargers', { params }),
 
   /**
-   * GET /api/chargers/:id - Detail
+   * GET /bff/chargers/:id - Detail
    */
-  detail: (id: string) => bffClient.get<ChargerDetailResponse>(`/api/chargers/${id}`),
+  detail: (id: string) => bffClient.get<ChargerDetailResponse>(`/bff/chargers/${id}`),
 
   /**
-   * GET /api/chargers/:id/live - Real-time data
+   * GET /bff/chargers/:id/live - Real-time data
    */
-  live: (id: string) => bffClient.get<ChargerLiveResponse>(`/api/chargers/${id}/live`),
+  live: (id: string) => bffClient.get<ChargerLiveResponse>(`/bff/chargers/${id}/live`),
 
   /**
-   * GET /api/chargers/:id/history - Sessions + history
+   * GET /bff/chargers/:id/history - Sessions + history
    */
   history: (id: string, params?: { startDate?: string; endDate?: string; page?: number }) =>
-    bffClient.get<ChargerSessionsResponse>(`/api/chargers/${id}/history`, { params }),
+    bffClient.get<ChargerSessionsResponse>(`/bff/chargers/${id}/history`, { params }),
 
   /**
-   * GET /api/chargers/:id/configuration - OCPP config
+   * GET /bff/chargers/:id/configuration - OCPP config
    */
   getConfiguration: (id: string) =>
-    bffClient.get<OcppConfigResponse>(`/api/chargers/${id}/configuration`),
+    bffClient.get<OcppConfigResponse>(`/bff/chargers/${id}/configuration`),
 
   /**
-   * POST /api/chargers/:id/configuration - Update OCPP config
+   * POST /bff/chargers/:id/configuration - Update OCPP config
    */
   updateConfiguration: (id: string, payload: UpdateOcppConfigRequest) =>
-    bffClient.post<OcppConfigResponse>(`/api/chargers/${id}/configuration`, payload),
+    bffClient.post<OcppConfigResponse>(`/bff/chargers/${id}/configuration`, payload),
 
   /**
-   * POST /api/chargers - Create
+   * POST /bff/chargers - Create
    */
-  create: (payload: Partial<Charger>) => bffClient.post<ChargerDetailResponse>('/api/chargers', payload),
+  create: (payload: Partial<Charger>) => bffClient.post<ChargerDetailResponse>('/bff/chargers', payload),
 
   /**
-   * PUT /api/chargers/:id - Update
+   * PUT /bff/chargers/:id - Update
    */
   update: (id: string, payload: Partial<Charger>) =>
-    bffClient.put<ChargerDetailResponse>(`/api/chargers/${id}`, payload),
+    bffClient.put<ChargerDetailResponse>(`/bff/chargers/${id}`, payload),
 
   /**
-   * DELETE /api/chargers/:id - Delete
+   * DELETE /bff/chargers/:id - Delete
    */
-  delete: (id: string) => bffClient.delete(`/api/chargers/${id}`),
+  delete: (id: string) => bffClient.delete(`/bff/chargers/${id}`),
 };

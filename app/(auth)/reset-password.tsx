@@ -1,6 +1,6 @@
 import { Text } from "@/components/ui/Text";
+import { getThemeColors } from "@/theme";
 import { View } from "react-native";
-import { getThemeColors } from "../../theme";
 
 export default function ResetPasswordScreen() {
   const colors = getThemeColors("light");
