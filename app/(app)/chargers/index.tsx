@@ -8,9 +8,9 @@ import { Text } from '../../../components/ui/Text';
 import { Card, CardContent } from '../../../components/ui/Card';
 import { Badge } from '../../../components/ui/Badge';
 import { Button } from '../../../components/ui/Button';
-import { useChargersStore } from '../../lib/stores/chargers.store';
+import { useChargersStore } from '../../../lib/stores/chargers.store';
 import { getThemeColors, spacing } from '../../../theme';
-import type { Charger } from '../../lib/api/chargers.api';
+import type { Charger } from '../../../lib/api/chargers.api';
 
 // Mock chargers data for now
 const MOCK_CHARGERS: Charger[] = [
