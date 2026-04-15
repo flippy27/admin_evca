@@ -39,92 +39,55 @@ export default function AppLayout() {
           },
         }}
       >
-      {/* Dashboard */}
-      {hasPermission(AuthPermissionsEnum.DASHBOARD_VIEW) && (
+        {/* Dashboard */}
+        {hasPermission(AuthPermissionsEnum.DASHBOARD_VIEW) && (
+          <Tabs.Screen
+            name="dashboard"
+            options={{
+              title: "Dashboard",
+              tabBarIcon: ({ color }) => (
+                <Ionicons name="home" size={24} color={color} />
+              ),
+            }}
+          />
+        )}
+
+        {/* Chargers */}
+        {hasPermission(AuthPermissionsEnum.CHARGERS_VIEW) && (
+          <Tabs.Screen
+            name="chargers"
+            options={{
+              title: "Chargers",
+              tabBarIcon: ({ color }) => (
+                <Ionicons name="flash-sharp" size={24} color={color} />
+              ),
+            }}
+          />
+        )}
+
+        {/* Sites */}
+        {hasPermission(AuthPermissionsEnum.SITES_VIEW) && (
+          <Tabs.Screen
+            name="sites"
+            options={{
+              title: "Sites",
+              tabBarIcon: ({ color }) => (
+                <Ionicons name="location" size={24} color={color} />
+              ),
+            }}
+          />
+        )}
+
+        {/* Profile (always visible) */}
         <Tabs.Screen
-          name="dashboard"
+          name="profile"
           options={{
-            title: "Dashboard",
+            title: "Profile",
             tabBarIcon: ({ color }) => (
-              <Ionicons name="home" size={24} color={color} />
+              <Ionicons name="person" size={24} color={color} />
             ),
           }}
         />
-      )}
-
-      {/* Chargers */}
-      {hasPermission(AuthPermissionsEnum.CHARGERS_VIEW) && (
-        <Tabs.Screen
-          name="chargers"
-          options={{
-            title: "Chargers",
-            tabBarIcon: ({ color }) => (
-              <Ionicons name="flash-sharp" size={24} color={color} />
-            ),
-          }}
-        />
-      )}
-
-      {/* Sites */}
-      {hasPermission(AuthPermissionsEnum.SITES_VIEW) && (
-        <Tabs.Screen
-          name="sites"
-          options={{
-            title: "Sites",
-            tabBarIcon: ({ color }) => (
-              <Ionicons name="location" size={24} color={color} />
-            ),
-          }}
-        />
-      )}
-
-      {/* Reporting */}
-      {hasPermission(AuthPermissionsEnum.REPORTS_VIEW) && (
-        <Tabs.Screen
-          name="reporting"
-          options={{
-            title: "Reports",
-            tabBarIcon: ({ color }) => (
-              <Ionicons name="bar-chart" size={24} color={color} />
-            ),
-          }}
-        />
-      )}
-
-      {/* Credentials */}
-      {hasPermission(AuthPermissionsEnum.CHARGERS_VIEW) && (
-        <Tabs.Screen
-          name="credentials"
-          options={{
-            title: "Credentials",
-            tabBarIcon: ({ color }) => (
-              <Ionicons name="key" size={24} color={color} />
-            ),
-          }}
-        />
-      )}
-
-      {/* Energy Resources */}
-      <Tabs.Screen
-        name="energy-resources"
-        options={{
-          title: "Energy",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="leaf" size={24} color={color} />
-          ),
-        }}
-      />
-
-      {/* Profile (always visible) */}
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="person" size={24} color={color} />
-          ),
-        }}
-      />
       </Tabs>
     </AppContainer>
   );
