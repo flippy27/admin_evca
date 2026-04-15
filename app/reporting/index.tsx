@@ -123,41 +123,60 @@ export default function ReportingScreen() {
 
           {/* Reports List */}
           {filteredReports?.map((report) => (
-          <Card key={report.id}>
-            <CardContent style={{ gap: spacing.md }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <View style={{ flex: 1 }}>
-                  <Text variant="h4" weight="bold">
-                    {report.name}
-                  </Text>
-                  <Text
-                    variant="caption"
-                    style={{ color: colors.mutedForeground, marginTop: spacing.sm }}
-                  >
-                    {report.type}
-                  </Text>
-                </View>
-                <Badge
-                  label={report.status.charAt(0).toUpperCase() + report.status.slice(1)}
-                  variant={
-                    report.status === 'completed'
-                      ? 'secondary'
-                      : report.status === 'failed'
-                        ? 'destructive'
-                        : 'outline'
-                  }
-                />
-              </View>
-
-              {report.description && (
+            <Card key={report.id}>
+              <CardContent style={{ gap: spacing.md }}>
                 <View
                   style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <View style={{ flex: 1 }}>
+                    <Text variant="h4" weight="bold">
+                      {report.name}
+                    </Text>
+                    <Text
+                      variant="caption"
+                      style={{ color: colors.mutedForeground, marginTop: spacing.sm }}
+                    >
+                      {report.type}
+                    </Text>
+                  </View>
+                  <Badge
+                    label={report.status.charAt(0).toUpperCase() + report.status.slice(1)}
+                    variant={
+                      report.status === 'completed'
+                        ? 'secondary'
+                        : report.status === 'failed'
+                          ? 'destructive'
+                          : 'outline'
+                    }
+                  />
+                </View>
+
+                {report.description && (
+                  <View
+                    style={{
+                      borderTopWidth: 1,
+                      borderTopColor: colors.border,
+                      paddingTop: spacing.md,
+                    }}
+                  >
+                    <Text
+                      variant="caption"
+                      style={{ color: colors.mutedForeground }}
+                    >
+                      {report.description}
+                    </Text>
+                  </View>
+                )}
+
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                     borderTopWidth: 1,
                     borderTopColor: colors.border,
                     paddingTop: spacing.md,
@@ -167,42 +186,23 @@ export default function ReportingScreen() {
                     variant="caption"
                     style={{ color: colors.mutedForeground }}
                   >
-                    {report.description}
+                    {new Date(report.createdAt).toLocaleDateString()}
                   </Text>
+                  <Ionicons
+                    name={
+                      report.status === 'completed'
+                        ? 'checkmark-circle'
+                        : report.status === 'failed'
+                          ? 'alert-circle'
+                          : 'hourglass'
+                    }
+                    size={16}
+                    color={statusColors[report.status]}
+                  />
                 </View>
-              )}
-
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  borderTopWidth: 1,
-                  borderTopColor: colors.border,
-                  paddingTop: spacing.md,
-                }}
-              >
-                <Text
-                  variant="caption"
-                  style={{ color: colors.mutedForeground }}
-                >
-                  {new Date(report.createdAt).toLocaleDateString()}
-                </Text>
-                <Ionicons
-                  name={
-                    report.status === 'completed'
-                      ? 'checkmark-circle'
-                      : report.status === 'failed'
-                        ? 'alert-circle'
-                        : 'hourglass'
-                  }
-                  size={16}
-                  color={statusColors[report.status]}
-                />
-              </View>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          ))}
 
           {filteredReports.length === 0 && !reportsLoading && (
             <View style={{ alignItems: 'center', paddingVertical: spacing.xl }}>

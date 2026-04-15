@@ -1,3 +1,4 @@
+import { SafeAreaView } from "react-native";
 import React, { useEffect } from 'react';
 import { SafeAreaView, ScrollView, View, RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -61,7 +62,7 @@ export default function CredentialsScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <ScrollView
+      <SafeAreaView style={{ flex: 1 }}>\n    <ScrollView
         contentContainerStyle={{ padding: spacing.lg, gap: spacing.lg }}
         refreshControl={
           <RefreshControl
@@ -161,7 +162,7 @@ export default function CredentialsScreen() {
             </Text>
           </View>
         )}
-      </ScrollView>
+      </ScrollView>\n  </SafeAreaView>
     </SafeAreaView>
   );
 }

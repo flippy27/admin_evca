@@ -1,3 +1,4 @@
+import { SafeAreaView } from "react-native";
 import React, { useEffect } from 'react';
 import { SafeAreaView, ScrollView, View, RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
