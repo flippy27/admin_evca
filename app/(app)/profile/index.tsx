@@ -1,11 +1,11 @@
 import { SafeAreaView, ScrollView, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Text } from '../../../components/ui/Text';
-import { Card, CardContent, CardHeader } from '../../../components/ui/Card';
-import { Button } from '../../../components/ui/Button';
-import { Switch } from '../../../components/ui/Switch';
-import { Badge } from '../../../components/ui/Badge';
+import { Text } from '../../../../components/ui/Text';
+import { Card, CardContent, CardHeader } from '../../../../components/ui/Card';
+import { Button } from '../../../../components/ui/Button';
+import { Switch } from '../../../../components/ui/Switch';
+import { Badge } from '../../../../components/ui/Badge';
 import { getThemeColors, spacing } from '../../../../theme';
 import { useAuthStore } from '../../../lib/stores/auth.store';
 import { useAppStore } from '../../../lib/stores/app.store';

@@ -3,9 +3,9 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 
-import { Text } from '../../components/ui/Text';
-import { Card, CardContent } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
+import { Text } from '../../../components/ui/Text';
+import { Card, CardContent } from '../../../components/ui/Card';
+import { Badge } from '../../../components/ui/Badge';
 import { getThemeColors, spacing } from '../../../theme';
 
 interface Site {

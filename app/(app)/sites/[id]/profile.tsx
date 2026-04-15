@@ -1,7 +1,7 @@
 import { View, SafeAreaView, ScrollView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { Text } from '../../../components/ui/Text';
-import { Card, CardContent, CardHeader } from '../../../components/ui/Card';
+import { Text } from '../../../../components/ui/Text';
+import { Card, CardContent, CardHeader } from '../../../../components/ui/Card';
 import { getThemeColors, spacing } from '../../../../theme';
 
 export default function SiteProfileScreen() {

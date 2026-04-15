@@ -1,11 +1,11 @@
 import { SafeAreaView, ScrollView, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Text } from '../../../components/ui/Text';
-import { Card, CardContent, CardHeader } from '../../../components/ui/Card';
-import { Button } from '../../../components/ui/Button';
-import { Input } from '../../../components/ui/Input';
-import { Switch } from '../../../components/ui/Switch';
+import { Text } from '../../../../components/ui/Text';
+import { Card, CardContent, CardHeader } from '../../../../components/ui/Card';
+import { Button } from '../../../../components/ui/Button';
+import { Input } from '../../../../components/ui/Input';
+import { Switch } from '../../../../components/ui/Switch';
 import { getThemeColors, spacing } from '../../../../theme';
 
 export default function ChargerConfigurationScreen() {

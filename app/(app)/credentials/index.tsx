@@ -1,10 +1,10 @@
 import { SafeAreaView, ScrollView, View, FlatList, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text } from '../../components/ui/Text';
-import { Card, CardContent, CardHeader } from '../../components/ui/Card';
-import { Button } from '../../components/ui/Button';
-import { Badge } from '../../components/ui/Badge';
+import { Text } from '../../../components/ui/Text';
+import { Card, CardContent, CardHeader } from '../../../components/ui/Card';
+import { Button } from '../../../components/ui/Button';
+import { Badge } from '../../../components/ui/Badge';
 import { getThemeColors, spacing } from '../../../theme';
 import { Ionicons } from '@expo/vector-icons';
 
