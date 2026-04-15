@@ -1,6 +1,7 @@
 /**
  * useNetworkStatus hook
  * Detects network connectivity and provides offline state
+ * For React Native - assumes online by default
  */
 
 import { useEffect, useState } from 'react';
@@ -12,40 +13,26 @@ interface NetworkState {
 
 /**
  * Hook to monitor network connectivity
- * Returns current network state and updates when connectivity changes
+ * Returns current network state
+ * Note: Actual network detection would require @react-native-community/netinfo
+ * For now, assumes online (graceful degradation in offline scenarios)
  */
 export function useNetworkStatus(): NetworkState {
-  const [isOnline, setIsOnline] = useState<boolean>(
-    typeof navigator !== 'undefined' ? navigator.onLine : true
-  );
+  const [isOnline, setIsOnline] = useState<boolean>(true); // Assume online by default
 
   useEffect(() => {
-    // Check on app state change
+    // Monitor app state changes
     const subscription = AppState.addEventListener('change', handleAppStateChange);
-
-    // Listen for online/offline events
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    if (typeof window !== 'undefined') {
-      window.addEventListener('online', handleOnline);
-      window.addEventListener('offline', handleOffline);
-    }
 
     return () => {
       subscription?.remove();
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('online', handleOnline);
-        window.removeEventListener('offline', handleOffline);
-      }
     };
   }, []);
 
   const handleAppStateChange = (state: AppStateStatus) => {
     if (state === 'active') {
-      // Recheck network status when app comes to foreground
-      const online = typeof navigator !== 'undefined' ? navigator.onLine : true;
-      setIsOnline(online);
+      // App came to foreground - still assume online
+      setIsOnline(true);
     }
   };
 
