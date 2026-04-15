@@ -17,6 +17,7 @@ import { SearchBar } from "@/components/ui/SearchBar";
 import { SkeletonCard } from "@/components/ui/Skeleton";
 import { Text } from "@/components/ui/Text";
 import { usePermissionGuard } from "@/lib/hooks/usePermissionGuard";
+import { useApiErrorToast } from "@/lib/hooks/useApiErrorToast";
 import { useChargersStore } from "@/lib/stores/chargers.store";
 import { AuthPermissionsEnum } from "@/lib/types/auth.types";
 import { getThemeColors, spacing } from "@/theme";
@@ -51,6 +52,9 @@ export default function ChargersScreen() {
 
   const [searchText, setSearchText] = useState("");
   const [filteredChargers, setFilteredChargers] = useState<typeof chargers>([]);
+
+  // Show error toast when API fails
+  useApiErrorToast(chargersError, "Failed to load chargers. Try again.");
 
   // Fetch on mount
   useEffect(() => {

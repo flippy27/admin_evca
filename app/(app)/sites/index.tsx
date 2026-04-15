@@ -17,6 +17,7 @@ import { SearchBar } from "@/components/ui/SearchBar";
 import { SkeletonCard } from "@/components/ui/Skeleton";
 import { Text } from "@/components/ui/Text";
 import { usePermissionGuard } from "@/lib/hooks/usePermissionGuard";
+import { useApiErrorToast } from "@/lib/hooks/useApiErrorToast";
 import { useSitesStore } from "@/lib/stores/sites.store";
 import { AuthPermissionsEnum } from "@/lib/types/auth.types";
 import { getThemeColors, spacing } from "@/theme";
@@ -44,6 +45,9 @@ export default function SitesScreen() {
 
   const [searchText, setSearchText] = useState("");
   const [filteredSites, setFilteredSites] = useState<typeof sites>([]);
+
+  // Show error toast when API fails
+  useApiErrorToast(sitesError, "Failed to load sites. Try again.");
 
   // Fetch on mount
   useEffect(() => {
