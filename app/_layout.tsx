@@ -52,7 +52,7 @@ export default function RootLayout() {
 
     const inAuthGroup = segments[0] === "(auth)";
     const inAppGroup = segments[0] === "(app)";
-    const inRoot = segments.length === 0 || segments[0] === "index";
+    const inRoot = segments.length === 0;
 
     if (sessionState === "authenticated") {
       // Authenticated → go to dashboard (main app entry point)
