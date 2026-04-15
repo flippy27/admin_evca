@@ -1,7 +1,7 @@
 /**
  * App layout — authenticated screens
- * Contains tab navigation with permission-based visibility + sidebar
- * Each tab routes to a feature module
+ * Tab navigation for main features only
+ * Additional routes (reporting, credentials, energy) accessed via sidebar
  */
 
 import { AuthPermissionsEnum } from "@/lib/config/permissions";
@@ -12,17 +12,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 
 export default function AppLayout() {
-  const { hasPermission, permissions, roles } = usePermissions();
+  const { hasPermission } = usePermissions();
   const colors = getThemeColors("light");
-
-  console.log('[APP LAYOUT] Permissions check:', {
-    hasPermissions: permissions.length > 0,
-    permissionCount: permissions.length,
-    firstFewPermissions: permissions.slice(0, 5),
-    hasDashboardView: permissions.includes(AuthPermissionsEnum.DASHBOARD_VIEW),
-    hasChargersView: permissions.includes(AuthPermissionsEnum.CHARGERS_VIEW),
-    roles: roles,
-  });
 
   return (
     <AppContainer>
@@ -78,35 +69,7 @@ export default function AppLayout() {
           />
         )}
 
-        {/* Reporting - hidden from tab bar (accessible via sidebar) */}
-        {hasPermission(AuthPermissionsEnum.REPORTS_VIEW) && (
-          <Tabs.Screen
-            name="reporting"
-            options={{
-              title: "Reports",
-            }}
-          />
-        )}
-
-        {/* Credentials - hidden from tab bar (accessible via sidebar) */}
-        {hasPermission(AuthPermissionsEnum.CHARGERS_VIEW) && (
-          <Tabs.Screen
-            name="credentials"
-            options={{
-              title: "Credentials",
-            }}
-          />
-        )}
-
-        {/* Energy Resources - hidden from tab bar (accessible via sidebar) */}
-        <Tabs.Screen
-          name="energy-resources"
-          options={{
-            title: "Energy",
-          }}
-        />
-
-        {/* Profile (always visible) */}
+        {/* Profile */}
         <Tabs.Screen
           name="profile"
           options={{
