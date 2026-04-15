@@ -20,4 +20,7 @@ export const ENV = {
   // Environment
   ENVIRONMENT: extra.environment || process.env.ENVIRONMENT || 'development',
   DEBUG: extra.debug || process.env.DEBUG === 'true',
+
+  // HTTP Logging: 0=off, 1=basic (URL+status), 2=detailed (+headers), 3=verbose (+bodies)
+  HTTP_LOG_LEVEL: extra.httpLogLevel || process.env.HTTP_LOG_LEVEL || '1',
 };

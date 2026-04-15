@@ -191,9 +191,7 @@ export default function LoginScreen() {
 
           {/* Login button */}
           <Button
-            label={
-              isLoading ? "" : t("auth.login.signIn")
-            }
+            label={isLoading ? "" : t("auth.login.signIn")}
             onPress={handleSubmit(onSubmit)}
             disabled={isLoading}
             loading={isLoading}

@@ -4,19 +4,18 @@
  * Persists to SecureStore (tokens) and in-memory (everything else)
  */
 
-import { create } from 'zustand';
-import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
+import { create } from 'zustand';
 import { authApi } from '../api/auth.api';
+import { clearAuthToken, injectAuthToken, onRefreshFailed } from '../api/client';
 import { decryptAndValidate } from '../crypto/encryption';
-import { injectAuthToken, clearAuthToken, onRefreshFailed } from '../api/client';
 import { logger } from '../services/logger';
 import {
-  SessionState,
-  ProcessedUserData,
-  LoginRequest,
   AuthDataSnapshot,
   PermissionsData,
+  ProcessedUserData,
+  SessionState
 } from '../types/auth.types';
 
 const STORAGE_KEY = 'cms_auth_data';
@@ -61,6 +60,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       // Step 1: Get tokens from BFF
       const loginRes = await authApi.login({ email, password });
+      console.log('loginres',JSON.stringify(loginRes));
+      
       const loginData = loginRes.data.payload.data;
 
       // Store tokens immediately
