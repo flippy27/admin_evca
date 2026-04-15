@@ -327,7 +327,7 @@ export default function ComponentShowcase() {
                     {
                       label: "Confirm",
                       onPress: () => showToast("Confirmed!"),
-                      variant: "default",
+                      variant: "primary",
                     },
                   ]}
                 >

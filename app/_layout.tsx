@@ -52,16 +52,15 @@ export default function RootLayout() {
 
     const inAuthGroup = segments[0] === "(auth)";
     const inAppGroup = segments[0] === "(app)";
-    const inRoot = segments.length === 0;
 
     if (sessionState === "authenticated") {
       // Authenticated → go to dashboard (main app entry point)
-      if (inAuthGroup || inRoot) {
+      if (!inAppGroup) {
         router.replace("/(app)/dashboard");
       }
     } else {
       // Not authenticated → go to login
-      if (inAppGroup || inRoot) {
+      if (!inAuthGroup) {
         router.replace("/(auth)/login");
       }
     }

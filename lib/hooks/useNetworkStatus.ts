@@ -4,14 +4,10 @@
  */
 
 import { useEffect, useState } from 'react';
-import { AppState, AppStateStatus, Platform } from 'react-native';
-import { NetInfo } from '@react-native-community/netinfo';
+import { AppState, AppStateStatus } from 'react-native';
 
 interface NetworkState {
   isOnline: boolean;
-  isWifi: boolean;
-  isMobile: boolean;
-  type: string | null;
 }
 
 /**
@@ -19,40 +15,28 @@ interface NetworkState {
  * Returns current network state and updates when connectivity changes
  */
 export function useNetworkStatus(): NetworkState {
-  const [networkState, setNetworkState] = useState<NetworkState>({
-    isOnline: true, // assume online initially
-    isWifi: false,
-    isMobile: false,
-    type: null,
-  });
+  const [isOnline, setIsOnline] = useState<boolean>(
+    typeof navigator !== 'undefined' ? navigator.onLine : true
+  );
 
   useEffect(() => {
-    let subscription: any = null;
-
-    // Check initial state
-    if (Platform.OS !== 'web') {
-      // NetInfo is not available on web, so skip
-      try {
-        checkNetworkStatus();
-      } catch {
-        // NetInfo might not be installed
-      }
-    }
-
-    async function checkNetworkStatus() {
-      // Note: NetInfo would need to be imported from @react-native-community/netinfo
-      // For now, we'll use a simple online check
-      const isOnline = typeof navigator !== 'undefined' ? navigator.onLine : true;
-      setNetworkState((prev) => ({ ...prev, isOnline }));
-    }
-
     // Check on app state change
-    const subscription_ = AppState.addEventListener('change', handleAppStateChange);
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    // Listen for online/offline events
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('online', handleOnline);
+      window.addEventListener('offline', handleOffline);
+    }
 
     return () => {
-      subscription_?.remove();
-      if (subscription) {
-        subscription.unsubscribe();
+      subscription?.remove();
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('online', handleOnline);
+        window.removeEventListener('offline', handleOffline);
       }
     };
   }, []);
@@ -60,14 +44,12 @@ export function useNetworkStatus(): NetworkState {
   const handleAppStateChange = (state: AppStateStatus) => {
     if (state === 'active') {
       // Recheck network status when app comes to foreground
-      setNetworkState((prev) => ({
-        ...prev,
-        isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
-      }));
+      const online = typeof navigator !== 'undefined' ? navigator.onLine : true;
+      setIsOnline(online);
     }
   };
 
-  return networkState;
+  return { isOnline };
 }
 
 /**

@@ -26,7 +26,7 @@ interface ButtonProps {
   rightIcon?: React.ReactNode;
 }
 
-export const Button = React.forwardRef<TouchableOpacity, ButtonProps>(
+export const Button = React.forwardRef<React.ElementRef<typeof TouchableOpacity>, ButtonProps>(
   ({
     label,
     variant = 'primary',

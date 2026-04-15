@@ -125,11 +125,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: typography.fontSize.sm,
-    fontWeight: typography.fontWeight.semibold,
+    fontWeight: '600' as const,
   },
   message: {
     fontSize: typography.fontSize.sm,
-    fontWeight: typography.fontWeight.normal,
+    fontWeight: '400' as const,
     lineHeight: typography.lineHeight.normal * typography.fontSize.sm,
   },
 });

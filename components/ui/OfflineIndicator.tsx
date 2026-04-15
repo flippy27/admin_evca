@@ -36,7 +36,7 @@ export function OfflineIndicator() {
       ]}
     >
       <View style={styles.content}>
-        <Ionicons name="wifi-off" size={16} color="white" />
+        <Ionicons name="cloud-offline" size={16} color="white" />
         <Text
           variant="body"
           weight="bold"

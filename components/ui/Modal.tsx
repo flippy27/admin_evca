@@ -17,7 +17,7 @@ interface ModalProps {
   actions?: {
     label: string;
     onPress: () => void;
-    variant?: 'default' | 'secondary' | 'destructive';
+    variant?: 'primary' | 'secondary' | 'destructive';
   }[];
   closeOnBackdropPress?: boolean;
 }

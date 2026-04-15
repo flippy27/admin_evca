@@ -55,7 +55,7 @@ export const Input = React.forwardRef<TextInput, InputProps>(
           style={[
             styles.input,
             {
-              backgroundColor: themeColors.inputBackground,
+              backgroundColor: themeColors.card,
               borderColor: error ? themeColors.destructive : themeColors.border,
               color: themeColors.foreground,
             },

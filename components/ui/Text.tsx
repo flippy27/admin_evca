@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text as RNText, StyleSheet, TextProps, TextStyle } from 'react-native';
+import { Text as RNText, StyleSheet, TextProps, TextStyle, StyleProp } from 'react-native';
 import { colors, typography } from '../../theme';
 
 export type TextVariant = 'h1' | 'h2' | 'h3' | 'h4' | 'body' | 'caption';
@@ -8,7 +8,7 @@ interface CustomTextProps extends TextProps {
   variant?: TextVariant;
   weight?: 'normal' | 'medium' | 'semibold' | 'bold';
   isDark?: boolean;
-  style?: TextStyle;
+  style?: StyleProp<TextStyle>;
 }
 
 export const Text = React.forwardRef<RNText, CustomTextProps>(

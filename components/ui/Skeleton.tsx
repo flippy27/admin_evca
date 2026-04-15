@@ -53,7 +53,7 @@ export function Skeleton({
           borderRadius: radius_,
           backgroundColor: colors.muted,
           opacity: fadeAnim,
-        },
+        } as any,
         style,
       ]}
     />

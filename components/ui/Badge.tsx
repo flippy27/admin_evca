@@ -90,6 +90,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: typography.fontSize.xs,
-    fontWeight: typography.fontWeight.semibold,
+    fontWeight: '600' as const,
   },
 });

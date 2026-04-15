@@ -27,7 +27,7 @@ i18n
     interpolation: {
       escapeValue: false, // React already escapes values
     },
-    compatibilityJSON: 'v3', // For RN compatibility
+    compatibilityJSON: 'v4', // For RN compatibility
   });
 
 export default i18n;

@@ -20,9 +20,9 @@ interface TableProps {
 export function Table({ columns, data, keyExtractor, onRowPress }: TableProps) {
   const colors = getThemeColors('light');
 
-  const getCellWidth = (col: TableColumn) => {
+  const getCellWidth = (col: TableColumn): string | number => {
     if (!col.width) return `${100 / columns.length}%`;
-    return col.width;
+    return col.width as string | number;
   };
 
   return (
@@ -44,7 +44,7 @@ export function Table({ columns, data, keyExtractor, onRowPress }: TableProps) {
                 {
                   width: getCellWidth(col),
                   minWidth: getCellWidth(col),
-                },
+                } as any,
               ]}
             >
               <Text variant="caption" weight="bold">
@@ -80,7 +80,7 @@ export function Table({ columns, data, keyExtractor, onRowPress }: TableProps) {
                     {
                       width: getCellWidth(col),
                       minWidth: getCellWidth(col),
-                    },
+                    } as any,
                   ]}
                 >
                   {col.render ? (
