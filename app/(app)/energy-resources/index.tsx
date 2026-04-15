@@ -107,7 +107,7 @@ export default function EnergyResourcesScreen() {
         )}
 
         {/* Resources List */}
-        {resources.map((resource) => {
+        {resources?.map((resource) => {
           const iconColor = getResourceColor(resource.type);
           const utilization = getUtilization(resource);
 

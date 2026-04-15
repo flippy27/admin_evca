@@ -91,7 +91,7 @@ export default function CredentialsScreen() {
         )}
 
         {/* Credentials List */}
-        {credentials.map((credential) => (
+        {credentials?.map((credential) => (
           <Card key={credential.id}>
             <CardContent style={{ gap: spacing.md }}>
               <View

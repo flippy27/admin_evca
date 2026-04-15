@@ -177,7 +177,7 @@ export default function SitesScreen() {
             variant="body"
             style={{ color: colors.mutedForeground, marginTop: spacing.sm }}
           >
-            {filteredSites.length} sites
+            {filteredSites?.length || 0} sites
           </Text>
         </View>
 

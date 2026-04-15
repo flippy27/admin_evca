@@ -74,7 +74,7 @@ export default function ReportingScreen() {
         )}
 
         {/* Reports List */}
-        {reports.map((report) => (
+        {reports?.map((report) => (
           <Card key={report.id}>
             <CardContent style={{ gap: spacing.md }}>
               <View

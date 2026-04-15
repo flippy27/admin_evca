@@ -215,7 +215,7 @@ export default function ChargersScreen() {
             variant="body"
             style={{ color: colors.mutedForeground, marginTop: spacing.sm }}
           >
-            {filteredChargers.length} chargers
+            {filteredChargers?.length || 0} chargers
           </Text>
         </View>
 
