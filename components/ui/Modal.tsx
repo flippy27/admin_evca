@@ -71,7 +71,7 @@ export function Modal({
                       action.onPress();
                       onClose();
                     }}
-                    variant={action.variant || 'primary'}
+                    variant={(action.variant ?? 'primary') as 'primary' | 'secondary' | 'destructive'}
                     fullWidth
                   />
                 </View>
