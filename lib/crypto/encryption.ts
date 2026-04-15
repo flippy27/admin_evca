@@ -7,9 +7,33 @@
 import { gcm } from '@noble/ciphers/aes';
 import { sha256 } from '@noble/hashes/sha256';
 import { hmac } from '@noble/hashes/hmac';
-import { utf8ToBytes, bytesToHex } from '@noble/hashes/utils';
 import { ENV } from '../config/env';
 import { EncryptedPayload, PermissionsData } from '../types/auth.types';
+
+// Utility functions to replace @noble/hashes/utils
+function utf8ToBytes(str: string): Uint8Array {
+  const bytes: number[] = [];
+  for (let i = 0; i < str.length; i++) {
+    const code = str.charCodeAt(i);
+    if (code < 0x80) {
+      bytes.push(code);
+    } else if (code < 0x800) {
+      bytes.push(0xc0 | (code >> 6), 0x80 | (code & 0x3f));
+    } else if (code < 0x10000) {
+      bytes.push(0xe0 | (code >> 12), 0x80 | ((code >> 6) & 0x3f), 0x80 | (code & 0x3f));
+    }
+  }
+  return new Uint8Array(bytes);
+}
+
+function bytesToHex(bytes: Uint8Array): string {
+  let hex = '';
+  for (let i = 0; i < bytes.length; i++) {
+    const b = bytes[i].toString(16);
+    hex += b.length === 1 ? '0' + b : b;
+  }
+  return hex;
+}
 
 // Polyfill for base64 decode (alternative to atob which may not be available)
 function base64ToBytes(base64: string): Uint8Array {
