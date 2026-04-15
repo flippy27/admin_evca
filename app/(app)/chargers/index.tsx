@@ -9,7 +9,7 @@ import { Card, CardContent } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { useChargersStore } from '../../lib/stores/chargers.store';
-import { getThemeColors, spacing } from '../../theme';
+import { getThemeColors, spacing } from '../../../theme';
 import type { Charger } from '../../lib/api/chargers.api';
 
 // Mock chargers data for now

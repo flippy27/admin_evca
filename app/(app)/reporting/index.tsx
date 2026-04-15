@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Text } from '../../components/ui/Text';
 import { Card, CardContent } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
-import { getThemeColors, spacing } from '../../theme';
+import { getThemeColors, spacing } from '../../../theme';
 
 const REPORT_TYPES = [
   { id: '1', name: 'User Activity Logs', count: 1250 },

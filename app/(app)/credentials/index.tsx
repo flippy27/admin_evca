@@ -5,7 +5,7 @@ import { Text } from '../../components/ui/Text';
 import { Card, CardContent, CardHeader } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
-import { getThemeColors, spacing } from '../../theme';
+import { getThemeColors, spacing } from '../../../theme';
 import { Ionicons } from '@expo/vector-icons';
 
 interface RFIDCredential {

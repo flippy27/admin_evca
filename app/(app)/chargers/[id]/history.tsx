@@ -3,7 +3,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { Text } from '../../../components/ui/Text';
 import { Card, CardContent } from '../../../components/ui/Card';
 import { Badge } from '../../../components/ui/Badge';
-import { getThemeColors, spacing } from '../../../theme';
+import { getThemeColors, spacing } from '../../../../theme';
 import { Ionicons } from '@expo/vector-icons';
 
 interface ChargingSession {
