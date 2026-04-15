@@ -78,33 +78,30 @@ export default function AppLayout() {
           />
         )}
 
-        {/* Reporting - hidden from tab bar */}
+        {/* Reporting - hidden from tab bar (accessible via sidebar) */}
         {hasPermission(AuthPermissionsEnum.REPORTS_VIEW) && (
           <Tabs.Screen
             name="reporting"
             options={{
-              href: null,
               title: "Reports",
             }}
           />
         )}
 
-        {/* Credentials - hidden from tab bar */}
+        {/* Credentials - hidden from tab bar (accessible via sidebar) */}
         {hasPermission(AuthPermissionsEnum.CHARGERS_VIEW) && (
           <Tabs.Screen
             name="credentials"
             options={{
-              href: null,
               title: "Credentials",
             }}
           />
         )}
 
-        {/* Energy Resources - hidden from tab bar */}
+        {/* Energy Resources - hidden from tab bar (accessible via sidebar) */}
         <Tabs.Screen
           name="energy-resources"
           options={{
-            href: null,
             title: "Energy",
           }}
         />

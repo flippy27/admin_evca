@@ -4,7 +4,7 @@
  */
 
 import React, { ReactNode, useState } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, SafeAreaView } from "react-native";
 import { Sidebar } from "./Sidebar";
 import { getThemeColors } from "@/theme";
 
@@ -41,16 +41,16 @@ export function AppContainer({ children }: AppContainerProps) {
         />
       )}
 
-      {/* Content */}
-      <View style={{ flex: 1, position: "relative" }}>
-        {/* Menu Toggle Button (visible when sidebar closed) */}
+      {/* Content with SafeAreaView for notch */}
+      <SafeAreaView style={{ flex: 1, position: "relative" }}>
+        {/* Menu Toggle Button */}
         {!sidebarOpen && (
           <TouchableOpacity
             onPress={openSidebar}
             style={{
               position: "absolute",
-              top: 16,
-              left: 16,
+              top: 12,
+              left: 12,
               width: 40,
               height: 40,
               borderRadius: 8,
@@ -96,7 +96,7 @@ export function AppContainer({ children }: AppContainerProps) {
 
         {/* Children (Tabs) */}
         {children}
-      </View>
+      </SafeAreaView>
     </View>
   );
 }
