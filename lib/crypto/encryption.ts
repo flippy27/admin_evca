@@ -71,9 +71,22 @@ async function decrypt(
   authTag: string
 ): Promise<unknown> {
   const key = deriveKey(ENV.ENCRYPTION_KEY);
+
+  console.log('[DECRYPT] Converting base64 strings:', {
+    ivLength: iv.length,
+    dataLength: encryptedData.length,
+    tagLength: authTag.length,
+  });
+
   const ivBytes = base64ToBytes(iv); // 16 bytes
   const dataBytes = base64ToBytes(encryptedData);
   const tagBytes = base64ToBytes(authTag); // 16 bytes
+
+  console.log('[DECRYPT] Converted to bytes:', {
+    ivBytesLength: ivBytes.length,
+    dataBytesLength: dataBytes.length,
+    tagBytesLength: tagBytes.length,
+  });
 
   // AES-GCM expects ciphertext || authTag as combined
   const combined = new Uint8Array([...dataBytes, ...tagBytes]);
@@ -113,6 +126,17 @@ export async function decryptAndValidate<T = PermissionsData>(
   payload: EncryptedPayload
 ): Promise<T> {
   try {
+    // Debug: log what we received
+    console.log('[DECRYPT] Payload structure:', {
+      hasEncryptedData: !!payload.encryptedData,
+      encryptedDataType: typeof payload.encryptedData,
+      encryptedDataLength: payload.encryptedData?.length || 0,
+      encryptedDataPreview: payload.encryptedData?.substring(0, 50) + '...',
+      hasIv: !!payload.iv,
+      hasAuthTag: !!payload.authTag,
+      hasSignature: !!payload.signature,
+    });
+
     const decrypted = (await decrypt(
       payload.encryptedData,
       payload.iv,
