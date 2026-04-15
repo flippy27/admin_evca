@@ -48,4 +48,8 @@ export enum AuthPermissionsEnum {
   REPORTS_OCPP_MESSAGES = 'reports--ocpp-messages',
   REPORTS_ENERGY_VARIABLES = 'reports--energy-variables',
   REPORTS_SYSTEM_UPTIMES = 'reports--system-uptimes',
+
+  // Credentials & Energy Resources (mobile-specific)
+  CREDENTIALS_VIEW = 'credentials--view',
+  ENERGY_RESOURCES_VIEW = 'energy-resources--view',
 }

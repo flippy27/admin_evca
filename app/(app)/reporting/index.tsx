@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { SafeAreaView, ScrollView, View, RefreshControl } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView, ScrollView, View, RefreshControl, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -7,10 +7,13 @@ import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import { Alert } from '@/components/ui/Alert';
+import { BottomDrawer } from '@/components/ui/BottomDrawer';
 import { useReportingStore } from '@/lib/stores/reporting.store';
 import { usePermissionGuard } from '@/lib/hooks/usePermissionGuard';
-import { AuthPermissionsEnum } from '@/lib/types/auth.types';
+import { AuthPermissionsEnum } from '@/lib/config/permissions';
 import { getThemeColors, spacing } from '@/theme';
+
+type ReportingTab = 'all' | 'pending' | 'completed';
 
 export default function ReportingScreen() {
   const { t } = useTranslation();
@@ -30,6 +33,10 @@ export default function ReportingScreen() {
     clearError,
   } = useReportingStore();
 
+  // UI State
+  const [activeTab, setActiveTab] = useState<ReportingTab>('all');
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+
   // Fetch on mount
   useEffect(() => {
     fetchReports(1, 20);
@@ -48,33 +55,74 @@ export default function ReportingScreen() {
     failed: '#ef4444',
   };
 
+  // Filter reports by tab
+  const filteredReports = reports.filter((report) => {
+    if (activeTab === 'all') return true;
+    return report.status === activeTab;
+  });
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <ScrollView
-        contentContainerStyle={{ padding: spacing.lg, gap: spacing.lg }}
-        refreshControl={
-          <RefreshControl refreshing={reportsLoading} onRefresh={handleRefresh} />
-        }
-      >
-        {/* Header */}
-        <View>
-          <Text variant="h2" weight="bold">
-            {t('common.ui.pageTitles.reporting') || 'Reporting'}
-          </Text>
-          <Text
-            variant="body"
-            style={{ color: colors.mutedForeground, marginTop: spacing.sm }}
-          >
-            View and export detailed reports
-          </Text>
+      <View style={{ flex: 1 }}>
+        {/* Tabs */}
+        <View
+          style={{
+            flexDirection: 'row',
+            borderBottomWidth: 1,
+            borderBottomColor: colors.border,
+            backgroundColor: colors.card,
+            paddingHorizontal: spacing.lg,
+          }}
+        >
+          {(['all', 'pending', 'completed'] as ReportingTab[]).map((tab) => (
+            <TouchableOpacity
+              key={tab}
+              onPress={() => setActiveTab(tab)}
+              style={{
+                paddingVertical: spacing.md,
+                paddingHorizontal: spacing.md,
+                borderBottomWidth: activeTab === tab ? 2 : 0,
+                borderBottomColor: colors.primary,
+              }}
+            >
+              <Text
+                variant="body"
+                weight={activeTab === tab ? 'semibold' : 'normal'}
+                style={{
+                  color: activeTab === tab ? colors.primary : colors.mutedForeground,
+                }}
+              >
+                {tab === 'all' ? 'All' : tab === 'pending' ? 'Pending' : 'Completed'}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </View>
 
-        {reportsError && (
-          <Alert variant="destructive" title="Error" message={reportsError} />
-        )}
+        <ScrollView
+          contentContainerStyle={{ padding: spacing.lg, gap: spacing.lg }}
+          refreshControl={
+            <RefreshControl refreshing={reportsLoading} onRefresh={handleRefresh} />
+          }
+        >
+          {/* Header */}
+          <View>
+            <Text variant="h2" weight="bold">
+              {t('common.ui.pageTitles.reporting') || 'Reporting'}
+            </Text>
+            <Text
+              variant="body"
+              style={{ color: colors.mutedForeground, marginTop: spacing.sm }}
+            >
+              {filteredReports.length} reports
+            </Text>
+          </View>
 
-        {/* Reports List */}
-        {reports?.map((report) => (
+          {reportsError && (
+            <Alert variant="destructive" title="Error" message={reportsError} />
+          )}
+
+          {/* Reports List */}
+          {filteredReports?.map((report) => (
           <Card key={report.id}>
             <CardContent style={{ gap: spacing.md }}>
               <View
@@ -156,14 +204,29 @@ export default function ReportingScreen() {
           </Card>
         ))}
 
-        {reports.length === 0 && !reportsLoading && (
-          <View style={{ alignItems: 'center', paddingVertical: spacing.xl }}>
-            <Text variant="body" style={{ color: colors.mutedForeground }}>
-              No reports found. Pull to refresh.
+          {filteredReports.length === 0 && !reportsLoading && (
+            <View style={{ alignItems: 'center', paddingVertical: spacing.xl }}>
+              <Text variant="body" style={{ color: colors.mutedForeground }}>
+                No {activeTab === 'all' ? 'reports' : activeTab} reports found. Pull to refresh.
+              </Text>
+            </View>
+          )}
+        </ScrollView>
+
+        {/* Filter Drawer */}
+        <BottomDrawer
+          visible={filterDrawerOpen}
+          onClose={() => setFilterDrawerOpen(false)}
+          title="Filter Reports"
+          height={200}
+        >
+          <ScrollView style={{ paddingBottom: spacing.lg }}>
+            <Text variant="body" weight="semibold" style={{ marginBottom: spacing.md }}>
+              Status
             </Text>
-          </View>
-        )}
-      </ScrollView>
+          </ScrollView>
+        </BottomDrawer>
+      </View>
     </SafeAreaView>
   );
 }

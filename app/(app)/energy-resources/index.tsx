@@ -9,7 +9,7 @@ import { Text } from '@/components/ui/Text';
 import { Alert } from '@/components/ui/Alert';
 import { useEnergyStore } from '@/lib/stores/energy.store';
 import { usePermissionGuard } from '@/lib/hooks/usePermissionGuard';
-import { AuthPermissionsEnum } from '@/lib/types/auth.types';
+import { AuthPermissionsEnum } from '@/lib/config/permissions';
 import { getThemeColors, spacing } from '@/theme';
 
 const getResourceIcon = (type: string) => {
