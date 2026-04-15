@@ -196,16 +196,10 @@ export interface EncryptedPayload {
   signature: string;
 }
 
-export interface PermissionsPayload {
+// Respuesta del endpoint /auth/permissions (estructura simple, sin envoltura de BFF)
+export interface PermissionsRawResponse {
   success: boolean;
   data: EncryptedPayload;
-}
-
-export interface PermissionsRawResponse {
-  meta: BffMeta;
-  columns: unknown[];
-  payload: PermissionsPayload;
-  pagination: unknown | null;
 }
 
 // ============ PASSWORD RECOVERY ============
