@@ -198,7 +198,11 @@ export interface EncryptedPayload {
 
 export interface PermissionsPayload {
   success: boolean;
-  data: EncryptedPayload;
+  message: string;
+  statusCode: number;
+  path: string;
+  timestamp: string;
+  data: PermissionsData;  // Already decrypted by server
 }
 
 export interface PermissionsRawResponse {

@@ -76,39 +76,31 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       // Inject token into axios
       injectAuthToken(loginData.access_token);
 
-      // Step 2: Get encrypted permissions
+      // Step 2: Get permissions (already decrypted by server)
       const permRes = await authApi.getPermissions();
-      console.log('[AUTH] Permissions response:', {
-        hasPayload: !!permRes.data.payload,
-        payloadKeys: Object.keys(permRes.data.payload || {}),
-        hasData: !!permRes.data.payload?.data,
-        dataType: typeof permRes.data.payload?.data,
-        dataKeys: permRes.data.payload?.data ? Object.keys(permRes.data.payload.data) : [],
-        fullPayload: permRes.data.payload,
-      });
-      const decrypted = await decryptAndValidate<PermissionsData>(permRes.data.payload.data);
+      const permissions = permRes.data.payload.data;
 
       // Process permissions into ProcessedUserData
       const roles: string[] = [];
-      const permissions: string[] = [];
+      const permissionCodes: string[] = [];
 
-      decrypted.applications.forEach((app) => {
+      permissions.applications.forEach((app) => {
         app.companies.forEach((company) => {
           if (company.role) roles.push(company.role);
           if (company.permissions?.length) {
-            permissions.push(...company.permissions.map((p) => p.code));
+            permissionCodes.push(...company.permissions.map((p) => p.code));
           }
         });
       });
 
       const processedUser: ProcessedUserData = {
-        userId: decrypted.user.externalId,
-        email: decrypted.user.email,
-        fullName: decrypted.user.name,
-        company: decrypted.company.name,
-        companyId: decrypted.company.externalId,
+        userId: permissions.user.externalId,
+        email: permissions.user.email,
+        fullName: permissions.user.name,
+        company: permissions.company.name,
+        companyId: permissions.company.externalId,
         roles: [...new Set(roles)],
-        permissions: [...new Set(permissions)],
+        permissions: [...new Set(permissionCodes)],
         isActive: true,
       };
 
