@@ -138,8 +138,8 @@ export default function LoginScreen() {
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label={t("authentication.login.email") || "Email"}
-                placeholder="user@example.com"
+                label={t("common.ui.fields.email") || "Email"}
+                placeholder={t("common.ui.placeholders.emailPlaceholder") || "user@example.com"}
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
@@ -161,8 +161,8 @@ export default function LoginScreen() {
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label={t("authentication.login.password") || "Password"}
-                placeholder="••••••••"
+                label={t("common.ui.fields.password") || "Password"}
+                placeholder={t("common.ui.placeholders.passwordPlaceholder") || "••••••••"}
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
@@ -180,7 +180,7 @@ export default function LoginScreen() {
             name="rememberMe"
             render={({ field: { onChange, value } }) => (
               <Switch
-                label={t("authentication.login.rememberMe") || "Remember me"}
+                label={t("common.ui.actions.remember") || "Remember me"}
                 value={value}
                 onValueChange={onChange}
                 disabled={isLoading}
@@ -192,7 +192,7 @@ export default function LoginScreen() {
           {/* Login button */}
           <Button
             label={
-              isLoading ? "" : t("authentication.login.signIn") || "Sign in"
+              isLoading ? "" : t("common.ui.actions.signIn") || "Sign in"
             }
             onPress={handleSubmit(onSubmit)}
             disabled={isLoading}
@@ -210,7 +210,7 @@ export default function LoginScreen() {
                 textAlign: "center",
               }}
             >
-              {t("authentication.login.forgotPassword") || "Forgot password?"}
+              {t("common.ui.links.forgotPassword") || "Forgot password?"}
             </Text>
           </TouchableOpacity>
         </View>
