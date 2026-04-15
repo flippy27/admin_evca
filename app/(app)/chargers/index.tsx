@@ -37,8 +37,6 @@ export default function ChargersScreen() {
     requiredPermissions: [AuthPermissionsEnum.CHARGERS_VIEW],
   });
 
-  if (!hasAccess) return null;
-
   // Store
   const {
     chargers,
@@ -51,7 +49,7 @@ export default function ChargersScreen() {
   } = useChargersStore();
 
   const [searchText, setSearchText] = useState("");
-  const [filteredChargers, setFilteredChargers] = useState(chargers);
+  const [filteredChargers, setFilteredChargers] = useState<typeof chargers>([]);
 
   // Fetch on mount
   useEffect(() => {
@@ -72,6 +70,8 @@ export default function ChargersScreen() {
       setFilteredChargers(chargers);
     }
   }, [searchText, chargers]);
+
+  if (!hasAccess) return null;
 
   const handleChargerPress = (chargerId: string) => {
     router.push({

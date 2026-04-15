@@ -27,7 +27,6 @@ export default function ProfileScreen() {
   });
 
   // Stores
-  const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
   const language = useAppStore((s) => s.language);
   const colorScheme = useAppStore((s) => s.colorScheme);
@@ -87,7 +86,7 @@ export default function ProfileScreen() {
     try {
       await updateProfile(personalForm);
       setIsEditingPersonal(false);
-    } catch (error) {
+    } catch {
       // Error handled by store
     }
   };
@@ -108,7 +107,7 @@ export default function ProfileScreen() {
         newPassword: "",
         confirmPassword: "",
       });
-    } catch (error) {
+    } catch {
       // Error handled by store
     }
   };

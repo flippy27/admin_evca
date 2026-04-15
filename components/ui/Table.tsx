@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet, FlatList } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { getThemeColors, spacing } from '../../theme';
 import { Text } from './Text';
 

@@ -51,8 +51,6 @@ export default function EnergyResourcesScreen() {
     requiredPermissions: [AuthPermissionsEnum.ENERGY_RESOURCES_VIEW],
   });
 
-  if (!hasAccess) return null;
-
   // Store
   const {
     resources,
@@ -66,6 +64,8 @@ export default function EnergyResourcesScreen() {
   useEffect(() => {
     fetchResources(1, 20);
   }, []);
+
+  if (!hasAccess) return null;
 
   const handleRefresh = () => {
     clearError('resources');

@@ -2,7 +2,6 @@ import React from 'react';
 import {
   FlatList,
   View,
-  Pressable,
   StyleSheet,
   ListRenderItem,
   ViewStyle,

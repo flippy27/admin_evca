@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { SafeAreaView, ScrollView, View, RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Ionicons } from '@expo/vector-icons';
 
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
@@ -22,8 +21,6 @@ export default function CredentialsScreen() {
     requiredPermissions: [AuthPermissionsEnum.CREDENTIALS_VIEW],
   });
 
-  if (!hasAccess) return null;
-
   // Store
   const {
     credentials,
@@ -41,6 +38,8 @@ export default function CredentialsScreen() {
     fetchCredentials(1, 20);
   }, []);
 
+  if (!hasAccess) return null;
+
   const handleRefresh = () => {
     clearError('credentials');
     fetchCredentials(1, 20);
@@ -49,15 +48,9 @@ export default function CredentialsScreen() {
   const handleRevoke = async (id: string) => {
     try {
       await revokeCredential(id);
-    } catch (error) {
+    } catch {
       // Error handled by store
     }
-  };
-
-  const typeColors: Record<string, string> = {
-    api_key: colors.primary,
-    token: '#8b5cf6',
-    other: colors.mutedForeground,
   };
 
   const typeLabels: Record<string, string> = {

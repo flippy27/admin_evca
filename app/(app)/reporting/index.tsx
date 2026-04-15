@@ -21,8 +21,6 @@ export default function ReportingScreen() {
     requiredPermissions: [AuthPermissionsEnum.REPORTS_VIEW],
   });
 
-  if (!hasAccess) return null;
-
   // Store
   const {
     reports,
@@ -36,6 +34,8 @@ export default function ReportingScreen() {
   useEffect(() => {
     fetchReports(1, 20);
   }, []);
+
+  if (!hasAccess) return null;
 
   const handleRefresh = () => {
     clearError('reports');

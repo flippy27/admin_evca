@@ -30,8 +30,6 @@ export default function SitesScreen() {
     requiredPermissions: [AuthPermissionsEnum.SITES_VIEW],
   });
 
-  if (!hasAccess) return null;
-
   // Store
   const {
     sites,
@@ -44,7 +42,7 @@ export default function SitesScreen() {
   } = useSitesStore();
 
   const [searchText, setSearchText] = useState("");
-  const [filteredSites, setFilteredSites] = useState(sites);
+  const [filteredSites, setFilteredSites] = useState<typeof sites>([]);
 
   // Fetch on mount
   useEffect(() => {
@@ -67,6 +65,8 @@ export default function SitesScreen() {
       setFilteredSites(sites);
     }
   }, [searchText, sites]);
+
+  if (!hasAccess) return null;
 
   const handleSitePress = (siteId: string) => {
     router.push({

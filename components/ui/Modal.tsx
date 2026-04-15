@@ -4,8 +4,6 @@ import {
   View,
   Pressable,
   StyleSheet,
-  ViewStyle,
-  TextStyle,
 } from 'react-native';
 import { getThemeColors, spacing } from '../../theme';
 import { Text } from './Text';
@@ -16,11 +14,11 @@ interface ModalProps {
   onClose: () => void;
   title?: string;
   children: React.ReactNode;
-  actions?: Array<{
+  actions?: {
     label: string;
     onPress: () => void;
     variant?: 'default' | 'secondary' | 'destructive';
-  }>;
+  }[];
   closeOnBackdropPress?: boolean;
 }
 
