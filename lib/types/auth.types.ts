@@ -196,9 +196,16 @@ export interface EncryptedPayload {
   signature: string;
 }
 
-export interface PermissionsRawResponse {
+export interface PermissionsPayload {
   success: boolean;
   data: EncryptedPayload;
+}
+
+export interface PermissionsRawResponse {
+  meta: BffMeta;
+  columns: unknown[];
+  payload: PermissionsPayload;
+  pagination: unknown | null;
 }
 
 // ============ PASSWORD RECOVERY ============
