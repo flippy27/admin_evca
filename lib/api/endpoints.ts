@@ -5,7 +5,7 @@
 export const ENDPOINTS = {
   // Auth
   LOGIN: '/bff/auth/login',
-  PERMISSIONS: '/auth/permissions',  // User Management service - returns simple structure
+  PERMISSIONS: '/bff/auth/permissions',
   REFRESH_TOKEN: '/bff/auth/refresh-token',
   FORGOT_PASSWORD: '/bff/users/reset-password',
   RESET_PASSWORD: '/bff/auth/reset-password',
