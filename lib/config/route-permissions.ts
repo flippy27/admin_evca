@@ -62,12 +62,12 @@ export const ROUTE_PERMISSIONS_MAP: Record<string, RoutePermissionConfig> = {
 
   '/(app)/reporting/index': {
     path: '/(app)/reporting',
-    requiredPermissions: [AuthPermissionsEnum.REPORTING_VIEW],
+    requiredPermissions: [AuthPermissionsEnum.REPORTS_VIEW],
   },
 
   '/(app)/credentials/index': {
     path: '/(app)/credentials',
-    requiredPermissions: [AuthPermissionsEnum.CREDENTIALS_MANAGE],
+    requiredPermissions: [AuthPermissionsEnum.CREDENTIALS_VIEW],
   },
 
   '/(app)/energy-resources/index': {
