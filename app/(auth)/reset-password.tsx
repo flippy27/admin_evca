@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { Text } from '../components/ui/Text';
+import { Text } from '../../components/ui/Text';
 import { getThemeColors } from '../../theme';
 
 export default function ResetPasswordScreen() {

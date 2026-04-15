@@ -12,12 +12,12 @@ import i18n from '../../lib/i18n';
 
 import { useAuthStore } from '../../lib/stores/auth.store';
 import { useAppStore } from '../../lib/stores/app.store';
-import { useToast } from '../components/ui/Toast';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
-import { Switch } from '../components/ui/Switch';
-import { Text } from '../components/ui/Text';
-import { Card } from '../components/ui/Card';
+import { useToast } from '../../components/ui/Toast';
+import { Button } from '../../components/ui/Button';
+import { Input } from '../../components/ui/Input';
+import { Switch } from '../../components/ui/Switch';
+import { Text } from '../../components/ui/Text';
+import { Card } from '../../components/ui/Card';
 import { getThemeColors, spacing } from '../../theme';
 
 interface LoginForm {
