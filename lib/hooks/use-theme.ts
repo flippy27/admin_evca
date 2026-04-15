@@ -12,7 +12,7 @@ export function useTheme() {
   const systemScheme = useColorScheme();
 
   // Resolve color scheme: if 'system', use device setting, otherwise use the app setting
-  const resolved = setting === 'system' ? (systemScheme ?? 'light') : setting;
+  const resolved = (setting === 'system' ? (systemScheme ?? 'light') : setting) as 'light' | 'dark';
   const isDark = resolved === 'dark';
   const colors = getThemeColors(resolved);
 
