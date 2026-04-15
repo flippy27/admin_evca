@@ -52,21 +52,18 @@ export default function RootLayout() {
 
     const inAuthGroup = segments[0] === "(auth)";
     const inAppGroup = segments[0] === "(app)";
+    const inRoot = segments.length === 0 || segments[0] === "index";
 
-    if (sessionState === "authenticated" && inAuthGroup) {
-      // Authenticated but in auth screens → go to app
-      //TODO: FIX DIS SHAIT
-      router.replace("/chargers");
-    } else if (sessionState !== "authenticated" && inAppGroup) {
-      // Not authenticated but in app screens → go to login
-      router.replace("/(auth)/login");
-    } else if (
-      sessionState !== "authenticated" &&
-      !inAuthGroup &&
-      !inAppGroup
-    ) {
-      // Not authenticated and not in a group → go to login
-      router.replace("/(auth)/login");
+    if (sessionState === "authenticated") {
+      // Authenticated → go to dashboard (main app entry point)
+      if (inAuthGroup || inRoot) {
+        router.replace("/(app)/dashboard");
+      }
+    } else {
+      // Not authenticated → go to login
+      if (inAppGroup || inRoot) {
+        router.replace("/(auth)/login");
+      }
     }
   }, [sessionState, segments]);
 
