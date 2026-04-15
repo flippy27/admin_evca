@@ -1,11 +1,12 @@
 /**
  * App layout — authenticated screens
- * Contains tab navigation with permission-based visibility
+ * Contains tab navigation with permission-based visibility + sidebar
  * Each tab routes to a feature module
  */
 
 import { AuthPermissionsEnum } from "@/lib/config/permissions";
 import { usePermissions } from "@/lib/hooks/use-permissions";
+import { AppContainer } from "@/components/layout/AppContainer";
 import { getThemeColors, spacing } from "@/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
@@ -24,19 +25,20 @@ export default function AppLayout() {
   });
 
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.muted,
-        tabBarStyle: {
-          backgroundColor: colors.card,
-          borderTopColor: colors.border,
-          paddingBottom: spacing.sm,
-          height: 60,
-        },
-      }}
-    >
+    <AppContainer>
+      <Tabs
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: colors.primary,
+          tabBarInactiveTintColor: colors.muted,
+          tabBarStyle: {
+            backgroundColor: colors.card,
+            borderTopColor: colors.border,
+            paddingBottom: spacing.sm,
+            height: 60,
+          },
+        }}
+      >
       {/* Dashboard */}
       {hasPermission(AuthPermissionsEnum.DASHBOARD_VIEW) && (
         <Tabs.Screen
@@ -123,6 +125,7 @@ export default function AppLayout() {
           ),
         }}
       />
-    </Tabs>
+      </Tabs>
+    </AppContainer>
   );
 }

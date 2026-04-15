@@ -8,11 +8,13 @@ import {
   SafeAreaView,
   TouchableOpacity,
   View,
+  ScrollView,
 } from "react-native";
 
 import { Alert } from "@/components/ui/Alert";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent } from "@/components/ui/Card";
+import { BottomDrawer } from "@/components/ui/BottomDrawer";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { SkeletonCard } from "@/components/ui/Skeleton";
 import { Text } from "@/components/ui/Text";
@@ -21,6 +23,8 @@ import { useApiErrorToast } from "@/lib/hooks/useApiErrorToast";
 import { useChargersStore } from "@/lib/stores/chargers.store";
 import { AuthPermissionsEnum } from "@/lib/types/auth.types";
 import { getThemeColors, spacing } from "@/theme";
+
+type ChargersTab = "list" | "sessions";
 
 const STATUS_COLORS: Record<string, string> = {
   available: "#22c55e",
@@ -50,8 +54,13 @@ export default function ChargersScreen() {
     clearError,
   } = useChargersStore();
 
+  // UI State
   const [searchText, setSearchText] = useState("");
   const [filteredChargers, setFilteredChargers] = useState<typeof chargers>([]);
+  const [activeTab, setActiveTab] = useState<ChargersTab>("list");
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const [guideDrawerOpen, setGuideDrawerOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
 
   // Show error toast when API fails
   useApiErrorToast(chargersError, "Failed to load chargers. Try again.");
@@ -61,20 +70,26 @@ export default function ChargersScreen() {
     fetchChargers(1, 20);
   }, []);
 
-  // Filter on search
+  // Filter on search & status
   useEffect(() => {
+    let filtered = chargers;
+
+    // Search filter
     if (searchText) {
-      setFilteredChargers(
-        chargers.filter(
-          (c) =>
-            c.name.toLowerCase().includes(searchText.toLowerCase()) ||
-            c.id.toLowerCase().includes(searchText.toLowerCase()),
-        ),
+      filtered = filtered.filter(
+        (c) =>
+          c.name.toLowerCase().includes(searchText.toLowerCase()) ||
+          c.id.toLowerCase().includes(searchText.toLowerCase()),
       );
-    } else {
-      setFilteredChargers(chargers);
     }
-  }, [searchText, chargers]);
+
+    // Status filter
+    if (statusFilter) {
+      filtered = filtered.filter((c) => c.status === statusFilter);
+    }
+
+    setFilteredChargers(filtered);
+  }, [searchText, chargers, statusFilter]);
 
   if (!hasAccess) return null;
 
@@ -205,64 +220,251 @@ export default function ChargersScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <View style={{ padding: spacing.lg, gap: spacing.md }}>
-        {/* Header */}
-        <View>
-          <Text variant="h2" weight="bold">
-            {t("common.ui.pageTitles.chargers") || "Chargers"}
-          </Text>
-          <Text
-            variant="body"
-            style={{ color: colors.mutedForeground, marginTop: spacing.sm }}
-          >
-            {filteredChargers?.length || 0} chargers
-          </Text>
+      <View style={{ flex: 1 }}>
+        {/* Tabs */}
+        <View
+          style={{
+            flexDirection: "row",
+            borderBottomWidth: 1,
+            borderBottomColor: colors.border,
+            backgroundColor: colors.card,
+            paddingHorizontal: spacing.lg,
+          }}
+        >
+          {(["list", "sessions"] as ChargersTab[]).map((tab) => (
+            <TouchableOpacity
+              key={tab}
+              onPress={() => setActiveTab(tab)}
+              style={{
+                paddingVertical: spacing.md,
+                paddingHorizontal: spacing.md,
+                borderBottomWidth: activeTab === tab ? 2 : 0,
+                borderBottomColor: colors.primary,
+              }}
+            >
+              <Text
+                variant="body"
+                weight={activeTab === tab ? "semibold" : "normal"}
+                style={{
+                  color:
+                    activeTab === tab ? colors.primary : colors.mutedForeground,
+                }}
+              >
+                {tab === "list" ? "Chargers" : "Sessions"}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </View>
 
-        {/* Search */}
-        <SearchBar placeholder="Search chargers..." onSearch={setSearchText} />
+        {activeTab === "list" ? (
+          <>
+            {/* Header */}
+            <View style={{ padding: spacing.lg, gap: spacing.md }}>
+              <View>
+                <Text variant="h2" weight="bold">
+                  {t("common.ui.pageTitles.chargers") || "Chargers"}
+                </Text>
+                <Text
+                  variant="body"
+                  style={{ color: colors.mutedForeground, marginTop: spacing.sm }}
+                >
+                  {filteredChargers?.length || 0} chargers
+                </Text>
+              </View>
 
-        {/* Error Alert */}
-        {chargersError && (
-          <Alert variant="destructive" title="Error" message={chargersError} />
+              {/* Controls */}
+              <View style={{ flexDirection: "row", gap: spacing.md }}>
+                <View style={{ flex: 1 }}>
+                  <SearchBar
+                    placeholder="Search chargers..."
+                    onSearch={setSearchText}
+                  />
+                </View>
+                <TouchableOpacity
+                  onPress={() => setFilterDrawerOpen(true)}
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 8,
+                    backgroundColor: colors.card,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderWidth: statusFilter ? 2 : 1,
+                    borderColor: statusFilter ? colors.primary : colors.border,
+                  }}
+                >
+                  <Ionicons name="funnel" size={20} color={colors.primary} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setGuideDrawerOpen(true)}
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 8,
+                    backgroundColor: colors.card,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Ionicons name="information-circle" size={20} color={colors.mutedForeground} />
+                </TouchableOpacity>
+              </View>
+
+              {/* Error Alert */}
+              {chargersError && (
+                <Alert variant="destructive" title="Error" message={chargersError} />
+              )}
+            </View>
+
+            {/* List */}
+            <FlatList
+              data={filteredChargers}
+              renderItem={renderChargerItem}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={{
+                paddingHorizontal: spacing.lg,
+                paddingBottom: spacing.xl,
+              }}
+              refreshControl={
+                <RefreshControl
+                  refreshing={chargersLoading}
+                  onRefresh={handleRefresh}
+                />
+              }
+              ListEmptyComponent={
+                chargersLoading ? (
+                  <View
+                    style={{ paddingHorizontal: spacing.lg, paddingVertical: spacing.lg }}
+                  >
+                    {Array.from({ length: 3 }).map((_, idx) => (
+                      <SkeletonCard key={idx} lines={2} style={{ marginBottom: spacing.md }} />
+                    ))}
+                  </View>
+                ) : (
+                  <View style={{ alignItems: "center", paddingVertical: spacing.xl }}>
+                    <Text variant="body" style={{ color: colors.mutedForeground }}>
+                      {searchText
+                        ? "No chargers found"
+                        : "No data. Pull to refresh."}
+                    </Text>
+                  </View>
+                )
+              }
+              onEndReached={() => {
+                if (page < totalPages) handleNextPage();
+              }}
+              onEndReachedThreshold={0.1}
+            />
+          </>
+        ) : (
+          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+            <Text variant="body" style={{ color: colors.mutedForeground }}>
+              Charge sessions — coming soon
+            </Text>
+          </View>
         )}
-      </View>
 
-      {/* List */}
-      <FlatList
-        data={filteredChargers}
-        renderItem={renderChargerItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={{
-          paddingHorizontal: spacing.lg,
-          paddingBottom: spacing.xl,
-        }}
-        refreshControl={
-          <RefreshControl
-            refreshing={chargersLoading}
-            onRefresh={handleRefresh}
-          />
-        }
-        ListEmptyComponent={
-          chargersLoading ? (
-            <View style={{ paddingHorizontal: spacing.lg, paddingVertical: spacing.lg }}>
-              {Array.from({ length: 3 }).map((_, idx) => (
-                <SkeletonCard key={idx} lines={2} style={{ marginBottom: spacing.md }} />
+        {/* Filter Drawer */}
+        <BottomDrawer
+          visible={filterDrawerOpen}
+          onClose={() => setFilterDrawerOpen(false)}
+          title="Filter Chargers"
+          height={300}
+        >
+          <ScrollView style={{ paddingBottom: spacing.lg }}>
+            <View style={{ gap: spacing.md }}>
+              <Text variant="body" weight="semibold">
+                Status
+              </Text>
+              {["available", "charging", "faulted", "offline"].map((status) => (
+                <TouchableOpacity
+                  key={status}
+                  onPress={() =>
+                    setStatusFilter(statusFilter === status ? null : status)
+                  }
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    paddingVertical: spacing.sm,
+                    gap: spacing.md,
+                  }}
+                >
+                  <View
+                    style={{
+                      width: 20,
+                      height: 20,
+                      borderRadius: 4,
+                      borderWidth: 2,
+                      borderColor:
+                        statusFilter === status ? colors.primary : colors.border,
+                      backgroundColor:
+                        statusFilter === status ? colors.primary : "transparent",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {statusFilter === status && (
+                      <Ionicons name="checkmark" size={14} color="white" />
+                    )}
+                  </View>
+                  <View
+                    style={{
+                      width: 12,
+                      height: 12,
+                      borderRadius: 6,
+                      backgroundColor: STATUS_COLORS[status],
+                      marginRight: spacing.sm,
+                    }}
+                  />
+                  <Text variant="body">
+                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                  </Text>
+                </TouchableOpacity>
               ))}
             </View>
-          ) : (
-            <View style={{ alignItems: "center", paddingVertical: spacing.xl }}>
-              <Text variant="body" style={{ color: colors.mutedForeground }}>
-                {searchText ? "No chargers found" : "No data. Pull to refresh."}
-              </Text>
-            </View>
-          )
-        }
-        onEndReached={() => {
-          if (page < totalPages) handleNextPage();
-        }}
-        onEndReachedThreshold={0.1}
-      />
+          </ScrollView>
+        </BottomDrawer>
+
+        {/* Guide Drawer */}
+        <BottomDrawer
+          visible={guideDrawerOpen}
+          onClose={() => setGuideDrawerOpen(false)}
+          title="Charger Status Guide"
+          height={350}
+        >
+          <ScrollView style={{ paddingBottom: spacing.lg }}>
+            {["available", "charging", "faulted", "offline"].map((status) => (
+              <View key={status} style={{ gap: spacing.sm, marginBottom: spacing.md }}>
+                <View style={{ flexDirection: "row", gap: spacing.md, alignItems: "center" }}>
+                  <View
+                    style={{
+                      width: 16,
+                      height: 16,
+                      borderRadius: 8,
+                      backgroundColor: STATUS_COLORS[status],
+                    }}
+                  />
+                  <Text variant="body" weight="semibold">
+                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                  </Text>
+                </View>
+                <Text
+                  variant="caption"
+                  style={{ color: colors.mutedForeground, marginLeft: spacing.xl }}
+                >
+                  {status === "available"
+                    ? "Ready for charging sessions"
+                    : status === "charging"
+                      ? "Currently delivering power to a vehicle"
+                      : status === "faulted"
+                        ? "Equipment malfunction detected"
+                        : "No power or communication"}
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
+        </BottomDrawer>
+      </View>
     </SafeAreaView>
   );
 }
