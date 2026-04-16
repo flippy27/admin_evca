@@ -1,24 +1,27 @@
 /**
- * Login Screen
- * 2-step auth: step 1 gets tokens, step 2 decrypts permissions
+ * Login Screen - Dhemax Design
+ * Gradient background (teal to green) with centered form
  */
 
-import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  TouchableOpacity,
+  View,
+  TextInput,
+  ActivityIndicator,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import i18n from "../../lib/i18n";
 
-import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
-import { Input } from "@/components/ui/Input";
-import { Switch } from "@/components/ui/Switch";
 import { Text } from "@/components/ui/Text";
 import { useToast } from "@/components/ui/Toast";
 import { useAppStore } from "@/lib/stores/app.store";
 import { useAuthStore } from "@/lib/stores/auth.store";
-import { getThemeColors, spacing } from "@/theme";
+import { spacing } from "@/theme";
 
 interface LoginForm {
   email: string;
@@ -27,7 +30,6 @@ interface LoginForm {
 }
 
 export default function LoginScreen() {
-  const router = useRouter();
   const { t } = useTranslation();
   const toast = useToast();
 
@@ -36,7 +38,7 @@ export default function LoginScreen() {
   const setLanguage = useAppStore((state) => state.setLanguage);
 
   const [isLoading, setIsLoading] = useState(false);
-  const colors = getThemeColors("light");
+  const insets = useSafeAreaInsets();
 
   const {
     control,
@@ -51,19 +53,13 @@ export default function LoginScreen() {
     },
   });
 
-  // Load remembered email on mount
   useEffect(() => {
     const loadRememberedEmail = async () => {
       try {
-        const AsyncStorage =
-          await import("@react-native-async-storage/async-storage").then(
-            (m) => m.default,
-          );
-        const saved = await AsyncStorage.getItem("auth_remember_email");
-        if (saved) {
-          // Can't directly set the form value here, it's handled by react-hook-form
-          // For now, we'll skip this — a more robust approach would use a state variable
-        }
+        await import("@react-native-async-storage/async-storage").then(
+          (m) => m.default,
+        );
+        // Implementation for loading would go here
       } catch (error) {
         console.error("Failed to load remembered email:", error);
       }
@@ -82,8 +78,6 @@ export default function LoginScreen() {
 
       if (!success) {
         toast.show(t("auth.login.invalidCredentials"), "error");
-      } else {
-        // Root layout will handle navigation to /(app)/dashboard when sessionState becomes 'authenticated'
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -103,163 +97,324 @@ export default function LoginScreen() {
     !!emailField && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField);
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        flexGrow: 1,
-        backgroundColor: colors.background,
-        padding: spacing.lg,
-        justifyContent: "center",
-      }}
-    >
-      <View style={{ alignItems: "center", marginBottom: spacing.xl }}>
-        <Text variant="h1" weight="bold" style={{ marginBottom: spacing.md }}>
-          e-Mobility Admin
-        </Text>
-        <Text variant="body" style={{ color: colors.mutedForeground }}>
-          {t("auth.login.loginTitle")}
-        </Text>
-      </View>
-
-      <Card style={{ marginBottom: spacing.xl }}>
-        <View style={{ padding: spacing.lg }}>
-          {/* Email field */}
-          <Controller
-            control={control}
-            name="email"
-            rules={{
-              required: t("common.ui.validation.errors.required"),
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: t("common.ui.validation.errors.strictEmail"),
-              },
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                label={t("auth.login.username")}
-                placeholder={t("auth.login.emailPlaceholder")}
-                onChangeText={onChange}
-                onBlur={onBlur}
-                value={value}
-                error={errors.email?.message}
-                autoCapitalize="none"
-                keyboardType="email-address"
-                editable={!isLoading}
-                containerStyle={{ marginBottom: spacing.md }}
-              />
-            )}
-          />
-
-          {/* Password field */}
-          <Controller
-            control={control}
-            name="password"
-            rules={{
-              required: t("common.ui.validation.errors.required"),
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                label={t("auth.login.password")}
-                placeholder={t("auth.login.passwordPlaceholder")}
-                onChangeText={onChange}
-                onBlur={onBlur}
-                value={value}
-                error={errors.password?.message}
-                secureTextEntry
-                editable={!isLoading}
-                containerStyle={{ marginBottom: spacing.md }}
-              />
-            )}
-          />
-
-          {/* Remember me toggle */}
-          <Controller
-            control={control}
-            name="rememberMe"
-            render={({ field: { onChange, value } }) => (
-              <Switch
-                label={t("auth.login.rememberMe")}
-                value={value}
-                onValueChange={onChange}
-                disabled={isLoading}
-                containerStyle={{ marginBottom: spacing.lg }}
-              />
-            )}
-          />
-
-          {/* Login button */}
-          <Button
-            label={isLoading ? "" : t("auth.login.signIn")}
-            onPress={handleSubmit(onSubmit)}
-            disabled={isLoading}
-            loading={isLoading}
-            fullWidth
-            style={{ marginBottom: spacing.md }}
-          />
-
-          {/* Forgot password link */}
-          <TouchableOpacity disabled={!isForgotPasswordEnabled || isLoading}>
+    <LinearGradient colors={["#1a7f8b", "#4CAF50"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ flex: 1 }}>
+      <View style={{ flex: 1, paddingTop: insets.top, paddingBottom: insets.bottom }}>
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: "center",
+            paddingHorizontal: spacing.lg,
+            paddingVertical: spacing.lg,
+          }}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Logo */}
+          <View style={{ alignItems: "center", marginBottom: spacing.xxl }}>
             <Text
-              variant="caption"
+              variant="h2"
+              weight="bold"
               style={{
-                color: isForgotPasswordEnabled ? colors.primary : colors.muted,
+                color: "#ffffff",
                 textAlign: "center",
               }}
             >
-              {t("auth.login.forgotPassword")}
+              e-Mobility
             </Text>
-          </TouchableOpacity>
-        </View>
-      </Card>
+            <Text
+              variant="caption"
+              style={{
+                color: "rgba(255, 255, 255, 0.8)",
+                textAlign: "center",
+                marginTop: spacing.sm,
+              }}
+            >
+              {t("auth.login.loginTitle")}
+            </Text>
+          </View>
 
-      {/* Language switcher */}
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          gap: spacing.md,
-          marginTop: spacing.xl,
-        }}
-      >
-        <TouchableOpacity
-          onPress={toggleLanguage}
-          style={{
-            paddingHorizontal: spacing.md,
-            paddingVertical: spacing.sm,
-            borderRadius: 6,
-            backgroundColor: language === "es" ? colors.primary : colors.muted,
-          }}
-        >
-          <Text
-            variant="caption"
-            weight="semibold"
+          {/* Form Container */}
+          <View style={{ gap: spacing.lg }}>
+            {/* Email field */}
+            <View>
+              <Text
+                variant="body"
+                weight="semibold"
+                style={{
+                  color: "#ffffff",
+                  marginBottom: spacing.sm,
+                }}
+              >
+                {t("auth.login.username")}
+              </Text>
+              <Controller
+                control={control}
+                name="email"
+                rules={{
+                  required: t("common.ui.validation.errors.required"),
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: t("common.ui.validation.errors.strictEmail"),
+                  },
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <>
+                    <TextInput
+                      style={{
+                        borderWidth: 1,
+                        borderColor: errors.email ? "#ef4444" : "#ffffff",
+                        borderRadius: 8,
+                        paddingHorizontal: spacing.md,
+                        paddingVertical: spacing.md,
+                        fontSize: 16,
+                        color: "#ffffff",
+                        backgroundColor: "rgba(255, 255, 255, 0.1)",
+                      }}
+                      placeholder={t("auth.login.emailPlaceholder")}
+                      placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      autoCapitalize="none"
+                      keyboardType="email-address"
+                      editable={!isLoading}
+                    />
+                    {errors.email && (
+                      <Text
+                        variant="caption"
+                        style={{
+                          color: "#ef4444",
+                          marginTop: spacing.xs,
+                        }}
+                      >
+                        {errors.email.message}
+                      </Text>
+                    )}
+                  </>
+                )}
+              />
+            </View>
+
+            {/* Password field */}
+            <View>
+              <Text
+                variant="body"
+                weight="semibold"
+                style={{
+                  color: "#ffffff",
+                  marginBottom: spacing.sm,
+                }}
+              >
+                {t("auth.login.password")}
+              </Text>
+              <Controller
+                control={control}
+                name="password"
+                rules={{
+                  required: t("common.ui.validation.errors.required"),
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <>
+                    <TextInput
+                      style={{
+                        borderWidth: 1,
+                        borderColor: errors.password ? "#ef4444" : "#ffffff",
+                        borderRadius: 8,
+                        paddingHorizontal: spacing.md,
+                        paddingVertical: spacing.md,
+                        fontSize: 16,
+                        color: "#ffffff",
+                        backgroundColor: "rgba(255, 255, 255, 0.1)",
+                      }}
+                      placeholder={t("auth.login.passwordPlaceholder")}
+                      placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      secureTextEntry
+                      editable={!isLoading}
+                    />
+                    {errors.password && (
+                      <Text
+                        variant="caption"
+                        style={{
+                          color: "#ef4444",
+                          marginTop: spacing.xs,
+                        }}
+                      >
+                        {errors.password.message}
+                      </Text>
+                    )}
+                  </>
+                )}
+              />
+            </View>
+
+            {/* Remember me checkbox */}
+            <Controller
+              control={control}
+              name="rememberMe"
+              render={({ field: { onChange, value } }) => (
+                <TouchableOpacity
+                  onPress={() => onChange(!value)}
+                  disabled={isLoading}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: spacing.sm,
+                  }}
+                >
+                  <View
+                    style={{
+                      width: 20,
+                      height: 20,
+                      borderWidth: 1,
+                      borderColor: "#ffffff",
+                      borderRadius: 4,
+                      backgroundColor: value ? "#ffffff" : "transparent",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {value && (
+                      <Text
+                        style={{
+                          color: "#4CAF50",
+                          fontSize: 14,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        ✓
+                      </Text>
+                    )}
+                  </View>
+                  <Text
+                    variant="body"
+                    style={{
+                      color: "#ffffff",
+                    }}
+                  >
+                    {t("auth.login.rememberMe")}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            />
+
+            {/* Login button */}
+            <TouchableOpacity
+              onPress={handleSubmit(onSubmit)}
+              disabled={isLoading}
+              style={{
+                backgroundColor: "#ffffff",
+                borderRadius: 8,
+                paddingVertical: spacing.md,
+                paddingHorizontal: spacing.lg,
+                marginTop: spacing.md,
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                opacity: isLoading ? 0.7 : 1,
+              }}
+            >
+              {isLoading ? (
+                <ActivityIndicator color="#4CAF50" size="small" />
+              ) : (
+                <Text
+                  variant="body"
+                  weight="bold"
+                  style={{
+                    color: "#4CAF50",
+                  }}
+                >
+                  {t("auth.login.signIn")}
+                </Text>
+              )}
+            </TouchableOpacity>
+
+            {/* Forgot password link */}
+            <TouchableOpacity
+              disabled={!isForgotPasswordEnabled || isLoading}
+              style={{ alignItems: "center" }}
+            >
+              <Text
+                variant="caption"
+                style={{
+                  color: isForgotPasswordEnabled
+                    ? "#ffffff"
+                    : "rgba(255, 255, 255, 0.5)",
+                  textAlign: "center",
+                  textDecorationLine: isForgotPasswordEnabled
+                    ? "underline"
+                    : "none",
+                }}
+              >
+                {t("auth.login.forgotPassword")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Language switcher - bottom */}
+          <View
             style={{
-              color: language === "es" ? colors.background : colors.foreground,
+              flexDirection: "row",
+              justifyContent: "center",
+              gap: spacing.md,
+              marginTop: spacing.xxl,
             }}
           >
-            ES
-          </Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              onPress={toggleLanguage}
+              style={{
+                paddingHorizontal: spacing.md,
+                paddingVertical: spacing.sm,
+                borderRadius: 6,
+                backgroundColor:
+                  language === "es"
+                    ? "#ffffff"
+                    : "rgba(255, 255, 255, 0.2)",
+              }}
+            >
+              <Text
+                variant="caption"
+                weight="semibold"
+                style={{
+                  color:
+                    language === "es"
+                      ? "#4CAF50"
+                      : "#ffffff",
+                }}
+              >
+                ES
+              </Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={toggleLanguage}
-          style={{
-            paddingHorizontal: spacing.md,
-            paddingVertical: spacing.sm,
-            borderRadius: 6,
-            backgroundColor: language === "en" ? colors.primary : colors.muted,
-          }}
-        >
-          <Text
-            variant="caption"
-            weight="semibold"
-            style={{
-              color: language === "en" ? colors.background : colors.foreground,
-            }}
-          >
-            EN
-          </Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              onPress={toggleLanguage}
+              style={{
+                paddingHorizontal: spacing.md,
+                paddingVertical: spacing.sm,
+                borderRadius: 6,
+                backgroundColor:
+                  language === "en"
+                    ? "#ffffff"
+                    : "rgba(255, 255, 255, 0.2)",
+              }}
+            >
+              <Text
+                variant="caption"
+                weight="semibold"
+                style={{
+                  color:
+                    language === "en"
+                      ? "#4CAF50"
+                      : "#ffffff",
+                }}
+              >
+                EN
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
-    </ScrollView>
+    </LinearGradient>
   );
 }
