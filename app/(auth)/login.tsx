@@ -1,9 +1,9 @@
 /**
  * Login Screen - Dhemax Design
- * Gradient background (teal to green) with centered form
+ * Gradient background (dark blue→cyan→yellow-green) with logo and animated particles
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -12,6 +12,9 @@ import {
   View,
   TextInput,
   ActivityIndicator,
+  Animated,
+  Easing,
+  Dimensions,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -29,6 +32,83 @@ interface LoginForm {
   rememberMe: boolean;
 }
 
+// Animated particle component
+function AnimatedParticle({
+  delay,
+  duration,
+  position,
+}: {
+  delay: number;
+  duration: number;
+  position: { top: number; left: number; size: number };
+}) {
+  const opacity = useRef(new Animated.Value(0.3)).current;
+  const scale = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    const startAnimation = () => {
+      Animated.loop(
+        Animated.sequence([
+          Animated.delay(delay),
+          Animated.parallel([
+            Animated.timing(opacity, {
+              toValue: 0.6,
+              duration: duration / 2,
+              easing: Easing.inOut(Easing.ease),
+              useNativeDriver: true,
+            }),
+            Animated.timing(scale, {
+              toValue: 1.2,
+              duration: duration / 2,
+              easing: Easing.inOut(Easing.ease),
+              useNativeDriver: true,
+            }),
+          ]),
+          Animated.parallel([
+            Animated.timing(opacity, {
+              toValue: 0.3,
+              duration: duration / 2,
+              easing: Easing.inOut(Easing.ease),
+              useNativeDriver: true,
+            }),
+            Animated.timing(scale, {
+              toValue: 1,
+              duration: duration / 2,
+              easing: Easing.inOut(Easing.ease),
+              useNativeDriver: true,
+            }),
+          ]),
+        ]),
+      ).start();
+    };
+
+    startAnimation();
+  }, [delay, duration, opacity, scale]);
+
+  return (
+    <Animated.View
+      style={{
+        position: "absolute",
+        top: position.top,
+        left: position.left,
+        width: position.size,
+        height: position.size,
+        borderRadius: position.size / 2,
+        opacity,
+        transform: [{ scale }],
+      }}
+    >
+      <View
+        style={{
+          flex: 1,
+          borderRadius: position.size / 2,
+          backgroundColor: "rgba(80, 191, 197, 0.3)",
+        }}
+      />
+    </Animated.View>
+  );
+}
+
 export default function LoginScreen() {
   const { t } = useTranslation();
   const toast = useToast();
@@ -39,6 +119,7 @@ export default function LoginScreen() {
 
   const [isLoading, setIsLoading] = useState(false);
   const insets = useSafeAreaInsets();
+  const screenWidth = Dimensions.get("window").width;
 
   const {
     control,
@@ -97,7 +178,29 @@ export default function LoginScreen() {
     !!emailField && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField);
 
   return (
-    <LinearGradient colors={["#1a7f8b", "#4CAF50"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ flex: 1 }}>
+    <LinearGradient
+      colors={["#22335a", "#46A3B5", "#A3B32B"]}
+      start={{ x: 0.2, y: 0.2 }}
+      end={{ x: 1, y: 1 }}
+      style={{ flex: 1 }}
+    >
+      {/* Animated particles background */}
+      <AnimatedParticle
+        delay={0}
+        duration={8000}
+        position={{ top: 60, left: 40, size: 120 }}
+      />
+      <AnimatedParticle
+        delay={2000}
+        duration={10000}
+        position={{ top: screenWidth * 0.3, left: screenWidth * 0.7, size: 100 }}
+      />
+      <AnimatedParticle
+        delay={4000}
+        duration={12000}
+        position={{ top: screenWidth * 0.6, left: 30, size: 80 }}
+      />
+
       <View style={{ flex: 1, paddingTop: insets.top, paddingBottom: insets.bottom }}>
         <ScrollView
           contentContainerStyle={{
@@ -108,24 +211,44 @@ export default function LoginScreen() {
           }}
           showsVerticalScrollIndicator={false}
         >
-          {/* Logo */}
+          {/* Logo - Dhemax with animated particles effect */}
           <View style={{ alignItems: "center", marginBottom: spacing.xxl }}>
+            <View
+              style={{
+                marginBottom: spacing.lg,
+                alignItems: "center",
+                justifyContent: "center",
+                width: 120,
+                height: 50,
+              }}
+            >
+              <Text
+                variant="h1"
+                weight="bold"
+                style={{
+                  color: "#ffffff",
+                  fontSize: 28,
+                }}
+              >
+                DHEMAX
+              </Text>
+              <Text
+                variant="caption"
+                style={{
+                  color: "rgba(255, 255, 255, 0.8)",
+                  fontSize: 10,
+                  marginTop: 2,
+                }}
+              >
+                The Smart Inside Mobility
+              </Text>
+            </View>
             <Text
-              variant="h2"
+              variant="h3"
               weight="bold"
               style={{
                 color: "#ffffff",
                 textAlign: "center",
-              }}
-            >
-              e-Mobility
-            </Text>
-            <Text
-              variant="caption"
-              style={{
-                color: "rgba(255, 255, 255, 0.8)",
-                textAlign: "center",
-                marginTop: spacing.sm,
               }}
             >
               {t("auth.login.loginTitle")}
