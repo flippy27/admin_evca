@@ -21,26 +21,30 @@ export const energyApi = {
     type?: string;
     status?: string;
   }) => {
-    // Transform params to match backend API format
-    const apiParams: Record<string, any> = {
-      page: params?.page || 1,
-      size: params?.pageSize || 20,
-    };
+    // Build query string with comma-separated location_ids
+    const queryParts: string[] = [];
 
-    if (params?.siteId) {
-      // Convert siteId to location_ids (can be array or single value)
-      apiParams.location_ids = Array.isArray(params.siteId) ? params.siteId : [params.siteId];
+    queryParts.push(`page=${params?.page || 1}`);
+    queryParts.push(`size=${params?.pageSize || 20}`);
+
+    // Add location_ids as comma-separated values
+    if (params?.siteId && (Array.isArray(params.siteId) ? params.siteId.length > 0 : params.siteId)) {
+      const locationIds = Array.isArray(params.siteId) ? params.siteId : [params.siteId];
+      queryParts.push(`location_ids=${locationIds.join(',')}`);
     }
 
     if (params?.type) {
-      apiParams.type = params.type;
+      queryParts.push(`type=${params.type}`);
     }
 
     if (params?.status) {
-      apiParams.status = params.status;
+      queryParts.push(`status=${params.status}`);
     }
 
-    return bffClient.get<EnergyResourcesListResponse>('/bff/energy-resources', { params: apiParams });
+    const queryString = queryParts.join('&');
+    const url = `/bff/energy-resources?${queryString}`;
+
+    return bffClient.get<EnergyResourcesListResponse>(url);
   },
 
   /**

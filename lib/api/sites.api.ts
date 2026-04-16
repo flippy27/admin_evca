@@ -17,7 +17,7 @@ export const sitesApi = {
     companyId?: string;
     search?: string;
   }) => {
-    // Build query string manually for repeated location_ids params
+    // Build query string with comma-separated location_ids
     const queryParts: string[] = [];
 
     queryParts.push(`page=${params?.page || 1}`);
@@ -28,12 +28,10 @@ export const sitesApi = {
       queryParts.push(`company_id=${params.companyId}`);
     }
 
-    // Add location_ids as repeated params
-    if (params?.siteId) {
+    // Add location_ids as comma-separated values
+    if (params?.siteId && (Array.isArray(params.siteId) ? params.siteId.length > 0 : params.siteId)) {
       const locationIds = Array.isArray(params.siteId) ? params.siteId : [params.siteId];
-      locationIds.forEach((id) => {
-        queryParts.push(`location_ids=${id}`);
-      });
+      queryParts.push(`location_ids=${locationIds.join(',')}`);
     }
 
     if (params?.search) {
