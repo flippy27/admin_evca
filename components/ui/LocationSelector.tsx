@@ -130,7 +130,6 @@ export function LocationSelector() {
             {
               backgroundColor: colors.card,
               height: Math.min(Dimensions.get('window').height * 0.7, 450),
-              paddingTop: insets.top,
             },
           ]}
         >
