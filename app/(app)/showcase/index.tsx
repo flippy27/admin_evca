@@ -82,6 +82,154 @@ export default function ShowcaseScreen() {
           </CardContent>
         </Card>
 
+        {/* Role Colors */}
+        <Card>
+          <CardContent style={{ gap: spacing.md }}>
+            <Text variant="h4" weight="bold">
+              Role Colors
+            </Text>
+            <View style={{ gap: spacing.md }}>
+              <View style={{ flexDirection: "row", gap: spacing.md, alignItems: "center" }}>
+                <View
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 8,
+                    backgroundColor: "#9C27B0",
+                  }}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text variant="body" weight="bold">
+                    Operador
+                  </Text>
+                  <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                    #9C27B0
+                  </Text>
+                </View>
+              </View>
+              <View style={{ flexDirection: "row", gap: spacing.md, alignItems: "center" }}>
+                <View
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 8,
+                    backgroundColor: "#00BCD4",
+                  }}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text variant="body" weight="bold">
+                    Mantenedor
+                  </Text>
+                  <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                    #00BCD4
+                  </Text>
+                </View>
+              </View>
+              <View style={{ flexDirection: "row", gap: spacing.md, alignItems: "center" }}>
+                <View
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 8,
+                    backgroundColor: "#4CAF50",
+                  }}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text variant="body" weight="bold">
+                    Supervisor
+                  </Text>
+                  <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                    #4CAF50
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </CardContent>
+        </Card>
+
+        {/* Status Colors */}
+        <Card>
+          <CardContent style={{ gap: spacing.md }}>
+            <Text variant="h4" weight="bold">
+              Status & Alert Colors
+            </Text>
+            <View style={{ gap: spacing.md }}>
+              <View style={{ flexDirection: "row", gap: spacing.md, alignItems: "center" }}>
+                <View
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 8,
+                    backgroundColor: "#4CAF50",
+                  }}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text variant="body" weight="bold">
+                    Success
+                  </Text>
+                  <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                    #4CAF50
+                  </Text>
+                </View>
+              </View>
+              <View style={{ flexDirection: "row", gap: spacing.md, alignItems: "center" }}>
+                <View
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 8,
+                    backgroundColor: "#FFC107",
+                  }}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text variant="body" weight="bold">
+                    Warning
+                  </Text>
+                  <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                    #FFC107
+                  </Text>
+                </View>
+              </View>
+              <View style={{ flexDirection: "row", gap: spacing.md, alignItems: "center" }}>
+                <View
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 8,
+                    backgroundColor: "#F44336",
+                  }}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text variant="body" weight="bold">
+                    Error
+                  </Text>
+                  <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                    #F44336
+                  </Text>
+                </View>
+              </View>
+              <View style={{ flexDirection: "row", gap: spacing.md, alignItems: "center" }}>
+                <View
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 8,
+                    backgroundColor: "#2196F3",
+                  }}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text variant="body" weight="bold">
+                    Info
+                  </Text>
+                  <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                    #2196F3
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </CardContent>
+        </Card>
+
         {/* Typography */}
         <Card>
           <CardContent style={{ gap: spacing.md }}>

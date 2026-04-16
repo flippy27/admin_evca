@@ -1,27 +1,29 @@
+import { Alert } from "@/components/ui/Alert";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
-import { Text } from "@/components/ui/Text";
 import { Input } from "@/components/ui/Input";
-import { Alert } from "@/components/ui/Alert";
+import { Text } from "@/components/ui/Text";
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
+import { AuthPermissionsEnum } from "@/lib/config/permissions";
+import { usePermissionGuard } from "@/lib/hooks/usePermissionGuard";
 import { useAppStore } from "@/lib/stores/app.store";
 import { useAuthStore } from "@/lib/stores/auth.store";
 import { useProfileStore } from "@/lib/stores/profile.store";
-import { usePermissionGuard } from "@/lib/hooks/usePermissionGuard";
-import { AuthPermissionsEnum } from "@/lib/config/permissions";
-import { useResolvedColorScheme } from '@/hooks/use-color-scheme';\nimport { getThemeColors, spacing } from "@/theme";
-import { validators, validationMessages } from "@/lib/validation/validators";
+import { validationMessages, validators } from "@/lib/validation/validators";
+import { getThemeColors, spacing } from "@/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useTranslation } from "react-i18next";
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, ScrollView, RefreshControl } from "react-native";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { RefreshControl, ScrollView, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ProfileScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const resolvedScheme = useResolvedColorScheme();\n  const colors = getThemeColors(resolvedScheme);
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
 
   // Permission guard
   const hasEditPermission = usePermissionGuard({
@@ -64,8 +66,12 @@ export default function ProfileScreen() {
   });
 
   // Validation errors
-  const [personalErrors, setPersonalErrors] = useState<Record<string, string>>({});
-  const [passwordErrors, setPasswordErrors] = useState<Record<string, string>>({});
+  const [personalErrors, setPersonalErrors] = useState<Record<string, string>>(
+    {},
+  );
+  const [passwordErrors, setPasswordErrors] = useState<Record<string, string>>(
+    {},
+  );
 
   // Fetch profile on mount
   useEffect(() => {
@@ -131,7 +137,9 @@ export default function ProfileScreen() {
 
     if (!validators.required(passwordForm.confirmPassword)) {
       errors.confirmPassword = validationMessages.required;
-    } else if (!validators.match(passwordForm.newPassword, passwordForm.confirmPassword)) {
+    } else if (
+      !validators.match(passwordForm.newPassword, passwordForm.confirmPassword)
+    ) {
       errors.confirmPassword = validationMessages.passwordMismatch;
     }
 
