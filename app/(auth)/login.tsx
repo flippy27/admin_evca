@@ -27,7 +27,7 @@ import { useAppStore } from "@/lib/stores/app.store";
 import { useAuthStore } from "@/lib/stores/auth.store";
 import { spacing } from "@/theme";
 
-// Dhemax logo SVG with animated shine effect
+// Dhemax logo SVG (without animate elements which cause RN issues)
 const DHEMAX_LOGO_SVG = `<?xml version="1.0" encoding="utf-8"?>
 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 87.1 32" style="enable-background:new 0 0 87.1 32;" xml:space="preserve">
 <style type="text/css">
@@ -76,32 +76,10 @@ const DHEMAX_LOGO_SVG = `<?xml version="1.0" encoding="utf-8"?>
 		<stop  offset="0.5965" style="stop-color:#9ECC48"/>
 		<stop  offset="0.7942" style="stop-color:#CAD400"/>
 	</linearGradient>
-	<mask id="smartTextMask">
-		<rect x="0" y="0" width="100%" height="100%" fill="black"/>
-		<text x="40" y="21" class="st2" fill="white">The <tspan class="st3">Smart</tspan> Inside Mobility</text>
-	</mask>
-	<filter id="shineBlur">
-		<feGaussianBlur stdDeviation="1.5"/>
-	</filter>
-	<linearGradient id="shineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-		<stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0" />
-		<stop offset="5%" style="stop-color:#22335a;stop-opacity:1.8" />
-		<stop offset="15%" style="stop-color:#46A3B5;stop-opacity:2.2" />
-		<stop offset="30%" style="stop-color:#50BFC5;stop-opacity:2.5" />
-		<stop offset="50%" style="stop-color:#FFFFFF;stop-opacity:3" />
-		<stop offset="70%" style="stop-color:#9DCC49;stop-opacity:2.5" />
-		<stop offset="85%" style="stop-color:#BED213;stop-opacity:2.2" />
-		<stop offset="95%" style="stop-color:#A3B32B;stop-opacity:1.8" />
-		<stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0" />
-	</linearGradient>
 	<path class="st1" d="M28.8,23.6c-0.4,0.8-1.1,1.2-2,1.2c-0.7,0-1.3-0.3-1.7-0.8l-2.3-2.8c-1.5-1.9-1.6-4.5-0.2-6.5l0.2-0.2l5.7,6.8
 		C29,22,29.1,22.9,28.8,23.6z M30.9,1.9c-0.2-0.3-0.5-0.5-0.8-0.6c-0.9-0.3-1.9,0-2.4,0.7l-4.8,5.9c-1.5,1.9-1.6,4.4-0.3,6.4
 		l0.2,0.3l8.2-9.9C31.6,3.8,31.6,2.7,30.9,1.9z"/>
 	<text x="40" y="21" class="st2">The <tspan class="st3">Smart</tspan> Inside Mobility</text>
-	<rect x="35" y="18" width="17" height="5" fill="url(#shineGradient)" mask="url(#smartTextMask)" filter="url(#shineBlur)" opacity="0">
-		<animate attributeName="x" values="35; 78" dur="4s" repeatCount="indefinite" />
-		<animate attributeName="opacity" values="0; 1.8; 1.8; 0" dur="4s" repeatCount="indefinite" />
-	</rect>
 </g>
 </svg>`;
 
@@ -109,6 +87,46 @@ interface LoginForm {
   email: string;
   password: string;
   rememberMe: boolean;
+}
+
+// Logo shine animation overlay
+function LogoShineOverlay() {
+  const shineOpacity = useRef(new Animated.Value(0)).current;
+  const shinePosition = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(shineOpacity, {
+          toValue: 1.5,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(shineOpacity, {
+          toValue: 0,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]),
+    ).start();
+  }, [shineOpacity]);
+
+  return (
+    <Animated.View
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        opacity: shineOpacity,
+        backgroundColor: "rgba(255, 255, 255, 0.15)",
+        borderRadius: 4,
+      }}
+    />
+  );
 }
 
 // Animated particle component - more visible blurred circles
@@ -297,9 +315,11 @@ export default function LoginScreen() {
                 justifyContent: "center",
                 width: 200,
                 height: 80,
+                position: "relative",
               }}
             >
               <SvgXml xml={DHEMAX_LOGO_SVG} width="100%" height="100%" />
+              <LogoShineOverlay />
             </View>
             <Text
               variant="h3"
