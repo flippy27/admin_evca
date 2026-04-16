@@ -17,7 +17,6 @@ import { getThemeColors, spacing } from "@/theme";
 export default function ShowcaseScreen() {
   const resolvedScheme = useResolvedColorScheme();
   const colors = getThemeColors(resolvedScheme);
-  const colorScheme = useAppStore((s) => s.colorScheme);
   const setColorScheme = useAppStore((s) => s.setColorScheme);
   const [searchText, setSearchText] = useState("");
   const [checkboxState, setCheckboxState] = useState({ unchecked: false, checked: true });
@@ -475,7 +474,7 @@ export default function ShowcaseScreen() {
             <SearchBar placeholder="Search..." onSearch={setSearchText} />
             {searchText && (
               <Text variant="caption" style={{ color: colors.mutedForeground }}>
-                Searching for: "{searchText}"
+                Searching for: &quot;{searchText}&quot;
               </Text>
             )}
           </CardContent>
