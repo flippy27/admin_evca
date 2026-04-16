@@ -279,7 +279,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     try {
       const res = await authApi.refreshToken(refreshToken);
-      const newTokens = res.data.data;
+      // Refresh endpoint returns tokens directly in payload (not nested under .data)
+      const newTokens = res.data.payload as any;
 
       const updated = {
         accessToken: newTokens.access_token,

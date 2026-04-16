@@ -34,10 +34,11 @@ export const authApi = {
 
   /**
    * Refresh access token using refresh token
+   * Returns BFF-style response with tokens in payload
    */
   refreshToken: (refreshToken: string) =>
-    bffClient.post<LoginResponse>(ENDPOINTS.REFRESH_TOKEN, {
-      refresh_token: refreshToken,
+    bffClient.post<BffLoginResponse>(ENDPOINTS.REFRESH_TOKEN, {
+      refreshToken: refreshToken,
     }),
 
   /**
