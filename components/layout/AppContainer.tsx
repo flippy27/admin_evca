@@ -18,7 +18,6 @@ export function AppContainer({ children }: AppContainerProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const colors = getThemeColors("light");
   const insets = useSafeAreaInsets();
-  const route = useRoute();
 
   const closeSidebar = () => setSidebarOpen(false);
   const openSidebar = () => setSidebarOpen(true);
