@@ -10,6 +10,7 @@ import {
   ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useSidebar } from "@/components/layout/AppContainer";
 
 import { Alert } from "@/components/ui/Alert";
 import { Badge } from "@/components/ui/Badge";
@@ -33,6 +34,7 @@ export default function SitesScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const colors = getThemeColors("light");
+  const { openSidebar } = useSidebar();
 
   // Permission guard
   const hasAccess = usePermissionGuard({
@@ -228,8 +230,37 @@ export default function SitesScreen() {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+    <SafeAreaView edges={["bottom"]} style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={{ flex: 1 }}>
+        {/* Header with Hamburger */}
+        <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.sm, paddingBottom: spacing.md, flexDirection: "row", alignItems: "center", gap: spacing.md }}>
+          {/* Hamburger Menu Button */}
+          <TouchableOpacity
+            onPress={openSidebar}
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 8,
+              backgroundColor: colors.card,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <View style={{ gap: 4 }}>
+              <View style={{ width: 20, height: 2, backgroundColor: colors.foreground, borderRadius: 1 }} />
+              <View style={{ width: 20, height: 2, backgroundColor: colors.foreground, borderRadius: 1 }} />
+              <View style={{ width: 20, height: 2, backgroundColor: colors.foreground, borderRadius: 1 }} />
+            </View>
+          </TouchableOpacity>
+
+          {/* Title Section */}
+          <View style={{ flex: 1 }}>
+            <Text variant="h2" weight="bold">
+              {t("common.ui.pageTitles.sites") || "Sites"}
+            </Text>
+          </View>
+        </View>
+
         {/* Tabs */}
         <View
           style={{
@@ -267,16 +298,10 @@ export default function SitesScreen() {
 
         {activeTab === "list" ? (
           <>
-            {/* Header */}
+            {/* List Header */}
             <View style={{ padding: spacing.lg, gap: spacing.md }}>
               <View>
-                <Text variant="h2" weight="bold">
-                  {t("common.ui.pageTitles.sites") || "Sites"}
-                </Text>
-                <Text
-                  variant="body"
-                  style={{ color: colors.mutedForeground, marginTop: spacing.sm }}
-                >
+                <Text variant="body" style={{ color: colors.mutedForeground }}>
                   {filteredSites?.length || 0} sites
                 </Text>
               </View>
