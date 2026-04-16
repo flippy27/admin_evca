@@ -1543,6 +1543,9 @@
       "logoutSuccess": "¡Sesión cerrada!",
       "logoutSuccessText": "Has cerrado sesión correctamente."
     },
+    "preferences": {
+      "title": "Preferencias"
+    },
     "changePassword": {
       "title": "Cambio de contraseña",
       "currentPassword": "Contraseña actual",
@@ -1553,6 +1556,14 @@
     "language": {
       "title": "Cambio de idioma",
       "label": "Idioma"
+    },
+    "theme": {
+      "title": "Cambio de tema",
+      "label": "Tema"
+    },
+    "security": {
+      "title": "Seguridad",
+      "label": "Seguridad"
     },
     "languageSelector": {
       "currentLanguage": "Idioma actual",

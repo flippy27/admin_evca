@@ -1616,6 +1616,9 @@
       "logoutSuccess": "Logged out!",
       "logoutSuccessText": "You have successfully logged out."
     },
+    "preferences": {
+      "title": "Preferences"
+    },
     "changePassword": {
       "title": "Change password",
       "currentPassword": "Current password",
@@ -1626,6 +1629,14 @@
     "language": {
       "title": "Change language",
       "label": "Language"
+    },
+    "theme": {
+      "title": "Change theme",
+      "label": "Theme"
+    },
+    "security": {
+      "title": "Security",
+      "label": "Security"
     },
     "languageSelector": {
       "currentLanguage": "Current language",

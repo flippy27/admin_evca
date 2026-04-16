@@ -78,30 +78,39 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       // Extract userId and companyId from JWT
       const jwtClaims = getJWTClaims(loginData.access_token);
 
-      // Step 2: Get permissions (already decrypted by server)
-      const permRes = await authApi.getPermissions();
-      const permissions = permRes.data.payload.data;
+      // Step 2: Get permissions (optional - use JWT as fallback)
+      let roles: string[] = [];
+      let permissionCodes: string[] = [];
+      let company = 'Unknown';
+      let companyExternalId = '';
 
-      // Process permissions into ProcessedUserData
-      const roles: string[] = [];
-      const permissionCodes: string[] = [];
+      try {
+        const permRes = await authApi.getPermissions();
+        const permissions = permRes.data.payload.data;
 
-      permissions.applications.forEach((app) => {
-        app.companies.forEach((company) => {
-          if (company.role) roles.push(company.role);
-          if (company.permissions?.length) {
-            permissionCodes.push(...company.permissions.map((p) => p.code));
-          }
+        permissions.applications.forEach((app) => {
+          app.companies.forEach((company) => {
+            if (company.role) roles.push(company.role);
+            if (company.permissions?.length) {
+              permissionCodes.push(...company.permissions.map((p) => p.code));
+            }
+          });
         });
-      });
+
+        company = permissions.company.name;
+        companyExternalId = permissions.company.externalId;
+      } catch (permError) {
+        console.warn('[Auth] Failed to fetch permissions, using JWT claims:', permError);
+        // Continue with JWT data only
+      }
 
       const processedUser: ProcessedUserData = {
-        userId: jwtClaims.userId || permissions.user.externalId,
-        email: jwtClaims.email || permissions.user.email,
-        fullName: jwtClaims.name || permissions.user.name,
-        company: permissions.company.name,
-        companyId: jwtClaims.companyId || permissions.company.externalId,
-        companyExternalId: jwtClaims.companyExternalId,
+        userId: jwtClaims.userId,
+        email: jwtClaims.email,
+        fullName: jwtClaims.name,
+        company,
+        companyId: jwtClaims.companyId,
+        companyExternalId,
         roles: [...new Set(roles)],
         permissions: [...new Set(permissionCodes)],
         isActive: true,

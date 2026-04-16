@@ -197,7 +197,7 @@ export default function ProfileScreen() {
             variant="body"
             style={{ color: colors.mutedForeground, marginTop: spacing.sm }}
           >
-            {t("common.ui.labels.manageAccount") || "Manage your account"}
+            Manage your account
           </Text>
         </View>
 
@@ -398,7 +398,7 @@ export default function ProfileScreen() {
         <Card>
           <CardHeader>
             <Text variant="h4" weight="bold">
-              {t("common.ui.labels.preferences") || "Preferences"}
+              {t("profile.preferences.title") || "Preferences"}
             </Text>
           </CardHeader>
           <CardContent style={{ gap: spacing.md }}>
@@ -411,7 +411,7 @@ export default function ProfileScreen() {
             >
               <View style={{ flex: 1 }}>
                 <Text variant="body" weight="bold">
-                  {t("common.ui.labels.language") || "Language"}
+                  {t("profile.language.label")}
                 </Text>
                 <Text
                   variant="caption"
@@ -452,7 +452,7 @@ export default function ProfileScreen() {
               >
                 <View style={{ flex: 1 }}>
                   <Text variant="body" weight="bold">
-                    {t("common.ui.labels.theme") || "Theme"}
+                    {t("profile.theme.label")}
                   </Text>
                   <Text
                     variant="caption"
@@ -484,7 +484,7 @@ export default function ProfileScreen() {
         <Card>
           <CardHeader>
             <Text variant="h4" weight="bold">
-              {t("common.ui.labels.security") || "Security"}
+              {t("profile.security.label")}
             </Text>
           </CardHeader>
           <CardContent style={{ gap: spacing.md }}>
@@ -555,7 +555,7 @@ export default function ProfileScreen() {
               </>
             ) : (
               <Button
-                label={t("common.ui.actions.changePassword") || "Change Password"}
+                label={t("profile.changePassword.title")}
                 variant="outline"
                 onPress={() => setIsChangingPassword(true)}
               />
@@ -564,7 +564,7 @@ export default function ProfileScreen() {
         </Card>
 
         <Button
-          label={t("common.ui.actions.logout") || "Logout"}
+          label={t("profile.logout.button")}
           variant="destructive"
           onPress={handleLogout}
         />
