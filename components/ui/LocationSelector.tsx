@@ -144,7 +144,13 @@ export function LocationSelector() {
 
           {/* Select All */}
           <TouchableOpacity
-            onPress={() => selectAll()}
+            onPress={() => {
+              if (selectedLocationIds.length === locations.length) {
+                clearSelection();
+              } else {
+                selectAll();
+              }
+            }}
             style={[
               styles.option,
               {
