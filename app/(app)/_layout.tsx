@@ -6,14 +6,25 @@
 
 import { AuthPermissionsEnum } from "@/lib/config/permissions";
 import { usePermissions } from "@/lib/hooks/use-permissions";
+import { useAuthStore } from "@/lib/stores/auth.store";
 import { AppContainer } from "@/components/layout/AppContainer";
 import { getThemeColors, spacing } from "@/theme";
 import { Ionicons } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
+import { useEffect } from "react";
 
 export default function AppLayout() {
+  const router = useRouter();
   const { hasPermission } = usePermissions();
+  const { accessToken } = useAuthStore();
   const colors = getThemeColors("light");
+
+  // Verify token exists - redirect to login if missing
+  useEffect(() => {
+    if (!accessToken) {
+      router.replace("/(auth)/login");
+    }
+  }, [accessToken]);
 
   return (
     <AppContainer>

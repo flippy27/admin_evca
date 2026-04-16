@@ -34,7 +34,9 @@ function logHttpRequest(method: string, url: string, config?: InternalAxiosReque
   const prefix = `[HTTP ${method}]`;
 
   if (LOG_LEVEL >= HttpLogLevel.BASIC) {
-    logger.info(`${prefix} ${url}`);
+    // Include query params in URL log
+    const fullUrl = config?.params ? `${url}?${new URLSearchParams(config.params).toString()}` : url;
+    logger.info(`${prefix} ${fullUrl}`);
   }
 
   if (LOG_LEVEL >= HttpLogLevel.DETAILED) {
@@ -45,6 +47,9 @@ function logHttpRequest(method: string, url: string, config?: InternalAxiosReque
         safeHeaders['Authorization'] = safeHeaders['Authorization'].toString().substring(0, 20) + '...';
       }
       logger.debug(`${prefix} Headers:`, safeHeaders);
+    }
+    if (config?.params) {
+      logger.debug(`${prefix} Query Params:`, config.params);
     }
   }
 
@@ -68,9 +73,8 @@ function logHttpResponse(method: string, url: string, response: AxiosResponse) {
     logger.debug(`${prefix} Response headers:`, response.headers);
   }
 
-  if (LOG_LEVEL >= HttpLogLevel.VERBOSE) {
-    logger.debug(`${prefix} Response body:`, response.data);
-  }
+  // Always log response body for easier debugging
+  logger.debug(`${prefix} Response body:`, JSON.stringify(response.data, null, 2));
 }
 
 function logHttpError(method: string, url: string, error: AxiosError) {
@@ -190,11 +194,32 @@ function createAuthenticatedClient(baseURL: string, isBff: boolean = false): Axi
 
 /**
  * Attempt to refresh access token
- * This is a placeholder — actual logic is in auth store
+ * Calls auth store to refresh using refresh token
  */
 async function attemptRefresh(): Promise<string | null> {
-  // Actual implementation will call authStore.refreshAccessToken()
-  return null;
+  try {
+    // Import here to avoid circular dependencies
+    const { useAuthStore } = await import('../stores/auth.store');
+    const authStore = useAuthStore.getState();
+
+    // Call refresh method
+    await authStore.refreshAccessToken();
+
+    // Return new token
+    const newToken = authStore.accessToken;
+    if (newToken) {
+      logger.info('Token refreshed successfully');
+      return newToken;
+    }
+
+    logger.error('Token refresh returned null');
+    return null;
+  } catch (error) {
+    logger.error('attemptRefresh failed:', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return null;
+  }
 }
 
 // Create two clients: one for BFF, one for user management

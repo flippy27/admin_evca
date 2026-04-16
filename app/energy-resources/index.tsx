@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { SafeAreaView, ScrollView, View, RefreshControl } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, ScrollView, RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -7,7 +8,10 @@ import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import { Alert } from '@/components/ui/Alert';
+import { LocationSelector } from '@/components/ui/LocationSelector';
 import { useEnergyStore } from '@/lib/stores/energy.store';
+import { useLocationsStore } from '@/lib/stores/locations.store';
+import { useAuthStore } from '@/lib/stores/auth.store';
 import { usePermissionGuard } from '@/lib/hooks/usePermissionGuard';
 import { AuthPermissionsEnum } from '@/lib/config/permissions';
 import { getThemeColors, spacing } from '@/theme';
@@ -60,10 +64,23 @@ export default function EnergyResourcesScreen() {
     clearError,
   } = useEnergyStore();
 
-  // Fetch on mount
+  // Get locations
+  const { user } = useAuthStore();
+  const { selectedLocationIds, fetchLocations } = useLocationsStore();
+
+  // Fetch locations on mount
   useEffect(() => {
-    fetchResources(1, 20);
-  }, []);
+    if (user?.userId && user?.companyId) {
+      fetchLocations(user.userId, user.companyId);
+    }
+  }, [user?.userId, user?.companyId]);
+
+  // Fetch resources when locations change
+  useEffect(() => {
+    fetchResources(1, 20, {
+      siteId: selectedLocationIds.length > 0 ? selectedLocationIds : undefined,
+    });
+  }, [selectedLocationIds]);
 
   if (!hasAccess) return null;
 
@@ -101,6 +118,9 @@ export default function EnergyResourcesScreen() {
             Monitor available energy sources
           </Text>
         </View>
+
+        {/* Location Selector */}
+        <LocationSelector />
 
         {resourcesError && (
           <Alert variant="destructive" title="Error" message={resourcesError} />

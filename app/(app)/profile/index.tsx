@@ -14,7 +14,8 @@ import { validators, validationMessages } from "@/lib/validation/validators";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { SafeAreaView, ScrollView, View, RefreshControl } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, ScrollView, RefreshControl } from "react-native";
 import React, { useEffect, useState } from "react";
 
 export default function ProfileScreen() {

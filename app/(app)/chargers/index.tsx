@@ -5,22 +5,26 @@ import { useTranslation } from "react-i18next";
 import {
   FlatList,
   RefreshControl,
-  SafeAreaView,
   TouchableOpacity,
   View,
   ScrollView,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Alert } from "@/components/ui/Alert";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent } from "@/components/ui/Card";
 import { BottomDrawer } from "@/components/ui/BottomDrawer";
+import { LocationSelector } from "@/components/ui/LocationSelector";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { SkeletonCard } from "@/components/ui/Skeleton";
 import { Text } from "@/components/ui/Text";
 import { usePermissionGuard } from "@/lib/hooks/usePermissionGuard";
 import { useApiErrorToast } from "@/lib/hooks/useApiErrorToast";
 import { useChargersStore } from "@/lib/stores/chargers.store";
+import { useChargingSessionsStore } from "@/lib/stores/charging-session.store";
+import { useLocationsStore } from "@/lib/stores/locations.store";
+import { useAuthStore } from "@/lib/stores/auth.store";
 import { AuthPermissionsEnum } from "@/lib/config/permissions";
 import { getThemeColors, spacing } from "@/theme";
 
@@ -43,7 +47,7 @@ export default function ChargersScreen() {
     requiredPermissions: [AuthPermissionsEnum.CHARGERS_VIEW],
   });
 
-  // Store
+  // Chargers Store
   const {
     chargers,
     chargersLoading,
@@ -53,6 +57,15 @@ export default function ChargersScreen() {
     fetchChargers,
     clearError,
   } = useChargersStore();
+
+  // Sessions Store
+  const {
+    sessions,
+    sessionsLoading,
+    sessionsError,
+    fetchSessions,
+    clearError: clearSessionsError,
+  } = useChargingSessionsStore();
 
   // UI State
   const [searchText, setSearchText] = useState("");
@@ -65,10 +78,21 @@ export default function ChargersScreen() {
   // Show error toast when API fails
   useApiErrorToast(chargersError, "Failed to load chargers. Try again.");
 
-  // Fetch on mount
+  // Get locations and chargers
+  const { user } = useAuthStore();
+  const { selectedLocationIds, fetchLocations } = useLocationsStore();
+
   useEffect(() => {
-    fetchChargers(1, 20);
-  }, []);
+    if (user?.userId && user?.companyId) {
+      fetchLocations(user.userId, user.companyId);
+    }
+  }, [user?.userId, user?.companyId]);
+
+  useEffect(() => {
+    fetchChargers(1, 20, {
+      siteId: selectedLocationIds.length > 0 ? selectedLocationIds : undefined,
+    });
+  }, [selectedLocationIds]);
 
   // Filter on search & status
   useEffect(() => {
@@ -91,6 +115,26 @@ export default function ChargersScreen() {
     setFilteredChargers(filtered);
   }, [searchText, chargers, statusFilter]);
 
+  // Load sessions when tab changes to sessions
+  useEffect(() => {
+    if (activeTab === "sessions") {
+      const { selectedLocationIds } = useLocationsStore.getState();
+      fetchSessions({
+        payload: {
+          location_ids: selectedLocationIds.length > 0 ? selectedLocationIds : undefined,
+        },
+        pagination: {
+          page: 1,
+          per_page: 20,
+        },
+        sort: {
+          by: 'session_start_datetime',
+          order: 'DESC',
+        },
+      });
+    }
+  }, [activeTab]);
+
   if (!hasAccess) return null;
 
   const handleChargerPress = (chargerId: string) => {
@@ -109,6 +153,10 @@ export default function ChargersScreen() {
     if (page < totalPages) {
       fetchChargers(page + 1, 20);
     }
+  };
+
+  const handleCreatePress = () => {
+    router.push("/chargers/create");
   };
 
   const renderChargerItem = ({ item }: { item: any }) => (
@@ -272,6 +320,9 @@ export default function ChargersScreen() {
                 </Text>
               </View>
 
+              {/* Location Selector */}
+              <LocationSelector />
+
               {/* Controls */}
               <View style={{ flexDirection: "row", gap: spacing.md }}>
                 <View style={{ flex: 1 }}>
@@ -307,6 +358,19 @@ export default function ChargersScreen() {
                   }}
                 >
                   <Ionicons name="information-circle" size={20} color={colors.mutedForeground} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleCreatePress}
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 8,
+                    backgroundColor: colors.primary,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Ionicons name="add" size={20} color="white" />
                 </TouchableOpacity>
               </View>
 
@@ -357,11 +421,96 @@ export default function ChargersScreen() {
             />
           </>
         ) : (
-          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <Text variant="body" style={{ color: colors.mutedForeground }}>
-              Charge sessions — coming soon
-            </Text>
-          </View>
+          <ScrollView
+            contentContainerStyle={{ paddingHorizontal: spacing.lg, paddingBottom: spacing.xl }}
+            refreshControl={
+              <RefreshControl
+                refreshing={sessionsLoading}
+                onRefresh={() => {
+                  clearSessionsError();
+                  const { selectedLocationIds } = useLocationsStore.getState();
+                  fetchSessions({
+                    payload: {
+                      location_ids: selectedLocationIds.length > 0 ? selectedLocationIds : undefined,
+                    },
+                    pagination: {
+                      page: 1,
+                      per_page: 20,
+                    },
+                  });
+                }}
+              />
+            }
+          >
+            {sessionsError && (
+              <Alert variant="destructive" title="Error" message={sessionsError} />
+            )}
+
+            {sessions.length > 0 ? (
+              <View style={{ gap: spacing.md, paddingTop: spacing.lg }}>
+                {sessions.map((session) => (
+                  <Card key={session.session_id || session.id}>
+                    <CardContent style={{ gap: spacing.md }}>
+                      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                        <Text variant="h4" weight="bold" style={{ flex: 1 }}>
+                          {session.license_plate || session.rfid || "N/A"}
+                        </Text>
+                        <Badge
+                          label={session.status?.charAt(0).toUpperCase() + (session.status?.slice(1) || "") || "Active"}
+                          variant="secondary"
+                        />
+                      </View>
+
+                      <View style={{ gap: spacing.sm }}>
+                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                          <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                            Energy
+                          </Text>
+                          <Text variant="body" weight="bold">
+                            {session.energy_kwh?.toFixed(2) || "0"} kWh
+                          </Text>
+                        </View>
+                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                          <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                            Duration
+                          </Text>
+                          <Text variant="body" weight="bold">
+                            {Math.floor((session.duration_minutes || 0) / 60)}h {(session.duration_minutes || 0) % 60}m
+                          </Text>
+                        </View>
+                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                          <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                            Power
+                          </Text>
+                          <Text variant="body" weight="bold">
+                            {session.max_power_kw?.toFixed(1) || "0"} kW
+                          </Text>
+                        </View>
+                      </View>
+
+                      <View style={{ borderTopWidth: 1, borderTopColor: colors.border, paddingTop: spacing.sm }}>
+                        <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                          {new Date(session.session_start_datetime || "").toLocaleString()}
+                        </Text>
+                      </View>
+                    </CardContent>
+                  </Card>
+                ))}
+              </View>
+            ) : sessionsLoading ? (
+              <View style={{ paddingHorizontal: spacing.lg, paddingVertical: spacing.lg }}>
+                {Array.from({ length: 3 }).map((_, idx) => (
+                  <SkeletonCard key={idx} lines={3} style={{ marginBottom: spacing.md }} />
+                ))}
+              </View>
+            ) : (
+              <View style={{ alignItems: "center", paddingVertical: spacing.xl }}>
+                <Text variant="body" style={{ color: colors.mutedForeground }}>
+                  No sessions found. Pull to refresh.
+                </Text>
+              </View>
+            )}
+          </ScrollView>
         )}
 
         {/* Filter Drawer */}

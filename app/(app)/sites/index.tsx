@@ -5,22 +5,25 @@ import { useTranslation } from "react-i18next";
 import {
   FlatList,
   RefreshControl,
-  SafeAreaView,
   TouchableOpacity,
   View,
   ScrollView,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Alert } from "@/components/ui/Alert";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent } from "@/components/ui/Card";
 import { BottomDrawer } from "@/components/ui/BottomDrawer";
+import { LocationSelector } from "@/components/ui/LocationSelector";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { SkeletonCard } from "@/components/ui/Skeleton";
 import { Text } from "@/components/ui/Text";
 import { usePermissionGuard } from "@/lib/hooks/usePermissionGuard";
 import { useApiErrorToast } from "@/lib/hooks/useApiErrorToast";
 import { useSitesStore } from "@/lib/stores/sites.store";
+import { useLocationsStore } from "@/lib/stores/locations.store";
+import { useAuthStore } from "@/lib/stores/auth.store";
 import { AuthPermissionsEnum } from "@/lib/config/permissions";
 import { getThemeColors, spacing } from "@/theme";
 
@@ -56,10 +59,21 @@ export default function SitesScreen() {
   // Show error toast when API fails
   useApiErrorToast(sitesError, "Failed to load sites. Try again.");
 
-  // Fetch on mount
+  // Get locations
+  const { user } = useAuthStore();
+  const { selectedLocationIds, fetchLocations } = useLocationsStore();
+
   useEffect(() => {
-    fetchSites(1, 20);
-  }, []);
+    if (user?.userId && user?.companyId) {
+      fetchLocations(user.userId, user.companyId);
+    }
+  }, [user?.userId, user?.companyId]);
+
+  useEffect(() => {
+    fetchSites(1, 20, {
+      siteId: selectedLocationIds.length > 0 ? selectedLocationIds : undefined,
+    });
+  }, [selectedLocationIds]);
 
   // Filter on search & status
   useEffect(() => {
@@ -88,7 +102,7 @@ export default function SitesScreen() {
 
   const handleSitePress = (siteId: string) => {
     router.push({
-      pathname: "/sites/[id]/profile" as any,
+      pathname: "/sites/[id]" as any,
       params: { id: siteId },
     });
   };
@@ -231,6 +245,9 @@ export default function SitesScreen() {
                   {filteredSites?.length || 0} sites
                 </Text>
               </View>
+
+              {/* Location Selector */}
+              <LocationSelector />
 
               {/* Controls */}
               <View style={{ flexDirection: "row", gap: spacing.md }}>

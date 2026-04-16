@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { SafeAreaView, ScrollView, View, RefreshControl } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, ScrollView, RefreshControl } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 

@@ -51,15 +51,18 @@ export const useEnergyStore = create<EnergyState>((set, get) => ({
         ...filters,
       });
 
+      // Append to existing resources if not first page, otherwise replace
+      const resourcesList = page === 1 ? res.data.payload : [...get().resources, ...res.data.payload];
+
       set({
-        resources: res.data.data,
+        resources: resourcesList,
         page,
         pageSize,
-        totalPages: res.data.pagination?.totalPages || 1,
+        totalPages: res.data.pagination?.total_pages || 1,
         resourcesLoading: false,
       });
 
-      logger.info('Energy resources fetched', { count: res.data.data.length });
+      logger.info('Energy resources fetched', { count: res.data.payload?.length || 0 });
     } catch (error) {
       const apiError = handleError(error);
       set({

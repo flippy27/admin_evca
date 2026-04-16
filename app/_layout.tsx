@@ -16,6 +16,7 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import i18n from "@/lib/i18n";
 import { useAppStore } from "@/lib/stores/app.store";
 import { useAuthStore } from "@/lib/stores/auth.store";
+import { onRefreshFailed } from "@/lib/api/client";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -33,6 +34,16 @@ export default function RootLayout() {
   const sessionState = useAuthStore((state) => state.sessionState);
   const restoreSession = useAuthStore((state) => state.restoreSession);
   const restoreSettings = useAppStore((state) => state.restoreSettings);
+
+  // Register token refresh failure callback
+  useEffect(() => {
+    const logout = useAuthStore.getState().logout;
+    onRefreshFailed(async () => {
+      console.log('[App] Token refresh failed - logging out');
+      await logout();
+      router.replace("/(auth)/login");
+    });
+  }, [router]);
 
   // Bootstrap: restore session and settings on app start
   useEffect(() => {

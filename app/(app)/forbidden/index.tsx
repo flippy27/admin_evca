@@ -1,5 +1,6 @@
 import React from 'react';
-import { SafeAreaView, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -67,7 +68,7 @@ export default function ForbiddenScreen() {
             marginBottom: spacing.lg,
           }}
         >
-          You don't have permission to access this resource. Please contact your administrator if you need access.
+          You don&apos;t have permission to access this resource. Please contact your administrator if you need access.
         </Text>
 
         <View style={{ width: '100%', gap: spacing.md }}>

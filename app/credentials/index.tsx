@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { SafeAreaView, ScrollView, View, RefreshControl } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, ScrollView, RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { Badge } from '@/components/ui/Badge';
@@ -61,7 +62,7 @@ export default function CredentialsScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <SafeAreaView style={{ flex: 1 }}>\n    <ScrollView
+      <ScrollView
         contentContainerStyle={{ padding: spacing.lg, gap: spacing.lg }}
         refreshControl={
           <RefreshControl
@@ -161,7 +162,7 @@ export default function CredentialsScreen() {
             </Text>
           </View>
         )}
-      </ScrollView>\n  </SafeAreaView>
+      </ScrollView>
     </SafeAreaView>
   );
 }

@@ -4,7 +4,8 @@
  */
 
 import React, { ReactNode, useState } from "react";
-import { View, TouchableOpacity, SafeAreaView } from "react-native";
+import { View, TouchableOpacity } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Sidebar } from "./Sidebar";
 import { getThemeColors } from "@/theme";
 
@@ -15,6 +16,7 @@ interface AppContainerProps {
 export function AppContainer({ children }: AppContainerProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const colors = getThemeColors("light");
+  const insets = useSafeAreaInsets();
 
   const closeSidebar = () => setSidebarOpen(false);
   const openSidebar = () => setSidebarOpen(true);
@@ -49,7 +51,7 @@ export function AppContainer({ children }: AppContainerProps) {
             onPress={openSidebar}
             style={{
               position: "absolute",
-              top: 12,
+              top: insets.top + 12,
               left: 12,
               width: 40,
               height: 40,

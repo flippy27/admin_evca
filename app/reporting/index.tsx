@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, View, RefreshControl, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -8,7 +9,10 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import { Alert } from '@/components/ui/Alert';
 import { BottomDrawer } from '@/components/ui/BottomDrawer';
+import { LocationSelector } from '@/components/ui/LocationSelector';
 import { useReportingStore } from '@/lib/stores/reporting.store';
+import { useLocationsStore } from '@/lib/stores/locations.store';
+import { useAuthStore } from '@/lib/stores/auth.store';
 import { usePermissionGuard } from '@/lib/hooks/usePermissionGuard';
 import { AuthPermissionsEnum } from '@/lib/config/permissions';
 import { getThemeColors, spacing } from '@/theme';
@@ -33,14 +37,27 @@ export default function ReportingScreen() {
     clearError,
   } = useReportingStore();
 
+  // Get locations
+  const { user } = useAuthStore();
+  const { selectedLocationIds, fetchLocations } = useLocationsStore();
+
   // UI State
   const [activeTab, setActiveTab] = useState<ReportingTab>('all');
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
 
-  // Fetch on mount
+  // Fetch locations on mount
   useEffect(() => {
-    fetchReports(1, 20);
-  }, []);
+    if (user?.userId && user?.companyId) {
+      fetchLocations(user.userId, user.companyId);
+    }
+  }, [user?.userId, user?.companyId]);
+
+  // Fetch reports when locations change
+  useEffect(() => {
+    fetchReports(1, 20, {
+      siteId: selectedLocationIds.length > 0 ? selectedLocationIds : undefined,
+    });
+  }, [selectedLocationIds]);
 
   if (!hasAccess) return null;
 
@@ -116,6 +133,9 @@ export default function ReportingScreen() {
               {filteredReports.length} reports
             </Text>
           </View>
+
+          {/* Location Selector */}
+          <LocationSelector />
 
           {reportsError && (
             <Alert variant="destructive" title="Error" message={reportsError} />

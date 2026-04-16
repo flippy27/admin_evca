@@ -17,6 +17,7 @@ import {
   ProcessedUserData,
   SessionState
 } from '../types/auth.types';
+import { getJWTClaims } from '../utils/jwt';
 
 const STORAGE_KEY = 'cms_auth_data';
 const REMEMBER_EMAIL_KEY = 'auth_remember_email';
@@ -60,8 +61,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       // Step 1: Get tokens from BFF
       const loginRes = await authApi.login({ email, password });
-      console.log('loginres',JSON.stringify(loginRes));
-      
       const loginData = loginRes.data.payload.data;
 
       // Store tokens immediately
@@ -75,6 +74,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       // Inject token into axios
       injectAuthToken(loginData.access_token);
+
+      // Extract userId and companyId from JWT
+      const jwtClaims = getJWTClaims(loginData.access_token);
 
       // Step 2: Get permissions (already decrypted by server)
       const permRes = await authApi.getPermissions();
@@ -94,15 +96,22 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       });
 
       const processedUser: ProcessedUserData = {
-        userId: permissions.user.externalId,
-        email: permissions.user.email,
-        fullName: permissions.user.name,
+        userId: jwtClaims.userId || permissions.user.externalId,
+        email: jwtClaims.email || permissions.user.email,
+        fullName: jwtClaims.name || permissions.user.name,
         company: permissions.company.name,
-        companyId: permissions.company.externalId,
+        companyId: jwtClaims.companyId || permissions.company.externalId,
         roles: [...new Set(roles)],
         permissions: [...new Set(permissionCodes)],
         isActive: true,
       };
+
+      console.log('[Auth] ProcessedUser created:', {
+        userId: processedUser.userId,
+        companyId: processedUser.companyId,
+        email: processedUser.email,
+        fullName: processedUser.fullName,
+      });
 
       // Persist to SecureStore
       const snapshot: AuthDataSnapshot = {
@@ -203,10 +212,27 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
         try {
           await get().refreshAccessToken();
-          set({
-            user: snapshot.userData || null,
-            sessionState: 'authenticated',
-          });
+
+          // Extract userId and companyId from current access token (after refresh)
+          const currentToken = get().accessToken;
+          if (currentToken) {
+            const jwtClaims = getJWTClaims(currentToken);
+            const updatedUser = snapshot.userData ? {
+              ...snapshot.userData,
+              userId: jwtClaims.userId || snapshot.userData.userId,
+              companyId: jwtClaims.companyId || snapshot.userData.companyId,
+            } : null;
+
+            set({
+              user: updatedUser || null,
+              sessionState: 'authenticated',
+            });
+          } else {
+            set({
+              user: snapshot.userData || null,
+              sessionState: 'authenticated',
+            });
+          }
         } catch (error) {
           console.error('Silent refresh failed:', error);
           await get().logout();
@@ -214,13 +240,27 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       } else {
         // Tokens are still valid
         injectAuthToken(snapshot.accessToken);
+
+        // Extract fresh userId and companyId from JWT
+        const jwtClaims = getJWTClaims(snapshot.accessToken);
+        const updatedUser = snapshot.userData ? {
+          ...snapshot.userData,
+          userId: jwtClaims.userId || snapshot.userData.userId,
+          companyId: jwtClaims.companyId || snapshot.userData.companyId,
+        } : null;
+
+        console.log('[RestoreSession] Updated user:', {
+          userId: updatedUser?.userId,
+          companyId: updatedUser?.companyId,
+        });
+
         set({
           accessToken: snapshot.accessToken,
           refreshToken: snapshot.refreshToken,
           expiresIn: snapshot.expiresIn,
           refreshExpiresIn: snapshot.refreshExpiresIn,
           tokenTimestamp: snapshot.timestamp || 0,
-          user: snapshot.userData || null,
+          user: updatedUser || null,
           sessionState: 'authenticated',
         });
       }

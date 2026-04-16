@@ -56,14 +56,14 @@ export const useCredentialsStore = create<CredentialsState>((set, get) => ({
       const res = await credentialsApi.list({ page, pageSize });
 
       set({
-        credentials: res.data.data,
+        credentials: res.data.payload,
         page,
         pageSize,
-        totalPages: res.data.pagination?.totalPages || 1,
+        totalPages: res.data.pagination?.total_pages || 1,
         credentialsLoading: false,
       });
 
-      logger.info('Credentials fetched', { count: res.data.data.length });
+      logger.info('Credentials fetched', { count: res.data.payload?.length || 0 });
     } catch (error) {
       const apiError = handleError(error);
       set({

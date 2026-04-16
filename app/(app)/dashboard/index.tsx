@@ -1,15 +1,18 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { SafeAreaView, ScrollView, View, RefreshControl } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, ScrollView, RefreshControl } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Text } from "@/components/ui/Text";
+import { LocationSelector } from "@/components/ui/LocationSelector";
 import { usePermissionGuard } from "@/lib/hooks/usePermissionGuard";
 import { useAuthStore } from "@/lib/stores/auth.store";
 import { useChargersStore } from "@/lib/stores/chargers.store";
 import { useSitesStore } from "@/lib/stores/sites.store";
+import { useLocationsStore } from "@/lib/stores/locations.store";
 import { AuthPermissionsEnum } from "@/lib/config/permissions";
 import { getThemeColors, spacing } from "@/theme";
 
@@ -37,13 +40,36 @@ export default function DashboardScreen() {
     fetchSites,
   } = useSitesStore();
 
-  if (!hasAccess) return null;
+  // Get locations and chargers/sites data
+  const { selectedLocationIds, fetchLocations } = useLocationsStore();
 
-  // Fetch data on mount
   useEffect(() => {
-    fetchChargers(1, 100); // Fetch all chargers for stats
-    fetchSites(1, 100); // Fetch all sites for stats
-  }, []);
+    console.log('[Dashboard] User data:', {
+      userId: user?.userId,
+      companyId: user?.companyId,
+      fullName: user?.fullName,
+      email: user?.email,
+    });
+
+    if (user?.userId && user?.companyId) {
+      console.log('[Dashboard] Calling fetchLocations...');
+      fetchLocations(user.userId, user.companyId);
+    } else {
+      console.log('[Dashboard] Missing userId or companyId');
+    }
+  }, [user?.userId, user?.companyId]);
+
+  // Fetch chargers and sites when selected locations change
+  useEffect(() => {
+    fetchChargers(1, 100, {
+      siteId: selectedLocationIds.length > 0 ? selectedLocationIds : undefined,
+    });
+    fetchSites(1, 100, {
+      siteId: selectedLocationIds.length > 0 ? selectedLocationIds : undefined,
+    });
+  }, [selectedLocationIds]);
+
+  if (!hasAccess) return null;
 
   // Calculate statistics from real data (with defaults for loading state)
   const chargingCount = chargers?.filter(
@@ -97,6 +123,9 @@ export default function DashboardScreen() {
             Welcome back, {user?.fullName?.split(" ")[0] || "User"}
           </Text>
         </View>
+
+        {/* Location Selector */}
+        <LocationSelector />
 
         {/* Quick Stats Grid */}
         <View style={{ gap: spacing.lg }}>

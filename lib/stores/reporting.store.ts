@@ -59,15 +59,18 @@ export const useReportingStore = create<ReportingState>((set, get) => ({
         ...filters,
       });
 
+      // Append to existing reports if not first page, otherwise replace
+      const reportsList = page === 1 ? res.data.payload : [...get().reports, ...res.data.payload];
+
       set({
-        reports: res.data.data,
+        reports: reportsList,
         page,
         pageSize,
-        totalPages: res.data.pagination?.totalPages || 1,
+        totalPages: res.data.pagination?.total_pages || 1,
         reportsLoading: false,
       });
 
-      logger.info('Reports fetched', { count: res.data.data.length });
+      logger.info('Reports fetched', { count: res.data.payload?.length || 0 });
     } catch (error) {
       const apiError = handleError(error);
       set({

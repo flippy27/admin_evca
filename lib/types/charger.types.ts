@@ -106,12 +106,16 @@ export interface OcppVariable {
 // ============ API RESPONSES ============
 
 export interface ChargersListResponse {
-  data: Charger[];
+  payload: any[]; // Raw API response
   pagination?: {
-    page: number;
-    pageSize: number;
-    totalItems: number;
-    totalPages: number;
+    current_page?: number;
+    page?: number;
+    per_page?: string | number;
+    pageSize?: number;
+    total_items?: number;
+    totalItems?: number;
+    total_pages?: number;
+    totalPages?: number;
   };
 }
 

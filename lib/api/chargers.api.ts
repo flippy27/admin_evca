@@ -6,6 +6,7 @@
 import { bffClient } from './client';
 import {
   Charger,
+  Connector,
   ChargersListResponse,
   ChargerDetailResponse,
   ChargerLiveResponse,
@@ -17,17 +18,91 @@ import {
 // Re-export types for backward compatibility
 export { Charger, Connector, ChargerSession } from '../types/charger.types';
 
+/**
+ * Map raw API charger data to Charger type
+ */
+function mapChargerFromApi(rawCharger: any): Charger {
+  const status = (rawCharger.charger_status || 'offline').toLowerCase() as any;
+  const statusMap: Record<string, 'available' | 'charging' | 'faulted' | 'offline'> = {
+    'offline': 'offline',
+    'online': 'available',
+    'available': 'available',
+    'occupied': 'charging',
+    'charging': 'charging',
+    'faulted': 'faulted',
+    'error': 'faulted',
+  };
+
+  return {
+    id: String(rawCharger.charger_ID),
+    name: rawCharger.charger_name || 'N/A',
+    status: statusMap[status] || 'offline',
+    siteId: String(rawCharger.location_id || ''),
+    siteName: rawCharger.charger_site_name,
+    power: parseFloat(rawCharger.charger_total_max_power_kw || '0'),
+    connectors: (rawCharger.charger_connectors_summary || []).map((conn: any) => ({
+      id: String(conn.connector_id),
+      connectorId: conn.connector_id,
+      status: (conn.status || 'unavailable').toLowerCase() as any,
+      type: conn.type,
+    })),
+    model: rawCharger.charger_model,
+    serialNumber: rawCharger.ocpp_id,
+  };
+}
+
 export const chargersApi = {
   /**
    * GET /bff/chargers - List with pagination + filters
+   * Maps pageSize -> size, siteId -> location_ids (as repeated params)
    */
-  list: (params?: {
+  list: async (params?: {
     page?: number;
     pageSize?: number;
-    siteId?: string;
+    siteId?: string | string[];
+    companyId?: string;
     status?: string;
     search?: string;
-  }) => bffClient.get<ChargersListResponse>('/bff/chargers', { params }),
+  }) => {
+    // Build query string manually for repeated location_ids params
+    const queryParts: string[] = [];
+
+    queryParts.push(`page=${params?.page || 1}`);
+    queryParts.push(`size=${params?.pageSize || 20}`);
+
+    // Add company_id if provided
+    if (params?.companyId) {
+      queryParts.push(`company_id=${params.companyId}`);
+    }
+
+    // Add location_ids as repeated params
+    if (params?.siteId) {
+      const locationIds = Array.isArray(params.siteId) ? params.siteId : [params.siteId];
+      locationIds.forEach((id) => {
+        queryParts.push(`location_ids=${id}`);
+      });
+    }
+
+    if (params?.status) {
+      queryParts.push(`status=${params.status}`);
+    }
+
+    if (params?.search) {
+      queryParts.push(`search=${encodeURIComponent(params.search)}`);
+    }
+
+    const queryString = queryParts.join('&');
+    const url = `/bff/chargers?${queryString}`;
+
+    const response = await bffClient.get<ChargersListResponse>(url);
+    return {
+      ...response,
+      data: {
+        ...response.data,
+        payload: response.data.payload?.map(mapChargerFromApi) || [],
+      },
+    };
+  },
 
   /**
    * GET /bff/chargers/:id - Detail

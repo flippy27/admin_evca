@@ -4,6 +4,7 @@
 
 import { create } from 'zustand';
 import { chargersApi } from '../api/chargers.api';
+import { useAuthStore } from './auth.store';
 import {
   Charger,
   ChargerLiveData,
@@ -84,21 +85,27 @@ export const useChargersStore = create<ChargersState>((set, get) => ({
   fetchChargers: async (page = 1, pageSize = 20, filters = {}) => {
     set({ chargersLoading: true, chargersError: null });
     try {
+      // Get companyId from auth store
+      const { user } = useAuthStore.getState();
+      const companyId = user?.companyId;
+
       const res = await chargersApi.list({
         page,
         pageSize,
+        companyId,
         ...filters,
       });
 
+      // Append to existing chargers if not first page, otherwise replace
+      const chargersList = page === 1 ? res.data.payload : [...get().chargers, ...res.data.payload];
+
       set({
-        chargers: res.data.data,
+        chargers: chargersList,
         page,
         pageSize,
-        totalPages: res.data.pagination?.totalPages || 1,
+        totalPages: res.data.pagination?.total_pages || 1,
         chargersLoading: false,
       });
-
-      logger.info('Chargers fetched successfully', { count: res.data.data.length });
     } catch (error) {
       const apiError = handleError(error);
       set({
@@ -117,7 +124,6 @@ export const useChargersStore = create<ChargersState>((set, get) => ({
         selectedCharger: res.data.data,
         detailLoading: false,
       });
-      logger.info(`Charger detail fetched: ${id}`);
     } catch (error) {
       const apiError = handleError(error);
       set({
@@ -155,7 +161,6 @@ export const useChargersStore = create<ChargersState>((set, get) => ({
         sessions: res.data.data,
         sessionsLoading: false,
       });
-      logger.info(`History fetched: ${id}`, { count: res.data.data.length });
     } catch (error) {
       const apiError = handleError(error);
       set({
@@ -174,7 +179,6 @@ export const useChargersStore = create<ChargersState>((set, get) => ({
         config: res.data.data,
         configLoading: false,
       });
-      logger.info(`Config fetched: ${id}`);
     } catch (error) {
       const apiError = handleError(error);
       set({
@@ -194,7 +198,6 @@ export const useChargersStore = create<ChargersState>((set, get) => ({
         config: res.data.data,
         configLoading: false,
       });
-      logger.info(`Config updated: ${id}`);
     } catch (error) {
       const apiError = handleError(error);
       set({

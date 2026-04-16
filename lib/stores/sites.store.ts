@@ -4,6 +4,7 @@
 
 import { create } from 'zustand';
 import { sitesApi } from '../api/sites.api';
+import { useAuthStore } from './auth.store';
 import { Site, SiteDetail } from '../types/site.types';
 import { logger } from '../services/logger';
 import { handleError } from '../services/errorHandler';
@@ -45,21 +46,29 @@ export const useSitesStore = create<SitesState>((set, get) => ({
   fetchSites: async (page = 1, pageSize = 20, filters = {}) => {
     set({ sitesLoading: true, sitesError: null });
     try {
+      // Get companyId from auth store
+      const { user } = useAuthStore.getState();
+      const companyId = user?.companyId;
+
       const res = await sitesApi.list({
         page,
         pageSize,
+        companyId,
         ...filters,
       });
 
+      // Append to existing sites if not first page, otherwise replace
+      const sitesList = page === 1 ? res.data.payload : [...get().sites, ...res.data.payload];
+
       set({
-        sites: res.data.data,
+        sites: sitesList,
         page,
         pageSize,
-        totalPages: res.data.pagination?.totalPages || 1,
+        totalPages: res.data.pagination?.total_pages || 1,
         sitesLoading: false,
       });
 
-      logger.info('Sites fetched', { count: res.data.data.length });
+      logger.info('Sites fetched', { count: res.data.payload?.length || 0 });
     } catch (error) {
       const apiError = handleError(error);
       set({
