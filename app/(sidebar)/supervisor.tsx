@@ -500,7 +500,13 @@ function MantenedorContent({ colors, spacing }: any) {
                 gap: spacing.sm,
               }}
             >
-              <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: spacing.xs,
+                }}
+              >
                 <Ionicons name="water" size={16} color="#00838F" />
                 <Text variant="caption" style={{ color: "#00838F" }}>
                   Voltaje Prom.
@@ -521,7 +527,13 @@ function MantenedorContent({ colors, spacing }: any) {
                 gap: spacing.sm,
               }}
             >
-              <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: spacing.xs,
+                }}
+              >
                 <Ionicons name="alert" size={16} color="#E65100" />
                 <Text variant="caption" style={{ color: "#E65100" }}>
                   Temp. Máx.
@@ -545,7 +557,13 @@ function MantenedorContent({ colors, spacing }: any) {
                 gap: spacing.sm,
               }}
             >
-              <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: spacing.xs,
+                }}
+              >
                 <Ionicons name="flash" size={16} color="#283593" />
                 <Text variant="caption" style={{ color: "#283593" }}>
                   Potencia Total
@@ -566,7 +584,13 @@ function MantenedorContent({ colors, spacing }: any) {
                 gap: spacing.sm,
               }}
             >
-              <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: spacing.xs,
+                }}
+              >
                 <Ionicons name="thermometer" size={16} color="#00838F" />
                 <Text variant="caption" style={{ color: "#00838F" }}>
                   Temp. Prom.
@@ -632,59 +656,127 @@ function MantenedorContent({ colors, spacing }: any) {
             <Text variant="h4" weight="bold">
               {location}
             </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                gap: spacing.md,
-              }}
-            >
-              {[1, 2].map((charger) => (
-                <Card
-                  key={charger}
-                  style={{
-                    flex: 0.48,
-                    borderLeftWidth: 4,
-                    borderLeftColor: charger === 1 ? "#4CAF50" : "#F44336",
-                  }}
-                >
-                  <CardContent style={{ gap: spacing.md }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: spacing.sm,
-                      }}
-                    >
-                      <Ionicons
-                        name="square"
-                        size={20}
-                        color={charger === 1 ? "#4CAF50" : "#F44336"}
-                      />
+            {[1, 2].map((charger) => (
+              <Card key={charger} style={{ borderLeftWidth: 4, borderLeftColor: charger === 1 ? "#4CAF50" : "#F44336" }}>
+                <CardContent style={{ gap: spacing.md }}>
+                  {/* Charger Header */}
+                  <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                    <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm }}>
                       <Text variant="body" weight="bold">
                         Cargador CB-0{charger}
                       </Text>
-                    </View>
-                    {[1, 2].map((connector) => (
                       <View
-                        key={connector}
-                        style={{ paddingVertical: spacing.sm, gap: spacing.xs }}
+                        style={{
+                          paddingHorizontal: spacing.sm,
+                          paddingVertical: spacing.xs,
+                          backgroundColor: "#E8F5E9",
+                          borderRadius: 4,
+                        }}
                       >
-                        <Text variant="caption" weight="bold">
-                          C{connector}
+                        <Text variant="caption" style={{ color: "#2E7D32", fontWeight: "600" }}>
+                          Online
                         </Text>
-                        <View style={{ flexDirection: "row", gap: spacing.md }}>
-                          <Text variant="caption">V 230.5</Text>
-                          <Text variant="caption">A 16.2</Text>
-                          <Text variant="caption">kW 3.734</Text>
-                          <Text variant="caption">°C 42.5</Text>
-                        </View>
                       </View>
-                    ))}
-                  </CardContent>
-                </Card>
-              ))}
-            </View>
+                      {charger === 2 && (
+                        <View
+                          style={{
+                            paddingHorizontal: spacing.sm,
+                            paddingVertical: spacing.xs,
+                            backgroundColor: "#FFEBEE",
+                            borderRadius: 4,
+                          }}
+                        >
+                          <Text variant="caption" style={{ color: "#C62828", fontWeight: "600" }}>
+                            1 falla
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  </View>
+
+                  {/* Connector C1 */}
+                  <View style={{ gap: spacing.xs }}>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                      <Text variant="caption" weight="bold">
+                        C1
+                      </Text>
+                      <View
+                        style={{
+                          paddingHorizontal: spacing.sm,
+                          paddingVertical: spacing.xs,
+                          backgroundColor: "#E3F2FD",
+                          borderRadius: 4,
+                        }}
+                      >
+                        <Text variant="caption" style={{ color: "#1565C0", fontWeight: "600" }}>
+                          Cargando
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={{ flexDirection: "row", gap: spacing.md }}>
+                      <Text variant="caption" style={{ color: colors.mutedForeground }}>V 230.5</Text>
+                      <Text variant="caption" style={{ color: colors.mutedForeground }}>A 16.2</Text>
+                      <Text variant="caption" style={{ color: colors.mutedForeground }}>kW 3.734</Text>
+                      <Text variant="caption" style={{ color: colors.mutedForeground }}>°C 42.5</Text>
+                    </View>
+                  </View>
+
+                  {/* Connector C2 */}
+                  <View
+                    style={{
+                      gap: spacing.xs,
+                      paddingHorizontal: spacing.sm,
+                      paddingVertical: spacing.sm,
+                      backgroundColor: charger === 2 ? "#FFEBEE" : "transparent",
+                      borderRadius: 4,
+                    }}
+                  >
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                      <Text variant="caption" weight="bold" style={{ color: charger === 2 ? "#C62828" : "black" }}>
+                        C2
+                      </Text>
+                      {charger === 2 ? (
+                        <Text variant="caption" style={{ color: "#C62828", fontWeight: "600" }}>
+                          Falla
+                        </Text>
+                      ) : (
+                        <View
+                          style={{
+                            paddingHorizontal: spacing.sm,
+                            paddingVertical: spacing.xs,
+                            backgroundColor: "#F3E5F5",
+                            borderRadius: 4,
+                          }}
+                        >
+                          <Text variant="caption" style={{ color: "#6A1B9A", fontWeight: "600" }}>
+                            Finalizando
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                    <View style={{ flexDirection: "row", gap: spacing.md }}>
+                      <Text variant="caption" style={{ color: charger === 2 ? "#C62828" : colors.mutedForeground }}>
+                        V {charger === 2 ? "229.8" : "229.8"}
+                      </Text>
+                      <Text variant="caption" style={{ color: charger === 2 ? "#C62828" : colors.mutedForeground }}>
+                        A {charger === 2 ? "0.5" : "0.5"}
+                      </Text>
+                      <Text variant="caption" style={{ color: charger === 2 ? "#C62828" : colors.mutedForeground }}>
+                        kW {charger === 2 ? "0.115" : "0.115"}
+                      </Text>
+                      <Text variant="caption" style={{ color: charger === 2 ? "#C62828" : colors.mutedForeground }}>
+                        °C {charger === 2 ? "38.2" : "38.2"}
+                      </Text>
+                    </View>
+                    {charger === 2 && (
+                      <Text variant="caption" style={{ color: "#C62828", fontStyle: "italic" }}>
+                        Sin datos energéticos
+                      </Text>
+                    )}
+                  </View>
+                </CardContent>
+              </Card>
+            ))}
           </View>
         ))}
       </View>
