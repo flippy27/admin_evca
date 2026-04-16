@@ -580,42 +580,50 @@ function MantenedorContent({ colors, spacing }: any) {
         </CardContent>
       </Card>
 
-      {/* Status Counts */}
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-around",
-          paddingVertical: spacing.lg,
-          paddingHorizontal: spacing.lg,
-          backgroundColor: colors.background,
-          gap: spacing.md,
-        }}
-      >
-        <View style={{ alignItems: "center" }}>
-          <Text variant="h2" weight="bold" style={{ color: "#4CAF50" }}>
-            8
+      {/* Status Counts - Salud de Conectores */}
+      <Card>
+        <CardContent style={{ gap: spacing.md }}>
+          <Text
+            variant="caption"
+            weight="bold"
+            style={{ color: colors.mutedForeground }}
+          >
+            SALUD DE CONECTORES
           </Text>
-          <Text variant="caption" style={{ color: colors.mutedForeground }}>
-            Operativos
-          </Text>
-        </View>
-        <View style={{ alignItems: "center" }}>
-          <Text variant="h2" weight="bold" style={{ color: "#F44336" }}>
-            1
-          </Text>
-          <Text variant="caption" style={{ color: colors.mutedForeground }}>
-            Con Falla
-          </Text>
-        </View>
-        <View style={{ alignItems: "center" }}>
-          <Text variant="h2" weight="bold" style={{ color: "#FFC107" }}>
-            1
-          </Text>
-          <Text variant="caption" style={{ color: colors.mutedForeground }}>
-            Suspendidos
-          </Text>
-        </View>
-      </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-around",
+              gap: spacing.md,
+            }}
+          >
+            <View style={{ alignItems: "center" }}>
+              <Text variant="h2" weight="bold" style={{ color: "#4CAF50" }}>
+                8
+              </Text>
+              <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                Operativos
+              </Text>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <Text variant="h2" weight="bold" style={{ color: "#F44336" }}>
+                1
+              </Text>
+              <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                Con Falla
+              </Text>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <Text variant="h2" weight="bold" style={{ color: "#FFC107" }}>
+                1
+              </Text>
+              <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                Suspendidos
+              </Text>
+            </View>
+          </View>
+        </CardContent>
+      </Card>
 
       {/* Location Chargers */}
       <View style={{ gap: spacing.lg, paddingBottom: spacing.xl }}>
