@@ -18,6 +18,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
+import { SvgXml } from "react-native-svg";
 import i18n from "../../lib/i18n";
 
 import { Text } from "@/components/ui/Text";
@@ -25,6 +26,84 @@ import { useToast } from "@/components/ui/Toast";
 import { useAppStore } from "@/lib/stores/app.store";
 import { useAuthStore } from "@/lib/stores/auth.store";
 import { spacing } from "@/theme";
+
+// Dhemax logo SVG with animated shine effect
+const DHEMAX_LOGO_SVG = `<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 87.1 32" style="enable-background:new 0 0 87.1 32;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;}
+	.st1{fill:url(#SVGID_1_);}
+	.st2{fill:#FFFFFF;font-family:'OpenSans-Regular', 'Open Sans', Arial, sans-serif;font-size:2.6px;font-weight:400;}
+	.st3{fill:#FFFFFF;font-family:'OpenSans-SemiBold', 'Open Sans', Arial, sans-serif;font-size:2.6px;font-weight:600;}
+</style>
+<g>
+	<g>
+		<path class="st0" d="M38.6,12.4c-0.6-0.6-1.4-1-2.3-1H34c-0.4,0-0.7,0.3-0.7,0.7v4.8c0,0.4,0.3,0.7,0.7,0.7h2.2
+			c1.6,0,3-1.2,3.1-2.8C39.4,13.9,39.1,13.1,38.6,12.4z M38.4,14.5c0,1.2-0.9,2.1-2.1,2.1h-2v-4.2h2C37.4,12.4,38.4,13.3,38.4,14.5z
+			"/>
+		<path class="st0" d="M45.6,11.4c-0.2,0-0.4,0.3-0.4,0.5v1.9c0,0.1-0.1,0.2-0.2,0.2h-3.6c-0.1,0-0.2-0.1-0.2-0.2v-1.9
+			c0-0.2-0.2-0.5-0.4-0.5c-0.3,0-0.6,0.2-0.6,0.5v5.2c0,0.2,0.2,0.5,0.4,0.5c0.3,0,0.6-0.2,0.6-0.5v-2c0-0.1,0.1-0.2,0.2-0.2H45
+			c0.1,0,0.2,0.1,0.2,0.2v1.9c0,0.2,0.2,0.5,0.4,0.5c0.3,0,0.6-0.2,0.6-0.5v-5.2C46.1,11.6,45.9,11.4,45.6,11.4z"/>
+		<path class="st0" d="M69.5,16.9l-2.4-5.2c-0.1-0.2-0.3-0.3-0.5-0.3h-0.8c-0.2,0-0.4,0.1-0.5,0.3L63,16.9c-0.1,0.1-0.1,0.3,0,0.5
+			c0.1,0.1,0.2,0.2,0.4,0.2c0.2,0,0.4-0.1,0.4-0.3l0.5-1.1c0-0.1,0.1-0.2,0.2-0.2h3.3c0.1,0,0.2,0.1,0.2,0.2l0.5,1.1
+			c0.1,0.2,0.2,0.3,0.4,0.3c0.2,0,0.3-0.1,0.4-0.2C69.6,17.2,69.6,17.1,69.5,16.9z M67.5,15.1H65c-0.1,0-0.1-0.1-0.1-0.1l1.2-2.6
+			h0.3l1.2,2.6C67.6,15,67.5,15.1,67.5,15.1z"/>
+		<path class="st0" d="M61.1,11.4c-0.3,0-0.6,0.2-0.7,0.5l-1.8,3.8h-0.3l-1.8-3.7c-0.1-0.3-0.4-0.4-0.6-0.5c-0.2,0-0.5,0-0.7,0.2
+			c-0.2,0.2-0.3,0.4-0.3,0.6v4.8c0,0.3,0.2,0.5,0.5,0.5c0.3,0,0.5-0.2,0.5-0.5v-4.3l1.7,3.5c0.1,0.2,0.3,0.3,0.5,0.3h0.9
+			c0.2,0,0.4-0.1,0.5-0.3l1.7-3.5l0,4.3c0,0.3,0.2,0.5,0.5,0.5c0.3,0,0.5-0.2,0.5-0.5v-4.8C61.9,11.8,61.5,11.4,61.1,11.4z"/>
+		<path class="st0" d="M75.9,16.8L74,14.5l1.9-2.3c0.1-0.1,0.1-0.3,0.1-0.5c-0.1-0.2-0.2-0.3-0.4-0.3c-0.1,0-0.3,0.1-0.4,0.2l-2,2.4
+			H73l-2-2.4c-0.1-0.1-0.2-0.2-0.4-0.2c-0.2,0-0.4,0.1-0.4,0.3c-0.1,0.2-0.1,0.4,0.1,0.5l1.9,2.3l-2,2.3c-0.1,0.1-0.1,0.3-0.1,0.5
+			c0.1,0.2,0.2,0.3,0.4,0.3c0.1,0,0.3-0.1,0.4-0.2L73,15h0.1l2,2.4c0.1,0.1,0.2,0.2,0.4,0.2c0.2,0,0.4-0.1,0.4-0.3
+			C76.1,17.1,76.1,16.9,75.9,16.8z"/>
+		<g>
+			<path class="st0" d="M48.9,15.1L48.9,15.1c0.1-0.1,0.3-0.1,0.5-0.1H53c0.1,0,0.1,0,0.2,0c0.2-0.1,0.3-0.2,0.3-0.4
+				c0-0.3-0.2-0.5-0.5-0.5h-3.7c-0.4,0-0.7,0.1-1,0.2c-0.3,0.2-0.5,0.4-0.6,0.6c-0.1,0.3-0.2,0.6-0.2,0.9l0,0c0,0.3,0.1,0.6,0.2,0.9
+				c0.1,0.3,0.4,0.5,0.6,0.6c0.3,0.2,0.6,0.2,1,0.2H53c0.3,0,0.5-0.2,0.5-0.5c0-0.2-0.1-0.4-0.3-0.4c-0.1,0-0.1,0-0.2,0h-3.6
+				c-0.2,0-0.4,0-0.5-0.1c-0.1-0.1-0.2-0.2-0.3-0.3c-0.1-0.1-0.1-0.3-0.1-0.4c0-0.1,0-0.3,0.1-0.4C48.7,15.3,48.8,15.2,48.9,15.1z"
+				/>
+			<path class="st0" d="M48,13.3L48,13.3c0.2,0,0.4-0.1,0.5-0.4c0,0,0-0.1,0.1-0.1c0.1-0.1,0.2-0.2,0.3-0.3c0.1-0.1,0.3-0.1,0.5-0.1
+				H53c0.1,0,0.1,0,0.2,0c0.2-0.1,0.3-0.2,0.3-0.4c0-0.3-0.2-0.5-0.5-0.5h-3.7c-0.4,0-0.7,0.1-1,0.2c-0.3,0.2-0.5,0.4-0.6,0.6
+				c0,0.1-0.1,0.2-0.1,0.3c-0.1,0.2,0,0.3,0.1,0.5C47.7,13.2,47.9,13.3,48,13.3z"/>
+		</g>
+	</g>
+	<path class="st0" d="M14.7,6.8h-3.4c-0.2,0-0.2,0.2-0.2,0.3l5.4,7.3c0.1,0.1,0.1,0.2,0,0.2l-5.4,7.3c-0.1,0.1,0,0.3,0.2,0.3l3.4,0
+		c0.2,0,0.4-0.1,0.5-0.3l5.3-7.1c0.1-0.2,0.1-0.4,0-0.6l-5.3-7.1C15.1,6.9,14.9,6.8,14.7,6.8z"/>
+	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="30.5824" y1="28.2761" x2="23.3702" y2="-2.7916">
+		<stop  offset="0" style="stop-color:#38BAEC"/>
+		<stop  offset="7.386206e-02" style="stop-color:#40BBE1"/>
+		<stop  offset="0.2071" style="stop-color:#53BFC1"/>
+		<stop  offset="0.3844" style="stop-color:#73C58E"/>
+		<stop  offset="0.5965" style="stop-color:#9ECC48"/>
+		<stop  offset="0.7942" style="stop-color:#CAD400"/>
+	</linearGradient>
+	<mask id="smartTextMask">
+		<rect x="0" y="0" width="100%" height="100%" fill="black"/>
+		<text x="40" y="21" class="st2" fill="white">The <tspan class="st3">Smart</tspan> Inside Mobility</text>
+	</mask>
+	<filter id="shineBlur">
+		<feGaussianBlur stdDeviation="1.5"/>
+	</filter>
+	<linearGradient id="shineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+		<stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0" />
+		<stop offset="5%" style="stop-color:#22335a;stop-opacity:1.8" />
+		<stop offset="15%" style="stop-color:#46A3B5;stop-opacity:2.2" />
+		<stop offset="30%" style="stop-color:#50BFC5;stop-opacity:2.5" />
+		<stop offset="50%" style="stop-color:#FFFFFF;stop-opacity:3" />
+		<stop offset="70%" style="stop-color:#9DCC49;stop-opacity:2.5" />
+		<stop offset="85%" style="stop-color:#BED213;stop-opacity:2.2" />
+		<stop offset="95%" style="stop-color:#A3B32B;stop-opacity:1.8" />
+		<stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0" />
+	</linearGradient>
+	<path class="st1" d="M28.8,23.6c-0.4,0.8-1.1,1.2-2,1.2c-0.7,0-1.3-0.3-1.7-0.8l-2.3-2.8c-1.5-1.9-1.6-4.5-0.2-6.5l0.2-0.2l5.7,6.8
+		C29,22,29.1,22.9,28.8,23.6z M30.9,1.9c-0.2-0.3-0.5-0.5-0.8-0.6c-0.9-0.3-1.9,0-2.4,0.7l-4.8,5.9c-1.5,1.9-1.6,4.4-0.3,6.4
+		l0.2,0.3l8.2-9.9C31.6,3.8,31.6,2.7,30.9,1.9z"/>
+	<text x="40" y="21" class="st2">The <tspan class="st3">Smart</tspan> Inside Mobility</text>
+	<rect x="35" y="18" width="17" height="5" fill="url(#shineGradient)" mask="url(#smartTextMask)" filter="url(#shineBlur)" opacity="0">
+		<animate attributeName="x" values="35; 78" dur="4s" repeatCount="indefinite" />
+		<animate attributeName="opacity" values="0; 1.8; 1.8; 0" dur="4s" repeatCount="indefinite" />
+	</rect>
+</g>
+</svg>`;
 
 interface LoginForm {
   email: string;
@@ -106,47 +185,6 @@ function AnimatedParticle({
   );
 }
 
-// Shine animation component for text
-function ShiningText({
-  text,
-  variant = "body",
-  weight = "normal",
-  color = "#ffffff",
-}: {
-  text: string;
-  variant?: "caption" | "body" | "h3";
-  weight?: "normal" | "semibold" | "bold";
-  color?: string;
-}) {
-  const shineOpacity = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(shineOpacity, {
-          toValue: 1.3,
-          duration: 2000,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-        Animated.timing(shineOpacity, {
-          toValue: 1,
-          duration: 2000,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-      ]),
-    ).start();
-  }, [shineOpacity]);
-
-  return (
-    <Animated.View style={{ opacity: shineOpacity }}>
-      <Text variant={variant} weight={weight} style={{ color }}>
-        {text}
-      </Text>
-    </Animated.View>
-  );
-}
 
 export default function LoginScreen() {
   const { t } = useTranslation();
@@ -257,24 +295,11 @@ export default function LoginScreen() {
                 marginBottom: spacing.lg,
                 alignItems: "center",
                 justifyContent: "center",
+                width: 200,
+                height: 80,
               }}
             >
-              <Text
-                variant="h1"
-                weight="bold"
-                style={{
-                  color: "#ffffff",
-                  fontSize: 32,
-                  marginBottom: spacing.sm,
-                }}
-              >
-                DHEMAX
-              </Text>
-              <ShiningText
-                text="The Smart Inside Mobility"
-                variant="caption"
-                color="rgba(255, 255, 255, 0.9)"
-              />
+              <SvgXml xml={DHEMAX_LOGO_SVG} width="100%" height="100%" />
             </View>
             <Text
               variant="h3"
