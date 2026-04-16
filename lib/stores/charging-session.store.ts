@@ -38,16 +38,16 @@ export const useChargingSessionsStore = create<ChargingSessionsState>((set, get)
   fetchSessions: async (request: SessionsRequest) => {
     set({ sessionsLoading: true, sessionsError: null });
     try {
-      // Get companyId from auth store
+      // Get companyExternalId from auth store (for API calls)
       const { user } = useAuthStore.getState();
-      const companyId = user?.companyId;
+      const companyId = user?.companyExternalId;
 
       // Build request with company_id
       const fullRequest: SessionsRequest = {
         ...request,
         payload: {
           ...request.payload,
-          // company_id will be in the URL or handled by the API
+          company_id: companyId,
         },
       };
 

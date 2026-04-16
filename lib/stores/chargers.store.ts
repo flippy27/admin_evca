@@ -85,9 +85,9 @@ export const useChargersStore = create<ChargersState>((set, get) => ({
   fetchChargers: async (page = 1, pageSize = 20, filters = {}) => {
     set({ chargersLoading: true, chargersError: null });
     try {
-      // Get companyId from auth store
+      // Get companyExternalId from auth store (for API calls)
       const { user } = useAuthStore.getState();
-      const companyId = user?.companyId;
+      const companyId = user?.companyExternalId;
 
       const res = await chargersApi.list({
         page,

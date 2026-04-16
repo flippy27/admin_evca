@@ -253,6 +253,7 @@ export interface ProcessedUserData {
   fullName: string;
   company: string;
   companyId?: string;
+  companyExternalId?: string;
   roles: string[];
   permissions: string[];
   isActive: boolean;

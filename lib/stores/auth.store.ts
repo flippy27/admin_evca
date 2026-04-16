@@ -101,6 +101,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         fullName: jwtClaims.name || permissions.user.name,
         company: permissions.company.name,
         companyId: jwtClaims.companyId || permissions.company.externalId,
+        companyExternalId: jwtClaims.companyExternalId,
         roles: [...new Set(roles)],
         permissions: [...new Set(permissionCodes)],
         isActive: true,

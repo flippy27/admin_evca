@@ -54,6 +54,7 @@ export function getJWTClaims(token: string) {
   const claims = {
     userId: decoded.user_id_local,
     companyId: decoded.company_id_local,
+    companyExternalId: decoded.company_external_id,
     email: decoded.email,
     name: decoded.name,
     sub: decoded.sub,
@@ -62,6 +63,7 @@ export function getJWTClaims(token: string) {
   logger.info('JWT Claims extracted', {
     userId: claims.userId,
     companyId: claims.companyId,
+    companyExternalId: claims.companyExternalId,
     email: claims.email,
     name: claims.name,
     allClaims: decoded,
@@ -70,6 +72,7 @@ export function getJWTClaims(token: string) {
   console.log('[JWT] Final claims:', {
     userId: claims.userId,
     companyId: claims.companyId,
+    companyExternalId: claims.companyExternalId,
     email: claims.email,
   });
 
