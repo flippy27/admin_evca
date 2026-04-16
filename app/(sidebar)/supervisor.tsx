@@ -1,3 +1,4 @@
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { BottomDrawer } from "@/components/ui/BottomDrawer";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Text } from "@/components/ui/Text";
@@ -12,7 +13,8 @@ type RoleType = "operador" | "mantenedor" | "supervisor";
 
 export default function SupervisorScreen() {
   const router = useRouter();
-  const colors = getThemeColors("light");
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
   const insets = useSafeAreaInsets();
   const [selectedRole, setSelectedRole] = useState<RoleType>("supervisor");
   const [selectedLocation, setSelectedLocation] = useState("Terminal Maipú");

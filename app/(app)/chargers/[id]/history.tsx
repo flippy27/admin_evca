@@ -1,3 +1,4 @@
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { RefreshControl, View, ScrollView } from 'react-native';
@@ -13,7 +14,8 @@ import { getThemeColors, spacing } from "@/theme";
 
 export default function ChargerHistoryScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const colors = getThemeColors("light");
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
 
   const {
     selectedCharger,

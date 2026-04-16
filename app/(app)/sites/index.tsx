@@ -1,3 +1,4 @@
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -33,7 +34,8 @@ type SitesTab = "list" | "activity";
 export default function SitesScreen() {
   const router = useRouter();
   const { t } = useTranslation();
-  const colors = getThemeColors("light");
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
   const { openSidebar } = useSidebar();
 
   // Permission guard

@@ -1,9 +1,11 @@
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { Text } from "@/components/ui/Text";
 import { getThemeColors } from "@/theme";
 import { View } from "react-native";
 
 export default function ForgotPasswordScreen() {
-  const colors = getThemeColors("light");
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
   return (
     <View
       style={{

@@ -1,3 +1,4 @@
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -44,7 +45,8 @@ const STATUS_COLORS: Record<string, string> = {
 export default function ChargersScreen() {
   const router = useRouter();
   const { t } = useTranslation();
-  const colors = getThemeColors("light");
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
   const { show: showToast } = useToast();
   const { openSidebar } = useSidebar();
 

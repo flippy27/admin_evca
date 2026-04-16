@@ -1,3 +1,4 @@
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 /**
  * App layout — authenticated screens
  * Tab navigation for main features only
@@ -17,7 +18,8 @@ export default function AppLayout() {
   const router = useRouter();
   const { hasPermission } = usePermissions();
   const { accessToken } = useAuthStore();
-  const colors = getThemeColors("light");
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
 
   // Verify token exists - redirect to login if missing
   useEffect(() => {

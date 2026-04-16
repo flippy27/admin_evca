@@ -1,3 +1,4 @@
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { Text } from "@/components/ui/Text";
 import { getThemeColors, spacing } from "@/theme";
 import { Ionicons } from "@expo/vector-icons";
@@ -14,7 +15,8 @@ type TabType = "activas" | "completadas";
 
 export default function SesionesCargarScreen() {
   const router = useRouter();
-  const colors = getThemeColors("light");
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
   const [selectedTab, setSelectedTab] = useState<TabType>("activas");
 
   const activeSessions = [

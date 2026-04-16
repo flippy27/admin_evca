@@ -1,3 +1,4 @@
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import React from "react";
 import { SafeAreaView, ScrollView, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -7,7 +8,8 @@ import { Button } from "@/components/ui/Button";
 import { getThemeColors, spacing } from "@/theme";
 
 export default function ShowcaseScreen() {
-  const colors = getThemeColors("light");
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>

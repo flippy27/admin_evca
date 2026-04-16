@@ -1,3 +1,4 @@
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import React, { useState } from "react";
 import { SafeAreaView, View, ScrollView, TouchableOpacity } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -10,7 +11,8 @@ import { getThemeColors, spacing } from "@/theme";
 export default function EnergyManagementScreen() {
   const { siteId } = useLocalSearchParams<{ siteId: string }>();
   const router = useRouter();
-  const colors = getThemeColors("light");
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>

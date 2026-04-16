@@ -1,3 +1,4 @@
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { useSidebar } from "@/components/layout/AppContainer";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent } from "@/components/ui/Card";
@@ -32,7 +33,8 @@ export default function DashboardScreen() {
   const { t } = useTranslation();
   const { openSidebar } = useSidebar();
   const user = useAuthStore((state) => state.user);
-  const colors = getThemeColors("light");
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
 
   // Permission guard
   const hasAccess = usePermissionGuard({

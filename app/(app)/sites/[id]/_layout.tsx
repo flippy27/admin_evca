@@ -1,10 +1,12 @@
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { getThemeColors } from "@/theme";
 import { Stack, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 
 export default function SiteDetailLayout() {
-  const colors = getThemeColors("light");
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
   const router = useRouter();
 
   return (

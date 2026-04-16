@@ -9,7 +9,7 @@ import { useAuthStore } from "@/lib/stores/auth.store";
 import { useProfileStore } from "@/lib/stores/profile.store";
 import { usePermissionGuard } from "@/lib/hooks/usePermissionGuard";
 import { AuthPermissionsEnum } from "@/lib/config/permissions";
-import { getThemeColors, spacing } from "@/theme";
+import { useResolvedColorScheme } from '@/hooks/use-color-scheme';\nimport { getThemeColors, spacing } from "@/theme";
 import { validators, validationMessages } from "@/lib/validation/validators";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -21,7 +21,7 @@ import React, { useEffect, useState } from "react";
 export default function ProfileScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const colors = getThemeColors("light");
+  const resolvedScheme = useResolvedColorScheme();\n  const colors = getThemeColors(resolvedScheme);
 
   // Permission guard
   const hasEditPermission = usePermissionGuard({

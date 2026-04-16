@@ -1,3 +1,4 @@
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 /**
  * Auth layout — unauthenticated screens
  * Blank background, no header
@@ -7,7 +8,8 @@ import { getThemeColors } from "@/theme";
 import { Stack } from "expo-router";
 
 export default function AuthLayout() {
-  const colors = getThemeColors("light");
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
 
   return (
     <Stack
