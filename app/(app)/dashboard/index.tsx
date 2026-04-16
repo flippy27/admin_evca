@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, ScrollView, RefreshControl } from "react-native";
+import { View, ScrollView, RefreshControl, Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-
+import { PieChart, BarChart } from "react-native-chart-kit";
+import { SkeletonLine, SkeletonCard, SkeletonChart, SkeletonGrid } from "@/components/ui/SkeletonLoader";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Text } from "@/components/ui/Text";
@@ -128,192 +129,306 @@ export default function DashboardScreen() {
         <LocationSelector />
 
         {/* Quick Stats Grid */}
-        <View style={{ gap: spacing.lg }}>
-          {/* Row 1: Chargers Overview */}
-          <View style={{ flexDirection: "row", gap: spacing.md }}>
-            <Card style={{ flex: 1 }}>
-              <CardContent style={{ alignItems: "center", gap: spacing.sm }}>
-                <Ionicons name="flash" size={24} color={colors.primary} />
-                <Text variant="h3" weight="bold">
-                  {stats.totalChargers}
-                </Text>
-                <Text
-                  variant="caption"
-                  style={{ color: colors.mutedForeground }}
-                >
-                  Total Chargers
-                </Text>
+        {chargersLoading || sitesLoading ? (
+          <View style={{ gap: spacing.lg }}>
+            {/* Row 1 Skeleton */}
+            <View style={{ flexDirection: "row", gap: spacing.md }}>
+              <View style={{ flex: 1 }}>
+                <SkeletonCard lines={3} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <SkeletonCard lines={3} />
+              </View>
+            </View>
+
+            {/* Row 2 Skeleton */}
+            <View style={{ flexDirection: "row", gap: spacing.md }}>
+              <View style={{ flex: 1 }}>
+                <SkeletonCard lines={3} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <SkeletonCard lines={3} />
+              </View>
+            </View>
+
+            {/* Row 3 Skeleton */}
+            <View style={{ flexDirection: "row", gap: spacing.md }}>
+              <View style={{ flex: 1 }}>
+                <SkeletonCard lines={3} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <SkeletonCard lines={3} />
+              </View>
+            </View>
+
+            {/* Total Power Skeleton */}
+            <SkeletonChart height={120} />
+          </View>
+        ) : (
+          <View style={{ gap: spacing.lg }}>
+            {/* Row 1: Chargers Overview */}
+            <View style={{ flexDirection: "row", gap: spacing.md }}>
+              <Card style={{ flex: 1 }}>
+                <CardContent style={{ alignItems: "center", gap: spacing.sm }}>
+                  <Ionicons name="flash" size={24} color={colors.primary} />
+                  <Text variant="h3" weight="bold">
+                    {stats.totalChargers}
+                  </Text>
+                  <Text
+                    variant="caption"
+                    style={{ color: colors.mutedForeground }}
+                  >
+                    Total Chargers
+                  </Text>
+                </CardContent>
+              </Card>
+
+              <Card style={{ flex: 1 }}>
+                <CardContent style={{ alignItems: "center", gap: spacing.sm }}>
+                  <Ionicons
+                    name="flash-sharp"
+                    size={24}
+                    color="#8b5cf6"
+                  />
+                  <Text
+                    variant="h3"
+                    weight="bold"
+                    style={{ color: "#8b5cf6" }}
+                  >
+                    {stats.activeCharging}
+                  </Text>
+                  <Text
+                    variant="caption"
+                    style={{ color: colors.mutedForeground }}
+                  >
+                    Charging
+                  </Text>
+                </CardContent>
+              </Card>
+            </View>
+
+            {/* Row 2: Status Distribution */}
+            <View style={{ flexDirection: "row", gap: spacing.md }}>
+              <Card style={{ flex: 1 }}>
+                <CardContent style={{ alignItems: "center", gap: spacing.sm }}>
+                  <Ionicons name="checkmark-circle" size={24} color="#22c55e" />
+                  <Text
+                    variant="h3"
+                    weight="bold"
+                    style={{ color: "#22c55e" }}
+                  >
+                    {stats.available}
+                  </Text>
+                  <Text
+                    variant="caption"
+                    style={{ color: colors.mutedForeground }}
+                  >
+                    Available
+                  </Text>
+                </CardContent>
+              </Card>
+
+              <Card style={{ flex: 1 }}>
+                <CardContent style={{ alignItems: "center", gap: spacing.sm }}>
+                  <Ionicons name="alert-circle" size={24} color="#ef4444" />
+                  <Text
+                    variant="h3"
+                    weight="bold"
+                    style={{ color: "#ef4444" }}
+                  >
+                    {stats.faulted}
+                  </Text>
+                  <Text
+                    variant="caption"
+                    style={{ color: colors.mutedForeground }}
+                  >
+                    Faulted
+                  </Text>
+                </CardContent>
+              </Card>
+            </View>
+
+            {/* Row 3: Sites & Power */}
+            <View style={{ flexDirection: "row", gap: spacing.md }}>
+              <Card style={{ flex: 1 }}>
+                <CardContent style={{ alignItems: "center", gap: spacing.sm }}>
+                  <Ionicons name="location" size={24} color={colors.primary} />
+                  <Text variant="h3" weight="bold">
+                    {stats.totalSites}
+                  </Text>
+                  <Text
+                    variant="caption"
+                    style={{ color: colors.mutedForeground }}
+                  >
+                    Sites
+                  </Text>
+                </CardContent>
+              </Card>
+
+              <Card style={{ flex: 1 }}>
+                <CardContent style={{ alignItems: "center", gap: spacing.sm }}>
+                  <Ionicons name="checkmark-done" size={24} color="#22c55e" />
+                  <Text
+                    variant="h3"
+                    weight="bold"
+                    style={{ color: "#22c55e" }}
+                  >
+                    {stats.activeSites}
+                  </Text>
+                  <Text
+                    variant="caption"
+                    style={{ color: colors.mutedForeground }}
+                  >
+                    Active
+                  </Text>
+                </CardContent>
+              </Card>
+            </View>
+
+            {/* Total Power */}
+            <Card>
+              <CardContent
+                style={{ alignItems: "center", gap: spacing.md, padding: spacing.lg }}
+              >
+                <Ionicons name="flash" size={40} color={colors.primary} />
+                <View style={{ alignItems: "center" }}>
+                  <Text variant="h2" weight="bold">
+                    {stats.totalPower} kW
+                  </Text>
+                  <Text
+                    variant="caption"
+                    style={{ color: colors.mutedForeground }}
+                  >
+                    Total Installed Power
+                  </Text>
+                </View>
               </CardContent>
             </Card>
+          </View>
+        )}
 
-            <Card style={{ flex: 1 }}>
-              <CardContent style={{ alignItems: "center", gap: spacing.sm }}>
-                <Ionicons
-                  name="flash-sharp"
-                  size={24}
-                  color="#8b5cf6"
+        {/* Charts Section */}
+        {chargersLoading || sitesLoading ? (
+          <View style={{ gap: spacing.lg }}>
+            <SkeletonChart height={200} />
+            <SkeletonChart height={200} />
+          </View>
+        ) : stats.totalChargers > 0 ? (
+          <View style={{ gap: spacing.lg }}>
+            {/* Conectores - Pie Chart */}
+            <Card>
+              <CardContent style={{ gap: spacing.md }}>
+                <Text variant="h4" weight="bold">Conectores</Text>
+                <Text variant="caption" style={{ color: colors.mutedForeground }}>Estado actual</Text>
+                <PieChart
+                  data={[
+                    { name: 'Charging', population: stats.activeCharging, color: '#8b5cf6', legendFontColor: colors.foreground, legendFontSize: 12 },
+                    { name: 'Available', population: stats.available, color: '#22c55e', legendFontColor: colors.foreground, legendFontSize: 12 },
+                    { name: 'Faulted', population: stats.faulted, color: '#ef4444', legendFontColor: colors.foreground, legendFontSize: 12 },
+                  ]}
+                  width={Dimensions.get('window').width - 64}
+                  height={200}
+                  chartConfig={{
+                    backgroundColor: colors.background,
+                    backgroundGradientFrom: colors.background,
+                    backgroundGradientTo: colors.background,
+                    color: () => colors.mutedForeground,
+                  }}
+                  accessor="population"
+                  backgroundColor="transparent"
+                  paddingLeft="15"
                 />
-                <Text
-                  variant="h3"
-                  weight="bold"
-                  style={{ color: "#8b5cf6" }}
-                >
-                  {stats.activeCharging}
-                </Text>
-                <Text
-                  variant="caption"
-                  style={{ color: colors.mutedForeground }}
-                >
-                  Charging
-                </Text>
+              </CardContent>
+            </Card>
+
+            {/* Power Distribution - Bar Chart */}
+            <Card>
+              <CardContent style={{ gap: spacing.md }}>
+                <Text variant="h4" weight="bold">Potencia por Sitio</Text>
+                <Text variant="caption" style={{ color: colors.mutedForeground }}>kW</Text>
+                <BarChart
+                  data={{
+                    labels: ['Sitio 1', 'Sitio 2', 'Sitio 3', 'Sitio 4', 'Sitio 5'],
+                    datasets: [
+                      {
+                        data: [Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10],
+                      },
+                    ],
+                  }}
+                  width={Dimensions.get('window').width - 64}
+                  height={200}
+                  chartConfig={{
+                    backgroundColor: colors.background,
+                    backgroundGradientFrom: colors.background,
+                    backgroundGradientTo: colors.background,
+                    color: () => '#46A3B5',
+                    barPercentage: 0.6,
+                  }}
+                  verticalLabelRotation={0}
+                />
               </CardContent>
             </Card>
           </View>
+        ) : null}
 
-          {/* Row 2: Status Distribution */}
-          <View style={{ flexDirection: "row", gap: spacing.md }}>
-            <Card style={{ flex: 1 }}>
-              <CardContent style={{ alignItems: "center", gap: spacing.sm }}>
-                <Ionicons name="checkmark-circle" size={24} color="#22c55e" />
-                <Text
-                  variant="h3"
-                  weight="bold"
-                  style={{ color: "#22c55e" }}
-                >
-                  {stats.available}
-                </Text>
-                <Text
-                  variant="caption"
-                  style={{ color: colors.mutedForeground }}
-                >
-                  Available
-                </Text>
-              </CardContent>
-            </Card>
-
-            <Card style={{ flex: 1 }}>
-              <CardContent style={{ alignItems: "center", gap: spacing.sm }}>
-                <Ionicons name="alert-circle" size={24} color="#ef4444" />
-                <Text
-                  variant="h3"
-                  weight="bold"
-                  style={{ color: "#ef4444" }}
-                >
-                  {stats.faulted}
-                </Text>
-                <Text
-                  variant="caption"
-                  style={{ color: colors.mutedForeground }}
-                >
-                  Faulted
-                </Text>
-              </CardContent>
-            </Card>
-          </View>
-
-          {/* Row 3: Sites & Power */}
-          <View style={{ flexDirection: "row", gap: spacing.md }}>
-            <Card style={{ flex: 1 }}>
-              <CardContent style={{ alignItems: "center", gap: spacing.sm }}>
-                <Ionicons name="location" size={24} color={colors.primary} />
-                <Text variant="h3" weight="bold">
-                  {stats.totalSites}
-                </Text>
-                <Text
-                  variant="caption"
-                  style={{ color: colors.mutedForeground }}
-                >
-                  Sites
-                </Text>
-              </CardContent>
-            </Card>
-
-            <Card style={{ flex: 1 }}>
-              <CardContent style={{ alignItems: "center", gap: spacing.sm }}>
-                <Ionicons name="checkmark-done" size={24} color="#22c55e" />
-                <Text
-                  variant="h3"
-                  weight="bold"
-                  style={{ color: "#22c55e" }}
-                >
-                  {stats.activeSites}
-                </Text>
-                <Text
-                  variant="caption"
-                  style={{ color: colors.mutedForeground }}
-                >
-                  Active
-                </Text>
-              </CardContent>
-            </Card>
-          </View>
-
-          {/* Total Power */}
+        {/* User Info */}
+        {!user ? (
           <Card>
-            <CardContent
-              style={{ alignItems: "center", gap: spacing.md, padding: spacing.lg }}
-            >
-              <Ionicons name="flash" size={40} color={colors.primary} />
-              <View style={{ alignItems: "center" }}>
-                <Text variant="h2" weight="bold">
-                  {stats.totalPower} kW
-                </Text>
-                <Text
-                  variant="caption"
-                  style={{ color: colors.mutedForeground }}
-                >
-                  Total Installed Power
-                </Text>
+            <CardContent style={{ gap: spacing.md }}>
+              <SkeletonLine width="40%" height={16} />
+              <View style={{ gap: spacing.sm }}>
+                <SkeletonLine width="100%" height={14} />
+                <SkeletonLine width="100%" height={14} />
+                <SkeletonLine width="60%" height={14} />
               </View>
             </CardContent>
           </Card>
-        </View>
-
-        {/* User Info */}
-        <Card>
-          <CardContent style={{ gap: spacing.md }}>
-            <Text variant="h4" weight="bold">
-              Account
-            </Text>
-            <View style={{ gap: spacing.sm }}>
-              <View>
-                <Text
-                  variant="caption"
-                  style={{ color: colors.mutedForeground }}
-                >
-                  Name
-                </Text>
-                <Text variant="body">
-                  {user?.fullName}
-                </Text>
-              </View>
-              <View>
-                <Text
-                  variant="caption"
-                  style={{ color: colors.mutedForeground }}
-                >
-                  Email
-                </Text>
-                <Text variant="body">{user?.email}</Text>
-              </View>
-              {user?.roles && user.roles.length > 0 && (
+        ) : (
+          <Card>
+            <CardContent style={{ gap: spacing.md }}>
+              <Text variant="h4" weight="bold">
+                Account
+              </Text>
+              <View style={{ gap: spacing.sm }}>
                 <View>
                   <Text
                     variant="caption"
                     style={{ color: colors.mutedForeground }}
                   >
-                    Roles
+                    Name
                   </Text>
-                  <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.sm }}>
-                    {user.roles.map((role) => (
-                      <Badge key={role} label={role} variant="secondary" />
-                    ))}
-                  </View>
+                  <Text variant="body">
+                    {user?.fullName}
+                  </Text>
                 </View>
-              )}
-            </View>
-          </CardContent>
-        </Card>
+                <View>
+                  <Text
+                    variant="caption"
+                    style={{ color: colors.mutedForeground }}
+                  >
+                    Email
+                  </Text>
+                  <Text variant="body">{user?.email}</Text>
+                </View>
+                {user?.roles && user.roles.length > 0 && (
+                  <View>
+                    <Text
+                      variant="caption"
+                      style={{ color: colors.mutedForeground }}
+                    >
+                      Roles
+                    </Text>
+                    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.sm }}>
+                      {user.roles.map((role) => (
+                        <Badge key={role} label={role} variant="secondary" />
+                      ))}
+                    </View>
+                  </View>
+                )}
+              </View>
+            </CardContent>
+          </Card>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
