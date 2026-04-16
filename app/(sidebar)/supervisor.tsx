@@ -470,6 +470,160 @@ function OperadorContent({ colors, spacing }: any) {
           </Card>
         ))}
       </View>
+
+      {/* Location Chargers */}
+      <View style={{ gap: spacing.lg, paddingBottom: spacing.xl }}>
+        {["Marquesina A", "Marquesina J", "Marquesina B"].map((location) => (
+          <View key={location} style={{ gap: spacing.md }}>
+            <Text variant="h4" weight="bold">
+              {location}
+            </Text>
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.md }}>
+              {[1, 2].map((charger) => (
+                <View
+                  key={charger}
+                  style={{
+                    flex: 0.48,
+                    borderWidth: 1,
+                    borderColor: colors.border,
+                    borderRadius: 12,
+                    padding: spacing.md,
+                    gap: spacing.md,
+                  }}
+                >
+                  {/* Charger Header */}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text variant="body" weight="bold">
+                      Cargador CB-0{charger}
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: spacing.xs,
+                      }}
+                    >
+                      <Ionicons name="flash" size={16} color="#4CAF50" />
+                      <Text
+                        variant="caption"
+                        style={{ color: "#4CAF50", fontWeight: "600" }}
+                      >
+                        {charger === 1 ? "1/2" : "1/2"}
+                      </Text>
+                    </View>
+                  </View>
+
+                  {/* Connector Boxes */}
+                  {charger === 1 ? (
+                    <>
+                      {/* C1 */}
+                      <View
+                        style={{
+                          paddingHorizontal: spacing.sm,
+                          paddingVertical: spacing.sm,
+                          borderWidth: 1,
+                          borderColor: "#2196F3",
+                          borderRadius: 8,
+                          gap: spacing.xs,
+                        }}
+                      >
+                        <Text variant="caption" style={{ color: "#2196F3" }}>
+                          ◻︎ 67%
+                        </Text>
+                        <Text
+                          variant="caption"
+                          style={{ color: "#2196F3", fontWeight: "600" }}
+                        >
+                          12345678
+                        </Text>
+                      </View>
+                      {/* C2 */}
+                      <View
+                        style={{
+                          paddingHorizontal: spacing.sm,
+                          paddingVertical: spacing.sm,
+                          borderWidth: 1,
+                          borderColor: "#9C27B0",
+                          borderRadius: 8,
+                          gap: spacing.xs,
+                        }}
+                      >
+                        <Text variant="caption" style={{ color: "#9C27B0" }}>
+                          ◻︎ 100%
+                        </Text>
+                        <Text
+                          variant="caption"
+                          style={{ color: "#9C27B0", fontWeight: "600" }}
+                        >
+                          87654321
+                        </Text>
+                      </View>
+                      {/* Action */}
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: spacing.xs,
+                          paddingVertical: spacing.sm,
+                        }}
+                      >
+                        <Ionicons name="power" size={16} color="#9C27B0" />
+                        <Text variant="caption" style={{ color: "#9C27B0" }}>
+                          Listo para desconectar
+                        </Text>
+                      </View>
+                    </>
+                  ) : (
+                    <>
+                      {/* C1 */}
+                      <View
+                        style={{
+                          paddingHorizontal: spacing.sm,
+                          paddingVertical: spacing.sm,
+                          borderWidth: 1,
+                          borderColor: "#2196F3",
+                          borderRadius: 8,
+                          gap: spacing.xs,
+                        }}
+                      >
+                        <Text variant="caption" style={{ color: "#2196F3" }}>
+                          ◻︎ 85%
+                        </Text>
+                        <Text
+                          variant="caption"
+                          style={{ color: "#2196F3", fontWeight: "600" }}
+                        >
+                          11223344
+                        </Text>
+                      </View>
+                      {/* C2 - Failed */}
+                      <View
+                        style={{
+                          paddingHorizontal: spacing.sm,
+                          paddingVertical: spacing.sm,
+                          borderWidth: 1,
+                          borderColor: "#F44336",
+                          borderRadius: 8,
+                        }}
+                      >
+                        <Text variant="caption" style={{ color: "#F44336" }}>
+                          C2
+                        </Text>
+                      </View>
+                    </>
+                  )}
+                </View>
+              ))}
+            </View>
+          </View>
+        ))}
+      </View>
     </>
   );
 }
