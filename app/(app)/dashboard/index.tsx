@@ -1,22 +1,32 @@
-import React, { useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, ScrollView, RefreshControl, Dimensions, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { useSidebar } from "@/components/layout/AppContainer";
-import { PieChart, BarChart } from "react-native-chart-kit";
-import { SkeletonLine, SkeletonCard, SkeletonChart, SkeletonGrid } from "@/components/ui/SkeletonLoader";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent } from "@/components/ui/Card";
-import { Text } from "@/components/ui/Text";
 import { LocationSelector } from "@/components/ui/LocationSelector";
+import {
+  SkeletonCard,
+  SkeletonChart,
+  SkeletonLine,
+} from "@/components/ui/SkeletonLoader";
+import { Text } from "@/components/ui/Text";
+import { AuthPermissionsEnum } from "@/lib/config/permissions";
 import { usePermissionGuard } from "@/lib/hooks/usePermissionGuard";
 import { useAuthStore } from "@/lib/stores/auth.store";
 import { useChargersStore } from "@/lib/stores/chargers.store";
-import { useSitesStore } from "@/lib/stores/sites.store";
 import { useLocationsStore } from "@/lib/stores/locations.store";
-import { AuthPermissionsEnum } from "@/lib/config/permissions";
+import { useSitesStore } from "@/lib/stores/sites.store";
 import { getThemeColors, spacing } from "@/theme";
+import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import {
+  Dimensions,
+  RefreshControl,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { BarChart, PieChart } from "react-native-chart-kit";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function DashboardScreen() {
   const { t } = useTranslation();
@@ -30,24 +40,16 @@ export default function DashboardScreen() {
   });
 
   // Chargers store
-  const {
-    chargers,
-    chargersLoading,
-    fetchChargers,
-  } = useChargersStore();
+  const { chargers, chargersLoading, fetchChargers } = useChargersStore();
 
   // Sites store
-  const {
-    sites,
-    sitesLoading,
-    fetchSites,
-  } = useSitesStore();
+  const { sites, sitesLoading, fetchSites } = useSitesStore();
 
   // Get locations and chargers/sites data
   const { selectedLocationIds, fetchLocations } = useLocationsStore();
 
   useEffect(() => {
-    console.log('[Dashboard] User data:', {
+    console.log("[Dashboard] User data:", {
       userId: user?.userId,
       companyId: user?.companyId,
       fullName: user?.fullName,
@@ -55,10 +57,10 @@ export default function DashboardScreen() {
     });
 
     if (user?.userId && user?.companyId) {
-      console.log('[Dashboard] Calling fetchLocations...');
+      console.log("[Dashboard] Calling fetchLocations...");
       fetchLocations(user.userId, user.companyId);
     } else {
-      console.log('[Dashboard] Missing userId or companyId');
+      console.log("[Dashboard] Missing userId or companyId");
     }
   }, [user?.userId, user?.companyId]);
 
@@ -75,15 +77,12 @@ export default function DashboardScreen() {
   if (!hasAccess) return null;
 
   // Calculate statistics from real data (with defaults for loading state)
-  const chargingCount = chargers?.filter(
-    (c) => c.status === "charging"
-  ).length || 0;
-  const availableCount = chargers?.filter(
-    (c) => c.status === "available"
-  ).length || 0;
-  const faultedCount = chargers?.filter(
-    (c) => c.status === "faulted"
-  ).length || 0;
+  const chargingCount =
+    chargers?.filter((c) => c.status === "charging").length || 0;
+  const availableCount =
+    chargers?.filter((c) => c.status === "available").length || 0;
+  const faultedCount =
+    chargers?.filter((c) => c.status === "faulted").length || 0;
   const totalPower = chargers?.reduce((sum, c) => sum + (c.power || 0), 0) || 0;
   const activeSites = sites?.filter((s) => s.status === "active").length || 0;
 
@@ -109,7 +108,12 @@ export default function DashboardScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView
-        contentContainerStyle={{ paddingHorizontal: spacing.lg, paddingTop: spacing.sm, paddingBottom: spacing.lg, gap: spacing.lg }}
+        contentContainerStyle={{
+          paddingHorizontal: spacing.lg,
+          paddingTop: spacing.sm,
+          paddingBottom: spacing.lg,
+          gap: spacing.md,
+        }}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
@@ -119,7 +123,13 @@ export default function DashboardScreen() {
         }
       >
         {/* Header */}
-        <View style={{ flexDirection: "row", alignItems: "flex-start", gap: spacing.md }}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "flex-start",
+            gap: spacing.md,
+          }}
+        >
           {/* Hamburger Menu Button */}
           <TouchableOpacity
             onPress={openSidebar}
@@ -235,16 +245,8 @@ export default function DashboardScreen() {
 
               <Card style={{ flex: 1 }}>
                 <CardContent style={{ alignItems: "center", gap: spacing.sm }}>
-                  <Ionicons
-                    name="flash-sharp"
-                    size={24}
-                    color="#8b5cf6"
-                  />
-                  <Text
-                    variant="h3"
-                    weight="bold"
-                    style={{ color: "#8b5cf6" }}
-                  >
+                  <Ionicons name="flash-sharp" size={24} color="#8b5cf6" />
+                  <Text variant="h3" weight="bold" style={{ color: "#8b5cf6" }}>
                     {stats.activeCharging}
                   </Text>
                   <Text
@@ -262,11 +264,7 @@ export default function DashboardScreen() {
               <Card style={{ flex: 1 }}>
                 <CardContent style={{ alignItems: "center", gap: spacing.sm }}>
                   <Ionicons name="checkmark-circle" size={24} color="#22c55e" />
-                  <Text
-                    variant="h3"
-                    weight="bold"
-                    style={{ color: "#22c55e" }}
-                  >
+                  <Text variant="h3" weight="bold" style={{ color: "#22c55e" }}>
                     {stats.available}
                   </Text>
                   <Text
@@ -281,11 +279,7 @@ export default function DashboardScreen() {
               <Card style={{ flex: 1 }}>
                 <CardContent style={{ alignItems: "center", gap: spacing.sm }}>
                   <Ionicons name="alert-circle" size={24} color="#ef4444" />
-                  <Text
-                    variant="h3"
-                    weight="bold"
-                    style={{ color: "#ef4444" }}
-                  >
+                  <Text variant="h3" weight="bold" style={{ color: "#ef4444" }}>
                     {stats.faulted}
                   </Text>
                   <Text
@@ -318,11 +312,7 @@ export default function DashboardScreen() {
               <Card style={{ flex: 1 }}>
                 <CardContent style={{ alignItems: "center", gap: spacing.sm }}>
                   <Ionicons name="checkmark-done" size={24} color="#22c55e" />
-                  <Text
-                    variant="h3"
-                    weight="bold"
-                    style={{ color: "#22c55e" }}
-                  >
+                  <Text variant="h3" weight="bold" style={{ color: "#22c55e" }}>
                     {stats.activeSites}
                   </Text>
                   <Text
@@ -338,7 +328,11 @@ export default function DashboardScreen() {
             {/* Total Power */}
             <Card>
               <CardContent
-                style={{ alignItems: "center", gap: spacing.md, padding: spacing.lg }}
+                style={{
+                  alignItems: "center",
+                  gap: spacing.md,
+                  padding: spacing.lg,
+                }}
               >
                 <Ionicons name="flash" size={40} color={colors.primary} />
                 <View style={{ alignItems: "center" }}>
@@ -368,15 +362,40 @@ export default function DashboardScreen() {
             {/* Conectores - Pie Chart */}
             <Card>
               <CardContent style={{ gap: spacing.md }}>
-                <Text variant="h4" weight="bold">Conectores</Text>
-                <Text variant="caption" style={{ color: colors.mutedForeground }}>Estado actual</Text>
+                <Text variant="h4" weight="bold">
+                  Conectores
+                </Text>
+                <Text
+                  variant="caption"
+                  style={{ color: colors.mutedForeground }}
+                >
+                  Estado actual
+                </Text>
                 <PieChart
                   data={[
-                    { name: 'Charging', population: stats.activeCharging, color: '#8b5cf6', legendFontColor: colors.foreground, legendFontSize: 12 },
-                    { name: 'Available', population: stats.available, color: '#22c55e', legendFontColor: colors.foreground, legendFontSize: 12 },
-                    { name: 'Faulted', population: stats.faulted, color: '#ef4444', legendFontColor: colors.foreground, legendFontSize: 12 },
+                    {
+                      name: "Charging",
+                      population: stats.activeCharging,
+                      color: "#8b5cf6",
+                      legendFontColor: colors.foreground,
+                      legendFontSize: 12,
+                    },
+                    {
+                      name: "Available",
+                      population: stats.available,
+                      color: "#22c55e",
+                      legendFontColor: colors.foreground,
+                      legendFontSize: 12,
+                    },
+                    {
+                      name: "Faulted",
+                      population: stats.faulted,
+                      color: "#ef4444",
+                      legendFontColor: colors.foreground,
+                      legendFontSize: 12,
+                    },
                   ]}
-                  width={Dimensions.get('window').width - 64}
+                  width={Dimensions.get("window").width - 64}
                   height={200}
                   chartConfig={{
                     backgroundColor: colors.background,
@@ -394,24 +413,43 @@ export default function DashboardScreen() {
             {/* Power Distribution - Bar Chart */}
             <Card>
               <CardContent style={{ gap: spacing.md }}>
-                <Text variant="h4" weight="bold">Potencia por Sitio</Text>
-                <Text variant="caption" style={{ color: colors.mutedForeground }}>kW</Text>
+                <Text variant="h4" weight="bold">
+                  Potencia por Sitio
+                </Text>
+                <Text
+                  variant="caption"
+                  style={{ color: colors.mutedForeground }}
+                >
+                  kW
+                </Text>
                 <BarChart
                   data={{
-                    labels: ['Sitio 1', 'Sitio 2', 'Sitio 3', 'Sitio 4', 'Sitio 5'],
+                    labels: [
+                      "Sitio 1",
+                      "Sitio 2",
+                      "Sitio 3",
+                      "Sitio 4",
+                      "Sitio 5",
+                    ],
                     datasets: [
                       {
-                        data: [Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10],
+                        data: [
+                          Math.random() * 10,
+                          Math.random() * 10,
+                          Math.random() * 10,
+                          Math.random() * 10,
+                          Math.random() * 10,
+                        ],
                       },
                     ],
                   }}
-                  width={Dimensions.get('window').width - 64}
+                  width={Dimensions.get("window").width - 64}
                   height={200}
                   chartConfig={{
                     backgroundColor: colors.background,
                     backgroundGradientFrom: colors.background,
                     backgroundGradientTo: colors.background,
-                    color: () => '#46A3B5',
+                    color: () => "#46A3B5",
                     barPercentage: 0.6,
                   }}
                   verticalLabelRotation={0}
@@ -447,9 +485,7 @@ export default function DashboardScreen() {
                   >
                     Name
                   </Text>
-                  <Text variant="body">
-                    {user?.fullName}
-                  </Text>
+                  <Text variant="body">{user?.fullName}</Text>
                 </View>
                 <View>
                   <Text
@@ -468,7 +504,13 @@ export default function DashboardScreen() {
                     >
                       Roles
                     </Text>
-                    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.sm }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                        gap: spacing.sm,
+                      }}
+                    >
                       {user.roles.map((role) => (
                         <Badge key={role} label={role} variant="secondary" />
                       ))}
