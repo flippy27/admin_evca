@@ -19,14 +19,17 @@ import { LocationSelector } from "@/components/ui/LocationSelector";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { SkeletonCard } from "@/components/ui/Skeleton";
 import { Text } from "@/components/ui/Text";
+import { OCPPModal } from "@/components/ui/OCPPModal";
 import { usePermissionGuard } from "@/lib/hooks/usePermissionGuard";
 import { useApiErrorToast } from "@/lib/hooks/useApiErrorToast";
 import { useChargersStore } from "@/lib/stores/chargers.store";
 import { useChargingSessionsStore } from "@/lib/stores/charging-session.store";
 import { useLocationsStore } from "@/lib/stores/locations.store";
 import { useAuthStore } from "@/lib/stores/auth.store";
+import { useOCPPStore } from "@/lib/stores/ocpp.store";
 import { AuthPermissionsEnum } from "@/lib/config/permissions";
 import { getThemeColors, spacing } from "@/theme";
+import { useToast } from "@/components/ui/Toast";
 
 type ChargersTab = "list" | "sessions";
 
@@ -41,6 +44,7 @@ export default function ChargersScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const colors = getThemeColors("light");
+  const { show: showToast } = useToast();
 
   // Permission guard
   const hasAccess = usePermissionGuard({
@@ -67,6 +71,17 @@ export default function ChargersScreen() {
     clearError: clearSessionsError,
   } = useChargingSessionsStore();
 
+  // OCPP Store
+  const {
+    executing: ocppExecuting,
+    startCharge,
+    stopCharge,
+    disableCharger,
+    enableCharger,
+    unlockConnector,
+    rebootCharger,
+  } = useOCPPStore();
+
   // UI State
   const [searchText, setSearchText] = useState("");
   const [filteredChargers, setFilteredChargers] = useState<typeof chargers>([]);
@@ -74,6 +89,8 @@ export default function ChargersScreen() {
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [guideDrawerOpen, setGuideDrawerOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
+  const [ocppModalOpen, setOCPPModalOpen] = useState(false);
+  const [selectedChargerForOCPP, setSelectedChargerForOCPP] = useState<any>(null);
 
   // Show error toast when API fails
   useApiErrorToast(chargersError, "Failed to load chargers. Try again.");
@@ -159,10 +176,90 @@ export default function ChargersScreen() {
     router.push("/chargers/create");
   };
 
+  const handleChargerLongPress = (charger: any) => {
+    setSelectedChargerForOCPP(charger);
+    setOCPPModalOpen(true);
+  };
+
+  const handleOCPPStartCharge = async () => {
+    if (!selectedChargerForOCPP) return;
+    const success = await startCharge(
+      selectedChargerForOCPP.id,
+      selectedChargerForOCPP.connectors?.[0]?.id || "1"
+    );
+    if (success) {
+      showToast("Charge started", "success");
+    } else {
+      showToast("Failed to start charge", "error");
+    }
+  };
+
+  const handleOCPPStopCharge = async () => {
+    if (!selectedChargerForOCPP) return;
+    const success = await stopCharge(selectedChargerForOCPP.id, 0);
+    if (success) {
+      showToast("Charge stopped", "success");
+    } else {
+      showToast("Failed to stop charge", "error");
+    }
+  };
+
+  const handleOCPPDisable = async () => {
+    if (!selectedChargerForOCPP) return;
+    const success = await disableCharger(selectedChargerForOCPP.id);
+    if (success) {
+      showToast("Charger disabled", "success");
+    } else {
+      showToast("Failed to disable", "error");
+    }
+  };
+
+  const handleOCPPEnable = async () => {
+    if (!selectedChargerForOCPP) return;
+    const success = await enableCharger(selectedChargerForOCPP.id);
+    if (success) {
+      showToast("Charger enabled", "success");
+    } else {
+      showToast("Failed to enable", "error");
+    }
+  };
+
+  const handleOCPPUnlock = async () => {
+    if (!selectedChargerForOCPP) return;
+    const success = await unlockConnector(
+      selectedChargerForOCPP.id,
+      selectedChargerForOCPP.connectors?.[0]?.id || "1"
+    );
+    if (success) {
+      showToast("Connector unlocked", "success");
+    } else {
+      showToast("Failed to unlock", "error");
+    }
+  };
+
+  const handleOCPPReboot = async () => {
+    if (!selectedChargerForOCPP) return;
+    const success = await rebootCharger(selectedChargerForOCPP.id);
+    if (success) {
+      showToast("Reboot initiated", "success");
+    } else {
+      showToast("Failed to reboot", "error");
+    }
+  };
+
+  const handleOCPPEdit = () => {
+    setOCPPModalOpen(false);
+    if (selectedChargerForOCPP) {
+      router.push(`/chargers/${selectedChargerForOCPP.id}/edit`);
+    }
+  };
+
   const renderChargerItem = ({ item }: { item: any }) => (
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={() => handleChargerPress(item.id)}
+      onLongPress={() => handleChargerLongPress(item)}
+      delayLongPress={500}
       style={{ marginBottom: spacing.md }}
     >
       <Card>
@@ -573,6 +670,26 @@ export default function ChargersScreen() {
             </View>
           </ScrollView>
         </BottomDrawer>
+
+        {/* OCPP Commands Modal */}
+        {selectedChargerForOCPP && (
+          <OCPPModal
+            visible={ocppModalOpen}
+            chargerId={selectedChargerForOCPP.id}
+            chargerName={selectedChargerForOCPP.name}
+            chargerStatus={selectedChargerForOCPP.status}
+            isActive={selectedChargerForOCPP.status === "charging"}
+            executing={ocppExecuting}
+            onStartCharge={handleOCPPStartCharge}
+            onStopCharge={handleOCPPStopCharge}
+            onDisable={handleOCPPDisable}
+            onEnable={handleOCPPEnable}
+            onUnlock={handleOCPPUnlock}
+            onReboot={handleOCPPReboot}
+            onEdit={handleOCPPEdit}
+            onClose={() => setOCPPModalOpen(false)}
+          />
+        )}
 
         {/* Guide Drawer */}
         <BottomDrawer
