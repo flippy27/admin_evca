@@ -487,11 +487,13 @@ function MantenedorContent({ colors, spacing }: any) {
           >
             RESUMEN ENERGÉTICO DEL PATIO
           </Text>
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.md }}>
+
+          {/* Row 1 */}
+          <View style={{ flexDirection: "row", gap: spacing.md }}>
             {/* Voltaje Prom */}
             <View
               style={{
-                flex: 0.48,
+                flex: 1,
                 padding: spacing.md,
                 backgroundColor: "#E0F7FA",
                 borderRadius: 8,
@@ -512,7 +514,7 @@ function MantenedorContent({ colors, spacing }: any) {
             {/* Temp Máx */}
             <View
               style={{
-                flex: 0.48,
+                flex: 1,
                 padding: spacing.md,
                 backgroundColor: "#FFF3E0",
                 borderRadius: 8,
@@ -529,11 +531,14 @@ function MantenedorContent({ colors, spacing }: any) {
                 42.5 °C
               </Text>
             </View>
+          </View>
 
+          {/* Row 2 */}
+          <View style={{ flexDirection: "row", gap: spacing.md }}>
             {/* Potencia Total */}
             <View
               style={{
-                flex: 0.48,
+                flex: 1,
                 padding: spacing.md,
                 backgroundColor: "#E8EAF6",
                 borderRadius: 8,
@@ -554,7 +559,7 @@ function MantenedorContent({ colors, spacing }: any) {
             {/* Temp Prom */}
             <View
               style={{
-                flex: 0.48,
+                flex: 1,
                 padding: spacing.md,
                 backgroundColor: "#E0F7FA",
                 borderRadius: 8,
