@@ -740,7 +740,12 @@ function MantenedorContent({ colors, spacing }: any) {
                         </Text>
                       </View>
                     </View>
-                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
                       <Text
                         variant="caption"
                         style={{ color: colors.mutedForeground }}
@@ -818,7 +823,12 @@ function MantenedorContent({ colors, spacing }: any) {
                         </View>
                       )}
                     </View>
-                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
                       <Text
                         variant="caption"
                         style={{
