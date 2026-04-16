@@ -109,12 +109,18 @@ export default function SitesScreen() {
 
   const handleRefresh = () => {
     clearError("sites");
-    fetchSites(1, 20);
+    const { selectedLocationIds } = useLocationsStore.getState();
+    fetchSites(1, 20, {
+      siteId: selectedLocationIds.length > 0 ? selectedLocationIds : undefined,
+    });
   };
 
   const handleNextPage = () => {
     if (page < totalPages) {
-      fetchSites(page + 1, 20);
+      const { selectedLocationIds } = useLocationsStore.getState();
+      fetchSites(page + 1, 20, {
+        siteId: selectedLocationIds.length > 0 ? selectedLocationIds : undefined,
+      });
     }
   };
 
