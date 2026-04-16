@@ -126,7 +126,7 @@ export default function DashboardScreen() {
         <View
           style={{
             flexDirection: "row",
-            alignItems: "center",
+            alignItems: "flex-start",
             gap: spacing.md,
           }}
         >
