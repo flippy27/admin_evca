@@ -1,5 +1,6 @@
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { BottomDrawer } from "@/components/ui/BottomDrawer";
+import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Text } from "@/components/ui/Text";
 import { getThemeColors, spacing } from "@/theme";
@@ -362,27 +363,38 @@ export default function SupervisorScreen() {
               paddingVertical: spacing.md,
               borderTopWidth: 1,
               borderTopColor: colors.border,
-              gap: spacing.xs,
+              gap: spacing.md,
             }}
           >
-            <Text
-              variant="caption"
-              style={{ color: colors.mutedForeground }}
-            >
-              Centro de Carga & EVCA Admin
-            </Text>
-            <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
-              <Text variant="caption" style={{ color: colors.mutedForeground }}>
-                Rol:
-              </Text>
+            <View style={{ gap: spacing.xs }}>
               <Text
                 variant="caption"
-                weight="bold"
-                style={{ color: colors.foreground }}
+                style={{ color: colors.mutedForeground }}
               >
-                {selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)}
+                Centro de Carga & EVCA Admin
               </Text>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
+                <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                  Rol:
+                </Text>
+                <Text
+                  variant="caption"
+                  weight="bold"
+                  style={{ color: colors.foreground }}
+                >
+                  {selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)}
+                </Text>
+              </View>
             </View>
+            <Button
+              label="Exit Supervisor"
+              variant="destructive"
+              onPress={() => {
+                router.push("/(app)/dashboard");
+                setSidebarOpen(false);
+              }}
+              size="sm"
+            />
           </View>
         </SafeAreaView>
       </View>
