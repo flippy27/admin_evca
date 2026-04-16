@@ -17,7 +17,7 @@ export default function ChargerDetailLayout() {
         },
         headerLeft: () => (
           <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="chevron-back" size={24} color={colors.primary} />
+            <Ionicons name="arrow-back" size={24} color={colors.primary} />
           </TouchableOpacity>
         ),
         contentStyle: { backgroundColor: colors.background },

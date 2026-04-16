@@ -35,7 +35,7 @@ export default function EnergyManagementScreen() {
               zIndex: 10,
             }}
           >
-            <Ionicons name="chevron-back" size={24} color={colors.primary} />
+            <Ionicons name="arrow-back" size={24} color={colors.primary} />
           </TouchableOpacity>
           <Text variant="h3" weight="bold">
             Gestión energética
