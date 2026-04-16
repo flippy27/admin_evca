@@ -1,20 +1,29 @@
 import React, { useEffect, useState } from 'react'
-import { View, ScrollView, StyleSheet, ActivityIndicator } from 'react-native'
+import { View, ScrollView, StyleSheet, ActivityIndicator, Alert } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import * as SecureStore from 'expo-secure-store'
 import { Card } from '@/components/ui/Card'
 import { Text } from '@/components/ui/Text'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
-import { Toast } from '@/components/ui/Toast'
+import { useToast } from '@/components/ui/Toast'
+import { usePermissionGuard } from '@/lib/hooks/usePermissionGuard'
+import { AuthPermissionsEnum } from '@/lib/config/permissions'
 import { apiCache } from '@/lib/utils/cache'
 
 export default function ChargerDetailScreen() {
   const { id } = useLocalSearchParams()
   const router = useRouter()
+  const { show: showToast } = useToast()
+
+  usePermissionGuard({
+    requiredPermissions: [AuthPermissionsEnum.CHARGERS_VIEW],
+  })
+
   const [charger, setCharger] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     if (id) {
@@ -77,6 +86,59 @@ export default function ChargerDetailScreen() {
     }
   }
 
+  const handleDelete = async () => {
+    Alert.alert(
+      'Delete Charger?',
+      'This action cannot be undone',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              setDeleting(true)
+
+              const token = await SecureStore.getItemAsync('access_token')
+              if (!token) throw new Error('Not authenticated')
+
+              const response = await fetch(
+                `https://emobility-bff.dev.dhemax.link/bff/chargers/${id}`,
+                {
+                  method: 'DELETE',
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                  },
+                }
+              )
+
+              if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`)
+              }
+
+              // Clear cache
+              apiCache.delete(`charger-${id}`)
+              apiCache.clearPattern('^chargers-')
+
+              showToast('Charger deleted', 'success')
+              router.back()
+            } catch (err) {
+              const msg = err instanceof Error ? err.message : 'Failed to delete'
+              showToast(msg, 'error')
+              console.error('Delete charger error:', err)
+            } finally {
+              setDeleting(false)
+            }
+          },
+        },
+      ]
+    )
+  }
+
   if (loading) {
     return (
       <View style={styles.centerContainer}>
@@ -89,8 +151,8 @@ export default function ChargerDetailScreen() {
     return (
       <View style={styles.centerContainer}>
         <Text style={styles.errorText}>Failed to load charger</Text>
-        <Button title="Retry" onPress={fetchCharger} />
-        <Button title="Back" onPress={() => router.back()} variant="secondary" />
+        <Button label="Retry" onPress={fetchCharger} />
+        <Button label="Back" onPress={() => router.back()} variant="secondary" />
       </View>
     )
   }
@@ -135,20 +197,33 @@ export default function ChargerDetailScreen() {
       {/* Actions */}
       <Card style={styles.actionsCard}>
         <Button
-          title="View Live Data"
+          label="View Live Data"
           onPress={() => router.push(`/chargers/${id}/live`)}
         />
         <Button
-          title="View History"
+          label="View History"
           onPress={() => router.push(`/chargers/${id}/history`)}
           variant="secondary"
           style={styles.actionButton}
         />
         <Button
-          title="Configuration"
+          label="Configuration"
           onPress={() => router.push(`/chargers/${id}/configuration`)}
           variant="secondary"
           style={styles.actionButton}
+        />
+        <Button
+          label="Edit"
+          onPress={() => router.push(`/chargers/${id}/edit`)}
+          variant="secondary"
+          style={styles.actionButton}
+        />
+        <Button
+          label={deleting ? 'Deleting...' : 'Delete'}
+          onPress={handleDelete}
+          variant="destructive"
+          style={styles.actionButton}
+          disabled={deleting}
         />
       </Card>
     </ScrollView>

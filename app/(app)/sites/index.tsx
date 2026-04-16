@@ -118,6 +118,10 @@ export default function SitesScreen() {
     }
   };
 
+  const handleCreatePress = () => {
+    router.push("/sites/create");
+  };
+
   const renderSiteItem = ({ item }: { item: any }) => (
     <TouchableOpacity
       activeOpacity={0.7}
@@ -268,6 +272,19 @@ export default function SitesScreen() {
                   }}
                 >
                   <Ionicons name="funnel" size={20} color={colors.primary} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleCreatePress}
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 8,
+                    backgroundColor: colors.primary,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Ionicons name="add" size={20} color="white" />
                 </TouchableOpacity>
               </View>
 

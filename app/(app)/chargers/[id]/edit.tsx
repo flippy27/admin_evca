@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { View, ScrollView, StyleSheet } from 'react-native'
-import { useRouter } from 'expo-router'
+import React, { useEffect, useState } from 'react'
+import { View, ScrollView, StyleSheet, ActivityIndicator } from 'react-native'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import * as SecureStore from 'expo-secure-store'
 import { Card, CardContent, CardHeader } from '@/components/ui/Card'
 import { Text } from '@/components/ui/Text'
@@ -11,17 +11,17 @@ import { usePermissionGuard } from '@/lib/hooks/usePermissionGuard'
 import { AuthPermissionsEnum } from '@/lib/config/permissions'
 import { apiCache } from '@/lib/utils/cache'
 
-type CreateChargerScreenProps = object
-
-export default function CreateChargerScreen(props: CreateChargerScreenProps) {
+export default function EditChargerScreen() {
+  const { id } = useLocalSearchParams()
   const router = useRouter()
   const { show: showToast } = useToast()
 
   usePermissionGuard({
-    requiredPermissions: [AuthPermissionsEnum.CHARGERS_CREATE],
+    requiredPermissions: [AuthPermissionsEnum.CHARGERS_EDIT],
   })
 
   const [loading, setLoading] = useState(false)
+  const [fetching, setFetching] = useState(true)
   const [form, setForm] = useState({
     charger_id: '',
     name: '',
@@ -34,8 +34,61 @@ export default function CreateChargerScreen(props: CreateChargerScreenProps) {
     rated_power_kw: '22',
     access_type: 'PUBLIC',
     ocpp_version: '1.6',
-    location_id: '11',
   })
+
+  // Fetch existing charger data
+  useEffect(() => {
+    if (id) {
+      fetchChargerData()
+    }
+  }, [id])
+
+  const fetchChargerData = async () => {
+    try {
+      setFetching(true)
+
+      const token = await SecureStore.getItemAsync('access_token')
+      if (!token) throw new Error('Not authenticated')
+
+      const response = await fetch(
+        `https://emobility-bff.dev.dhemax.link/bff/chargers/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`)
+      }
+
+      const data = await response.json()
+      const chargerData = data.payload
+
+      // Pre-fill form with existing data
+      setForm({
+        charger_id: chargerData.charger_ID || '',
+        name: chargerData.charger_name || '',
+        vendor: chargerData.charger_vendor || '',
+        model: chargerData.charger_model || '',
+        ocpp_id: chargerData.charger_ocpp_id || '',
+        ip_address: chargerData.charger_ip_address || '',
+        serial_number: chargerData.charger_serial_number || '',
+        firmware_version: chargerData.charger_firmware_version || '',
+        rated_power_kw: String(chargerData.charger_rated_power_kw || 22),
+        access_type: chargerData.charger_access_type || 'PUBLIC',
+        ocpp_version: chargerData.charger_ocpp_version || '1.6',
+      })
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Failed to load charger'
+      showToast(msg, 'error')
+      console.error('Fetch charger error:', err)
+    } finally {
+      setFetching(false)
+    }
+  }
 
   const handleSubmit = async () => {
     try {
@@ -63,29 +116,13 @@ export default function CreateChargerScreen(props: CreateChargerScreenProps) {
           rated_power_kw: parseFloat(form.rated_power_kw),
           access_type: form.access_type,
           ocpp_version: form.ocpp_version,
-          connectors: [
-            {
-              connector_id: 'CONN-1',
-              name: 'Connector 1',
-              type: 'AC',
-              standard: 'IEC_62196_T2',
-              power_type: 'AC_1_PHASE',
-              max_voltage: 230,
-              max_amperage: 16,
-            },
-          ],
-          site: {
-            existing: {
-              location_id: form.location_id,
-            },
-          },
         },
       }
 
       const response = await fetch(
-        'https://emobility-bff.dev.dhemax.link/bff/chargers',
+        `https://emobility-bff.dev.dhemax.link/bff/chargers/${id}`,
         {
-          method: 'POST',
+          method: 'PUT',
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -102,24 +139,33 @@ export default function CreateChargerScreen(props: CreateChargerScreenProps) {
       }
 
       // Clear cache
+      apiCache.delete(`charger-${id}`)
       apiCache.clearPattern('^chargers-')
 
-      showToast('Charger created', 'success')
+      showToast('Charger updated', 'success')
       router.back()
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to create'
+      const msg = err instanceof Error ? err.message : 'Failed to update'
       showToast(msg, 'error')
-      console.error('Create charger error:', err)
+      console.error('Edit charger error:', err)
     } finally {
       setLoading(false)
     }
+  }
+
+  if (fetching) {
+    return (
+      <View style={styles.centerContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
+    )
   }
 
   return (
     <ScrollView style={styles.container}>
       <Card style={styles.card}>
         <CardHeader>
-          <Text style={styles.title}>New Charger</Text>
+          <Text style={styles.title}>Edit Charger</Text>
         </CardHeader>
         <CardContent>
           <Text style={styles.section}>Required</Text>
@@ -183,7 +229,7 @@ export default function CreateChargerScreen(props: CreateChargerScreenProps) {
 
           <View style={styles.actions}>
             <Button
-              label={loading ? 'Creating...' : 'Create'}
+              label={loading ? 'Updating...' : 'Update'}
               onPress={handleSubmit}
               disabled={loading}
             />
@@ -206,6 +252,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
     padding: 16,
+  },
+  centerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   card: {
     marginBottom: 32,

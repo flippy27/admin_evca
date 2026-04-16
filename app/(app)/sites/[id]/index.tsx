@@ -1,20 +1,29 @@
 import React, { useEffect, useState } from 'react'
-import { View, ScrollView, StyleSheet, ActivityIndicator } from 'react-native'
+import { View, ScrollView, StyleSheet, ActivityIndicator, Alert } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import * as SecureStore from 'expo-secure-store'
 import { Card } from '@/components/ui/Card'
 import { Text } from '@/components/ui/Text'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
-import { Toast } from '@/components/ui/Toast'
+import { useToast } from '@/components/ui/Toast'
+import { usePermissionGuard } from '@/lib/hooks/usePermissionGuard'
+import { AuthPermissionsEnum } from '@/lib/config/permissions'
 import { apiCache } from '@/lib/utils/cache'
 
 export default function SiteDetailScreen() {
   const { id } = useLocalSearchParams()
   const router = useRouter()
+  const { show: showToast } = useToast()
+
+  usePermissionGuard({
+    requiredPermissions: [AuthPermissionsEnum.SITES_VIEW],
+  })
+
   const [site, setSite] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     if (id) {
@@ -77,6 +86,59 @@ export default function SiteDetailScreen() {
     }
   }
 
+  const handleDelete = async () => {
+    Alert.alert(
+      'Delete Site?',
+      'This action cannot be undone',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              setDeleting(true)
+
+              const token = await SecureStore.getItemAsync('access_token')
+              if (!token) throw new Error('Not authenticated')
+
+              const response = await fetch(
+                `https://emobility-bff.dev.dhemax.link/bff/sites/${id}`,
+                {
+                  method: 'DELETE',
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                  },
+                }
+              )
+
+              if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`)
+              }
+
+              // Clear cache
+              apiCache.delete(`site-${id}`)
+              apiCache.clearPattern('^sites-')
+
+              showToast('Site deleted', 'success')
+              router.back()
+            } catch (err) {
+              const msg = err instanceof Error ? err.message : 'Failed to delete'
+              showToast(msg, 'error')
+              console.error('Delete site error:', err)
+            } finally {
+              setDeleting(false)
+            }
+          },
+        },
+      ]
+    )
+  }
+
   if (loading) {
     return (
       <View style={styles.centerContainer}>
@@ -89,8 +151,8 @@ export default function SiteDetailScreen() {
     return (
       <View style={styles.centerContainer}>
         <Text style={styles.errorText}>Failed to load site</Text>
-        <Button title="Retry" onPress={fetchSite} />
-        <Button title="Back" onPress={() => router.back()} variant="secondary" />
+        <Button label="Retry" onPress={fetchSite} />
+        <Button label="Back" onPress={() => router.back()} variant="secondary" />
       </View>
     )
   }
@@ -135,14 +197,21 @@ export default function SiteDetailScreen() {
       {/* Actions */}
       <Card style={styles.actionsCard}>
         <Button
-          title="View Chargers"
+          label="View Chargers"
           onPress={() => router.push(`/chargers?location=${id}`)}
         />
         <Button
-          title="Edit Site"
-          onPress={() => router.push(`/sites/${id}/profile`)}
+          label="Edit"
+          onPress={() => router.push(`/sites/${id}/edit`)}
           variant="secondary"
           style={styles.actionButton}
+        />
+        <Button
+          label={deleting ? 'Deleting...' : 'Delete'}
+          onPress={handleDelete}
+          variant="destructive"
+          style={styles.actionButton}
+          disabled={deleting}
         />
       </Card>
     </ScrollView>

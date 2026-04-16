@@ -11,30 +11,29 @@ import { usePermissionGuard } from '@/lib/hooks/usePermissionGuard'
 import { AuthPermissionsEnum } from '@/lib/config/permissions'
 import { apiCache } from '@/lib/utils/cache'
 
-type CreateChargerScreenProps = object
+type CreateSiteScreenProps = object
 
-export default function CreateChargerScreen(props: CreateChargerScreenProps) {
+export default function CreateSiteScreen(props: CreateSiteScreenProps) {
   const router = useRouter()
   const { show: showToast } = useToast()
 
   usePermissionGuard({
-    requiredPermissions: [AuthPermissionsEnum.CHARGERS_CREATE],
+    requiredPermissions: [AuthPermissionsEnum.SITES_CREATE],
   })
 
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
-    charger_id: '',
     name: '',
-    vendor: '',
-    model: '',
-    ocpp_id: '',
-    ip_address: '',
-    serial_number: '',
-    firmware_version: '',
-    rated_power_kw: '22',
-    access_type: 'PUBLIC',
-    ocpp_version: '1.6',
-    location_id: '11',
+    alias: '',
+    city: '',
+    street: '',
+    country: '',
+    adm_division: '',
+    latitude: '',
+    longitude: '',
+    company: '',
+    timezone: 'UTC',
+    accessibility: '',
   })
 
   const handleSubmit = async () => {
@@ -42,7 +41,7 @@ export default function CreateChargerScreen(props: CreateChargerScreenProps) {
       setLoading(true)
 
       // Validate required fields
-      if (!form.charger_id || !form.name || !form.vendor || !form.model) {
+      if (!form.name) {
         showToast('Fill all required fields', 'error')
         return
       }
@@ -52,38 +51,24 @@ export default function CreateChargerScreen(props: CreateChargerScreenProps) {
 
       const payload = {
         payload: {
-          charger_id: form.charger_id,
-          name: form.name,
-          vendor: form.vendor,
-          model: form.model,
-          ocpp_id: form.ocpp_id,
-          ip_address: form.ip_address,
-          serial_number: form.serial_number,
-          firmware_version: form.firmware_version,
-          rated_power_kw: parseFloat(form.rated_power_kw),
-          access_type: form.access_type,
-          ocpp_version: form.ocpp_version,
-          connectors: [
-            {
-              connector_id: 'CONN-1',
-              name: 'Connector 1',
-              type: 'AC',
-              standard: 'IEC_62196_T2',
-              power_type: 'AC_1_PHASE',
-              max_voltage: 230,
-              max_amperage: 16,
-            },
-          ],
-          site: {
-            existing: {
-              location_id: form.location_id,
-            },
+          location_name: form.name,
+          location_alias: form.alias,
+          location_address: {
+            location_address_city: form.city,
+            location_address_street: form.street,
+            location_address_country: form.country,
+            location_address_adm_division: form.adm_division,
+            location_address_latitude: form.latitude ? parseFloat(form.latitude) : null,
+            location_address_longitude: form.longitude ? parseFloat(form.longitude) : null,
           },
+          location_company: form.company,
+          location_timezone: form.timezone,
+          location_accessibility: form.accessibility,
         },
       }
 
       const response = await fetch(
-        'https://emobility-bff.dev.dhemax.link/bff/chargers',
+        'https://emobility-bff.dev.dhemax.link/bff/sites',
         {
           method: 'POST',
           headers: {
@@ -102,14 +87,14 @@ export default function CreateChargerScreen(props: CreateChargerScreenProps) {
       }
 
       // Clear cache
-      apiCache.clearPattern('^chargers-')
+      apiCache.clearPattern('^sites-')
 
-      showToast('Charger created', 'success')
+      showToast('Site created', 'success')
       router.back()
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Failed to create'
       showToast(msg, 'error')
-      console.error('Create charger error:', err)
+      console.error('Create site error:', err)
     } finally {
       setLoading(false)
     }
@@ -119,65 +104,78 @@ export default function CreateChargerScreen(props: CreateChargerScreenProps) {
     <ScrollView style={styles.container}>
       <Card style={styles.card}>
         <CardHeader>
-          <Text style={styles.title}>New Charger</Text>
+          <Text style={styles.title}>New Site</Text>
         </CardHeader>
         <CardContent>
           <Text style={styles.section}>Required</Text>
-          <Input
-            placeholder="Charger ID"
-            value={form.charger_id}
-            onChangeText={(v) => setForm({ ...form, charger_id: v })}
-            editable={!loading}
-          />
           <Input
             placeholder="Name"
             value={form.name}
             onChangeText={(v) => setForm({ ...form, name: v })}
             editable={!loading}
           />
-          <Input
-            placeholder="Vendor"
-            value={form.vendor}
-            onChangeText={(v) => setForm({ ...form, vendor: v })}
-            editable={!loading}
-          />
-          <Input
-            placeholder="Model"
-            value={form.model}
-            onChangeText={(v) => setForm({ ...form, model: v })}
-            editable={!loading}
-          />
 
           <Text style={styles.section}>Details</Text>
           <Input
-            placeholder="OCPP ID"
-            value={form.ocpp_id}
-            onChangeText={(v) => setForm({ ...form, ocpp_id: v })}
+            placeholder="Alias"
+            value={form.alias}
+            onChangeText={(v) => setForm({ ...form, alias: v })}
             editable={!loading}
           />
           <Input
-            placeholder="IP Address"
-            value={form.ip_address}
-            onChangeText={(v) => setForm({ ...form, ip_address: v })}
+            placeholder="City"
+            value={form.city}
+            onChangeText={(v) => setForm({ ...form, city: v })}
             editable={!loading}
           />
           <Input
-            placeholder="Serial Number"
-            value={form.serial_number}
-            onChangeText={(v) => setForm({ ...form, serial_number: v })}
+            placeholder="Street"
+            value={form.street}
+            onChangeText={(v) => setForm({ ...form, street: v })}
             editable={!loading}
           />
           <Input
-            placeholder="Firmware Version"
-            value={form.firmware_version}
-            onChangeText={(v) => setForm({ ...form, firmware_version: v })}
+            placeholder="Country"
+            value={form.country}
+            onChangeText={(v) => setForm({ ...form, country: v })}
             editable={!loading}
           />
           <Input
-            placeholder="Power (kW)"
-            value={form.rated_power_kw}
-            onChangeText={(v) => setForm({ ...form, rated_power_kw: v })}
+            placeholder="State/Division"
+            value={form.adm_division}
+            onChangeText={(v) => setForm({ ...form, adm_division: v })}
+            editable={!loading}
+          />
+          <Input
+            placeholder="Latitude"
+            value={form.latitude}
+            onChangeText={(v) => setForm({ ...form, latitude: v })}
             keyboardType="decimal-pad"
+            editable={!loading}
+          />
+          <Input
+            placeholder="Longitude"
+            value={form.longitude}
+            onChangeText={(v) => setForm({ ...form, longitude: v })}
+            keyboardType="decimal-pad"
+            editable={!loading}
+          />
+          <Input
+            placeholder="Company"
+            value={form.company}
+            onChangeText={(v) => setForm({ ...form, company: v })}
+            editable={!loading}
+          />
+          <Input
+            placeholder="Timezone"
+            value={form.timezone}
+            onChangeText={(v) => setForm({ ...form, timezone: v })}
+            editable={!loading}
+          />
+          <Input
+            placeholder="Accessibility"
+            value={form.accessibility}
+            onChangeText={(v) => setForm({ ...form, accessibility: v })}
             editable={!loading}
           />
 
