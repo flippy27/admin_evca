@@ -197,7 +197,7 @@ Gives you the weekly breakdown and success criteria. Read this first to understa
 - [x] Charger CRUD forms (create, edit, delete)
 - [x] Site CRUD forms
 - [ ] OCPP commands (start, stop, disable, enable, unlock, reboot) - *optional*
-- [ ] Tabs component for charger detail
+- [x] Tabs component for charger detail (live/history/config navigation)
 - [x] Form validation and error handling
 - **Goal:** All CRUD operations working ✅ (commands optional)
 
