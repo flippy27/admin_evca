@@ -1,32 +1,83 @@
 import React, { useState } from "react";
-import { SafeAreaView, ScrollView, View, TouchableOpacity } from "react-native";
+import { SafeAreaView, ScrollView, View, TouchableOpacity, Modal } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@/components/ui/Text";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { BottomDrawer } from "@/components/ui/BottomDrawer";
 import { getThemeColors, spacing } from "@/theme";
+
+type RoleType = "operador" | "mantenedor" | "supervisor";
+type LocationType = "Terminal Maipú" | "Marquesina A" | "Terminal B";
 
 export default function SupervisorScreen() {
   const router = useRouter();
   const colors = getThemeColors("light");
-  const [selectedLocation, setSelectedLocation] = useState("Terminal Maipú");
+  const [selectedRole, setSelectedRole] = useState<RoleType>("supervisor");
+  const [selectedLocation, setSelectedLocation] = useState<LocationType>("Terminal Maipú");
+  const [roleDrawerOpen, setRoleDrawerOpen] = useState(false);
+  const [locationDrawerOpen, setLocationDrawerOpen] = useState(false);
+
+  const roles: RoleType[] = ["operador", "mantenedor", "supervisor"];
+  const locations: LocationType[] = ["Terminal Maipú", "Marquesina A", "Terminal B"];
+
+  const getRoleDescription = (role: RoleType) => {
+    const descriptions = {
+      operador: "Control de operaciones • Monitoreo de cargas • Reportes diarios",
+      mantenedor: "Mantenimiento preventivo • Historial de servicios • Alertas técnicas",
+      supervisor: "Estado general del patio • KPIs operacionales • Alertas y monitoreo",
+    };
+    return descriptions[role];
+  };
+
+  const getRoleIcon = (role: RoleType) => {
+    const icons = {
+      operador: "settings",
+      mantenedor: "hammer",
+      supervisor: "eye",
+    };
+    return icons[role];
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView contentContainerStyle={{ padding: spacing.lg, gap: spacing.lg }}>
         {/* Header */}
         <View style={{ gap: spacing.sm }}>
-          <Text variant="h2" weight="bold">
-            Supervisor
-          </Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.md }}>
+            <Ionicons name="menu" size={24} color={colors.foreground} />
+            <Text variant="h3" weight="bold">
+              {selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)}
+            </Text>
+          </View>
           <Text variant="body" style={{ color: colors.mutedForeground }}>
             PoC v1
           </Text>
         </View>
 
+        {/* Role Selector */}
+        <TouchableOpacity
+          onPress={() => setRoleDrawerOpen(true)}
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingHorizontal: spacing.md,
+            paddingVertical: spacing.md,
+            backgroundColor: colors.primary,
+            borderRadius: 8,
+          }}
+        >
+          <Text variant="body" weight="bold" style={{ color: "white" }}>
+            {selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)}
+          </Text>
+          <Ionicons name="chevron-down" size={20} color="white" />
+        </TouchableOpacity>
+
         {/* Location Selector */}
         <TouchableOpacity
+          onPress={() => setLocationDrawerOpen(true)}
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
@@ -347,6 +398,106 @@ export default function SupervisorScreen() {
             </CardContent>
           </Card>
         </View>
+
+        {/* Role Drawer */}
+        <BottomDrawer
+          visible={roleDrawerOpen}
+          onClose={() => setRoleDrawerOpen(false)}
+          title="Select Role"
+          height={250}
+        >
+          <ScrollView style={{ paddingBottom: spacing.lg }}>
+            <View style={{ gap: spacing.md, paddingHorizontal: spacing.lg }}>
+              {roles.map((role) => (
+                <TouchableOpacity
+                  key={role}
+                  onPress={() => {
+                    setSelectedRole(role);
+                    setRoleDrawerOpen(false);
+                  }}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    paddingVertical: spacing.md,
+                    gap: spacing.md,
+                  }}
+                >
+                  <View
+                    style={{
+                      width: 20,
+                      height: 20,
+                      borderRadius: 4,
+                      borderWidth: 2,
+                      borderColor:
+                        selectedRole === role ? colors.primary : colors.border,
+                      backgroundColor:
+                        selectedRole === role ? colors.primary : "transparent",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {selectedRole === role && (
+                      <Ionicons name="checkmark" size={14} color="white" />
+                    )}
+                  </View>
+                  <Text variant="body" weight={selectedRole === role ? "bold" : "normal"}>
+                    {role.charAt(0).toUpperCase() + role.slice(1)}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
+        </BottomDrawer>
+
+        {/* Location Drawer */}
+        <BottomDrawer
+          visible={locationDrawerOpen}
+          onClose={() => setLocationDrawerOpen(false)}
+          title="Select Location"
+          height={250}
+        >
+          <ScrollView style={{ paddingBottom: spacing.lg }}>
+            <View style={{ gap: spacing.md, paddingHorizontal: spacing.lg }}>
+              {locations.map((location) => (
+                <TouchableOpacity
+                  key={location}
+                  onPress={() => {
+                    setSelectedLocation(location);
+                    setLocationDrawerOpen(false);
+                  }}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    paddingVertical: spacing.md,
+                    gap: spacing.md,
+                  }}
+                >
+                  <View
+                    style={{
+                      width: 20,
+                      height: 20,
+                      borderRadius: 4,
+                      borderWidth: 2,
+                      borderColor:
+                        selectedLocation === location ? colors.primary : colors.border,
+                      backgroundColor:
+                        selectedLocation === location ? colors.primary : "transparent",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {selectedLocation === location && (
+                      <Ionicons name="checkmark" size={14} color="white" />
+                    )}
+                  </View>
+                  <Text variant="body" weight={selectedLocation === location ? "bold" : "normal"}>
+                    {location}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
+        </BottomDrawer>
       </ScrollView>
     </SafeAreaView>
   );
