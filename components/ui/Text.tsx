@@ -1,13 +1,13 @@
 import React from 'react';
 import { Text as RNText, StyleSheet, TextProps, TextStyle, StyleProp } from 'react-native';
-import { colors, typography } from '../../theme';
+import { typography, getThemeColors } from '../../theme';
+import { useResolvedColorScheme } from '../../hooks/use-color-scheme';
 
 export type TextVariant = 'h1' | 'h2' | 'h3' | 'h4' | 'body' | 'caption';
 
 interface CustomTextProps extends TextProps {
   variant?: TextVariant;
   weight?: 'normal' | 'medium' | 'semibold' | 'bold';
-  isDark?: boolean;
   style?: StyleProp<TextStyle>;
 }
 
@@ -15,12 +15,12 @@ export const Text = React.forwardRef<RNText, CustomTextProps>(
   ({
     variant = 'body',
     weight,
-    isDark = false,
     style,
     children,
     ...props
   }, ref) => {
-    const themeColors = isDark ? colors.dark : colors.light;
+    const resolvedScheme = useResolvedColorScheme();
+    const themeColors = getThemeColors(resolvedScheme);
 
     const getVariantStyle = (): TextStyle => {
       const variantStyles: Record<TextVariant, TextStyle> = {

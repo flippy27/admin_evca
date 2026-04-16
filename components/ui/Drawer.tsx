@@ -7,7 +7,8 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-import { colors, spacing } from '../../theme';
+import { spacing, getThemeColors } from '../../theme';
+import { useResolvedColorScheme } from '../../hooks/use-color-scheme';
 import { Text } from './Text';
 import { Separator } from './Separator';
 
@@ -23,7 +24,6 @@ interface DrawerProps {
   onClose: () => void;
   items: DrawerItem[];
   header?: React.ReactNode;
-  isDark?: boolean;
 }
 
 export const Drawer = ({
@@ -31,9 +31,9 @@ export const Drawer = ({
   onClose,
   items,
   header,
-  isDark = false,
 }: DrawerProps) => {
-  const themeColors = isDark ? colors.dark : colors.light;
+  const resolvedScheme = useResolvedColorScheme();
+  const themeColors = getThemeColors(resolvedScheme);
 
   return (
     <Modal
@@ -55,7 +55,7 @@ export const Drawer = ({
           {header && (
             <>
               {header}
-              <Separator isDark={isDark} />
+              <Separator />
             </>
           )}
 
@@ -78,7 +78,6 @@ export const Drawer = ({
                   <View style={styles.itemContent}>
                     {item.icon && <View style={styles.icon}>{item.icon}</View>}
                     <Text
-                      isDark={isDark}
                       weight="medium"
                       style={{
                         color: item.isDanger ? themeColors.destructive : themeColors.foreground,
@@ -88,7 +87,7 @@ export const Drawer = ({
                     </Text>
                   </View>
                 </TouchableOpacity>
-                {index < items.length - 1 && <Separator isDark={isDark} />}
+                {index < items.length - 1 && <Separator />}
               </React.Fragment>
             ))}
           </ScrollView>

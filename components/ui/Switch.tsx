@@ -6,7 +6,8 @@ import {
   StyleSheet,
   ViewStyle,
 } from 'react-native';
-import { colors, spacing, typography } from '../../theme';
+import { colors, spacing, typography, getThemeColors } from '../../theme';
+import { useResolvedColorScheme } from '../../hooks/use-color-scheme';
 
 interface SwitchProps {
   value: boolean;
@@ -14,7 +15,6 @@ interface SwitchProps {
   label?: string;
   disabled?: boolean;
   containerStyle?: ViewStyle;
-  isDark?: boolean;
 }
 
 export const Switch = React.forwardRef<RNSwitch, SwitchProps>(
@@ -24,9 +24,9 @@ export const Switch = React.forwardRef<RNSwitch, SwitchProps>(
     label,
     disabled = false,
     containerStyle,
-    isDark = false,
   }, ref) => {
-    const themeColors = isDark ? colors.dark : colors.light;
+    const resolvedScheme = useResolvedColorScheme();
+    const themeColors = getThemeColors(resolvedScheme);
 
     return (
       <View

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
-import { colors, spacing, radius, typography } from '../../theme';
+import { getThemeColors, spacing, radius, typography } from '../../theme';
+import { useResolvedColorScheme } from '../../hooks/use-color-scheme';
 
 export type AlertVariant = 'default' | 'destructive' | 'success' | 'info';
 
@@ -9,7 +10,6 @@ interface AlertProps {
   message: string;
   variant?: AlertVariant;
   style?: ViewStyle;
-  isDark?: boolean;
   icon?: React.ReactNode;
 }
 
@@ -18,10 +18,11 @@ export const Alert = ({
   message,
   variant = 'default',
   style,
-  isDark = false,
   icon,
 }: AlertProps) => {
-  const themeColors = isDark ? colors.dark : colors.light;
+  const resolvedScheme = useResolvedColorScheme();
+  const themeColors = getThemeColors(resolvedScheme);
+  const isDark = resolvedScheme === 'dark';
 
   const getVariantStyle = (): {
     background: string;
@@ -40,22 +41,22 @@ export const Alert = ({
         title: themeColors.foreground,
       },
       destructive: {
-        background: isDark ? 'oklch(0.2 0.1 25)' : 'oklch(0.96 0.05 25)',
-        border: themeColors.destructive,
-        text: themeColors.destructive,
-        title: themeColors.destructive,
+        background: isDark ? 'oklch(0.3 0.1 29)' : '#fee2e2',
+        border: '#dc2626',
+        text: isDark ? '#fca5a5' : '#7f1d1d',
+        title: isDark ? '#fca5a5' : '#b91c1c',
       },
       success: {
-        background: isDark ? 'oklch(0.25 0.1 120)' : 'oklch(0.95 0.08 120)',
+        background: isDark ? 'oklch(0.3 0.1 142)' : '#dcfce7',
         border: '#16a34a',
-        text: '#16a34a',
-        title: '#16a34a',
+        text: isDark ? '#86efac' : '#15803d',
+        title: isDark ? '#86efac' : '#166534',
       },
       info: {
-        background: isDark ? 'oklch(0.2 0.1 200)' : 'oklch(0.95 0.08 200)',
-        border: '#3b82f6',
-        text: '#3b82f6',
-        title: '#3b82f6',
+        background: isDark ? 'oklch(0.3 0.1 255)' : '#dbeafe',
+        border: '#2563eb',
+        text: isDark ? '#93c5fd' : '#1e40af',
+        title: isDark ? '#93c5fd' : '#1e3a8a',
       },
     };
     return variantStyles[variant];
@@ -74,62 +75,49 @@ export const Alert = ({
         style,
       ]}
     >
-      <View style={styles.contentContainer}>
-        {icon && <View style={styles.icon}>{icon}</View>}
-        <View style={styles.textContainer}>
-          {title && (
-            <Text
-              style={[
-                styles.title,
-                {
-                  color: variantStyle.title,
-                },
-              ]}
-            >
-              {title}
-            </Text>
-          )}
+      <View style={styles.content}>
+        {title && (
           <Text
             style={[
-              styles.message,
-              {
-                color: variantStyle.text,
-              },
+              styles.title,
+              { color: variantStyle.title, fontFamily: typography.bold },
             ]}
           >
-            {message}
+            {title}
           </Text>
-        </View>
+        )}
+        <Text style={[styles.message, { color: variantStyle.text }]}>
+          {message}
+        </Text>
       </View>
+      {icon && <View style={styles.icon}>{icon}</View>}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   alert: {
-    borderWidth: 1,
-    borderRadius: radius.md,
-    padding: spacing.lg,
-  },
-  contentContainer: {
     flexDirection: 'row',
     alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    padding: spacing.md,
     gap: spacing.md,
   },
-  icon: {
-    marginTop: spacing.xs,
-  },
-  textContainer: {
+  content: {
     flex: 1,
     gap: spacing.xs,
   },
   title: {
-    fontSize: typography.fontSize.sm,
-    fontWeight: '600' as const,
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: spacing.xs,
   },
   message: {
-    fontSize: typography.fontSize.sm,
-    fontWeight: '400' as const,
-    lineHeight: typography.lineHeight.normal * typography.fontSize.sm,
+    fontSize: 13,
+  },
+  icon: {
+    marginTop: 2,
   },
 });

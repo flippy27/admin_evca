@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
-import { colors, spacing, radius, typography } from '../../theme';
+import { spacing, radius, typography, getThemeColors } from '../../theme';
+import { useResolvedColorScheme } from '../../hooks/use-color-scheme';
 
 export type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline';
 
@@ -8,16 +9,15 @@ interface BadgeProps {
   label: string;
   variant?: BadgeVariant;
   style?: ViewStyle;
-  isDark?: boolean;
 }
 
 export const Badge = ({
   label,
   variant = 'default',
   style,
-  isDark = false,
 }: BadgeProps) => {
-  const themeColors = isDark ? colors.dark : colors.light;
+  const resolvedScheme = useResolvedColorScheme();
+  const themeColors = getThemeColors(resolvedScheme);
 
   const getVariantStyle = (): { background: ViewStyle; text: { color: string } } => {
     const styles: Record<BadgeVariant, { background: ViewStyle; text: { color: string } }> = {

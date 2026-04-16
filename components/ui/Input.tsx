@@ -7,7 +7,8 @@ import {
   TextInputProps,
   Text,
 } from 'react-native';
-import { colors, spacing, radius, typography } from '../../theme';
+import { spacing, radius, typography, getThemeColors } from '../../theme';
+import { useResolvedColorScheme } from '../../hooks/use-color-scheme';
 
 interface InputProps extends TextInputProps {
   label?: string;
@@ -18,7 +19,6 @@ interface InputProps extends TextInputProps {
   disabled?: boolean;
   multiline?: boolean;
   containerStyle?: ViewStyle;
-  isDark?: boolean;
 }
 
 export const Input = React.forwardRef<TextInput, InputProps>(
@@ -31,10 +31,10 @@ export const Input = React.forwardRef<TextInput, InputProps>(
     disabled = false,
     multiline = false,
     containerStyle,
-    isDark = false,
     ...props
   }, ref) => {
-    const themeColors = isDark ? colors.dark : colors.light;
+    const resolvedScheme = useResolvedColorScheme();
+    const themeColors = getThemeColors(resolvedScheme);
 
     return (
       <View style={containerStyle}>

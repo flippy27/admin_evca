@@ -6,6 +6,7 @@
 import React, { ReactNode } from "react";
 import { Modal, View, TouchableOpacity, Dimensions, StyleSheet } from "react-native";
 import { getThemeColors, spacing } from "@/theme";
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { Text } from "./Text";
 
 interface BottomDrawerProps {
@@ -23,7 +24,8 @@ export function BottomDrawer({
   height = 300,
   children,
 }: BottomDrawerProps) {
-  const colors = getThemeColors("light");
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
   const screenHeight = Dimensions.get("window").height;
 
   return (

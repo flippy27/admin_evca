@@ -1,19 +1,19 @@
 import React from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
-import { colors, spacing } from '../../theme';
+import { spacing, getThemeColors } from '../../theme';
+import { useResolvedColorScheme } from '../../hooks/use-color-scheme';
 
 interface SeparatorProps {
   vertical?: boolean;
   style?: ViewStyle;
-  isDark?: boolean;
 }
 
 export const Separator = ({
   vertical = false,
   style,
-  isDark = false,
 }: SeparatorProps) => {
-  const themeColors = isDark ? colors.dark : colors.light;
+  const resolvedScheme = useResolvedColorScheme();
+  const themeColors = getThemeColors(resolvedScheme);
 
   return (
     <View

@@ -7,7 +7,8 @@ import {
   TextStyle,
   ActivityIndicator,
 } from 'react-native';
-import { colors, spacing, radius, typography } from '../../theme';
+import { spacing, radius, typography, getThemeColors } from '../../theme';
+import { useResolvedColorScheme } from '../../hooks/use-color-scheme';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'destructive' | 'ghost';
 export type ButtonSize = 'sm' | 'md' | 'lg';
@@ -21,7 +22,6 @@ interface ButtonProps {
   loading?: boolean;
   fullWidth?: boolean;
   style?: ViewStyle;
-  isDark?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
 }
@@ -36,11 +36,11 @@ export const Button = React.forwardRef<React.ElementRef<typeof TouchableOpacity>
     loading = false,
     fullWidth = false,
     style,
-    isDark = false,
     leftIcon,
     rightIcon,
   }, ref) => {
-    const themeColors = isDark ? colors.dark : colors.light;
+    const resolvedScheme = useResolvedColorScheme();
+    const themeColors = getThemeColors(resolvedScheme);
     const isDisabled = disabled || loading;
 
     const getVariantStyle = (): { background: ViewStyle; text: TextStyle } => {
