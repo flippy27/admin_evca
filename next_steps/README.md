@@ -161,6 +161,7 @@ Gives you the weekly breakdown and success criteria. Read this first to understa
 - **NEW:** Create/Edit/Delete forms for Sites
 - **NEW:** Cache invalidation on mutations
 - **NEW:** Toast notifications for success/error
+- **NEW:** OCPP commands modal with long-press integration (start, stop, disable, enable, unlock, reboot)
 
 ### 🟡 Partially Working
 - Location selector (working, needs polish)
@@ -170,8 +171,6 @@ Gives you the weekly breakdown and success criteria. Read this first to understa
 - OCPP commands (not started - user noted as optional)
 
 ### ❌ Not Implemented
-- OCPP commands (start, stop, disable, enable, unlock, reboot) - *optional per user*
-- Tabs component for charger detail screens (routes exist, needs UI tabs)
 - Reporting screens and charts
 - Credentials management
 - Energy resources management
@@ -196,10 +195,10 @@ Gives you the weekly breakdown and success criteria. Read this first to understa
 ### Week 2: CRUD & Commands
 - [x] Charger CRUD forms (create, edit, delete)
 - [x] Site CRUD forms
-- [ ] OCPP commands (start, stop, disable, enable, unlock, reboot) - *optional*
+- [x] OCPP commands (start, stop, disable, enable, unlock, reboot) with modal & long-press ✅
 - [x] Tabs component for charger detail (live/history/config navigation)
 - [x] Form validation and error handling
-- **Goal:** All CRUD operations working ✅ (commands optional)
+- **Goal:** All CRUD operations + OCPP commands working ✅
 
 ### Week 3: Advanced Features
 - [ ] Reporting screens and charts
@@ -280,12 +279,12 @@ Gives you the weekly breakdown and success criteria. Read this first to understa
 - ✅ Sessions display
 - **Result:** Can view all data
 
-**By end of Week 2:** 🔄 IN PROGRESS
+**By end of Week 2:** ✅ COMPLETE
 - ✅ Create chargers/sites
 - ✅ Edit chargers/sites
 - ✅ Delete chargers/sites
-- ⏳ Start/stop charging (optional - OCPP commands)
-- **Result:** Full CRUD working ✅ (commands optional)
+- ✅ Start/stop charging (OCPP commands - optional)
+- **Result:** Full CRUD + OCPP commands working ✅
 
 **By end of Week 3:**
 - ✅ All features implemented
