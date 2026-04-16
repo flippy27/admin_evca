@@ -94,6 +94,17 @@ export default function AppLayout() {
             ),
           }}
         />
+
+        {/* Showcase */}
+        <Tabs.Screen
+          name="showcase"
+          options={{
+            title: "Showcase",
+            tabBarIcon: ({ color }) => (
+              <Ionicons name="sparkles" size={24} color={color} />
+            ),
+          }}
+        />
       </Tabs>
     </AppContainer>
   );
