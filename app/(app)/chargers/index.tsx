@@ -18,7 +18,7 @@ import { Card, CardContent } from "@/components/ui/Card";
 import { BottomDrawer } from "@/components/ui/BottomDrawer";
 import { LocationSelector } from "@/components/ui/LocationSelector";
 import { SearchBar } from "@/components/ui/SearchBar";
-import { SkeletonCard } from "@/components/ui/Skeleton";
+import { SkeletonCard, SkeletonListItem } from "@/components/ui/SkeletonLoader";
 import { Text } from "@/components/ui/Text";
 import { OCPPModal } from "@/components/ui/OCPPModal";
 import { usePermissionGuard } from "@/lib/hooks/usePermissionGuard";
@@ -526,10 +526,10 @@ export default function ChargersScreen() {
               ListEmptyComponent={
                 chargersLoading ? (
                   <View
-                    style={{ paddingHorizontal: spacing.lg, paddingVertical: spacing.lg }}
+                    style={{ paddingHorizontal: spacing.lg, paddingVertical: spacing.lg, gap: spacing.md }}
                   >
                     {Array.from({ length: 3 }).map((_, idx) => (
-                      <SkeletonCard key={idx} lines={2} style={{ marginBottom: spacing.md }} />
+                      <SkeletonCard key={idx} lines={2} />
                     ))}
                   </View>
                 ) : (
