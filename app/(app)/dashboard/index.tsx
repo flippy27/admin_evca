@@ -126,7 +126,7 @@ export default function DashboardScreen() {
         <View
           style={{
             flexDirection: "row",
-            alignItems: "flex-start",
+            alignItems: "center",
             gap: spacing.md,
           }}
         >
@@ -140,7 +140,6 @@ export default function DashboardScreen() {
               backgroundColor: colors.card,
               justifyContent: "center",
               alignItems: "center",
-              marginTop: 4,
             }}
           >
             <View style={{ gap: 4 }}>

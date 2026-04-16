@@ -375,7 +375,7 @@ export default function ChargersScreen() {
     <SafeAreaView edges={["bottom"]} style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={{ flex: 1 }}>
         {/* Header with Hamburger */}
-        <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.sm, paddingBottom: spacing.md, flexDirection: "row", alignItems: "flex-start", gap: spacing.md }}>
+        <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.sm, paddingBottom: spacing.md, flexDirection: "row", alignItems: "center", gap: spacing.md }}>
           {/* Hamburger Menu Button */}
           <TouchableOpacity
             onPress={openSidebar}
@@ -386,7 +386,6 @@ export default function ChargersScreen() {
               backgroundColor: colors.card,
               justifyContent: "center",
               alignItems: "center",
-              marginTop: 4,
             }}
           >
             <View style={{ gap: 4 }}>
