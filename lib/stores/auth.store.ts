@@ -279,8 +279,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     try {
       const res = await authApi.refreshToken(refreshToken);
-      // Refresh endpoint returns tokens directly in payload (not nested under .data)
-      const newTokens = res.data.payload as any;
+      // User management refresh returns tokens in response.data.data
+      const newTokens = res.data.data as any;
 
       const updated = {
         accessToken: newTokens.access_token,
@@ -293,17 +293,73 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set(updated);
       injectAuthToken(newTokens.access_token);
 
-      // Update SecureStore
-      const stored = await SecureStore.getItemAsync(STORAGE_KEY);
-      if (stored) {
-        const snapshot = JSON.parse(stored) as AuthDataSnapshot;
-        await SecureStore.setItemAsync(
-          STORAGE_KEY,
-          JSON.stringify({ ...snapshot, ...updated })
-        );
+      logger.info('Access token refreshed successfully');
+
+      // Re-fetch permissions with new token (permissions may have changed)
+      try {
+        const permRes = await authApi.getPermissions();
+        const permissions = permRes.data.payload.data;
+
+        // Process permissions
+        const roles: string[] = [];
+        const permissionCodes: string[] = [];
+
+        permissions.applications.forEach((app) => {
+          app.companies.forEach((company) => {
+            if (company.role) roles.push(company.role);
+            if (company.permissions?.length) {
+              permissionCodes.push(...company.permissions.map((p) => p.code));
+            }
+          });
+        });
+
+        // Extract userId and companyId from new JWT
+        const jwtClaims = getJWTClaims(newTokens.access_token);
+        const currentUser = get().user;
+
+        const updatedUser: ProcessedUserData = {
+          userId: jwtClaims.userId || currentUser?.userId || permissions.user.externalId,
+          email: jwtClaims.email || currentUser?.email || permissions.user.email,
+          fullName: currentUser?.fullName || permissions.user.name,
+          company: permissions.company.name,
+          companyId: jwtClaims.companyId || currentUser?.companyId || permissions.company.externalId,
+          roles: [...new Set(roles)],
+          permissions: [...new Set(permissionCodes)],
+          isActive: true,
+        };
+
+        set({ user: updatedUser });
+
+        // Update SecureStore with new tokens + updated user data
+        const stored = await SecureStore.getItemAsync(STORAGE_KEY);
+        if (stored) {
+          const snapshot = JSON.parse(stored) as AuthDataSnapshot;
+          await SecureStore.setItemAsync(
+            STORAGE_KEY,
+            JSON.stringify({
+              ...snapshot,
+              ...updated,
+              userData: updatedUser
+            })
+          );
+        }
+
+        logger.info('Permissions refreshed after token refresh');
+      } catch (permError) {
+        logger.warn('Failed to refresh permissions, but token refresh succeeded', permError);
+        // Don't fail token refresh if permissions fetch fails - user is still authenticated
+        // Update SecureStore with just new tokens
+        const stored = await SecureStore.getItemAsync(STORAGE_KEY);
+        if (stored) {
+          const snapshot = JSON.parse(stored) as AuthDataSnapshot;
+          await SecureStore.setItemAsync(
+            STORAGE_KEY,
+            JSON.stringify({ ...snapshot, ...updated })
+          );
+        }
       }
     } catch (error) {
-      console.error('Refresh token failed:', error);
+      logger.error('Refresh token failed:', error);
       await get().logout();
       throw error;
     }

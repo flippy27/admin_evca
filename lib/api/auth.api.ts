@@ -2,7 +2,7 @@
  * Auth API endpoints
  */
 
-import { bffClient } from './client';
+import { bffClient, userMgmtClient } from './client';
 import { ENDPOINTS } from './endpoints';
 import {
   LoginRequest,
@@ -34,10 +34,11 @@ export const authApi = {
 
   /**
    * Refresh access token using refresh token
-   * Returns BFF-style response with tokens in payload
+   * Calls user-management service (not BFF)
+   * Response: { access_token, refresh_token, expires_in, refresh_expires_in }
    */
   refreshToken: (refreshToken: string) =>
-    bffClient.post<BffLoginResponse>(ENDPOINTS.REFRESH_TOKEN, {
+    userMgmtClient.post<any>(ENDPOINTS.REFRESH_TOKEN, {
       refreshToken: refreshToken,
     }),
 

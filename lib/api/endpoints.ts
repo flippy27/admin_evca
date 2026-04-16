@@ -6,7 +6,7 @@ export const ENDPOINTS = {
   // Auth
   LOGIN: '/bff/auth/login',
   PERMISSIONS: '/bff/auth/permissions',
-  REFRESH_TOKEN: '/bff/auth/refresh',
+  REFRESH_TOKEN: '/api/auth/refresh-token',
   FORGOT_PASSWORD: '/bff/users/reset-password',
   RESET_PASSWORD: '/bff/auth/reset-password',
   CHANGE_PASSWORD: '/bff/users/change-password',
