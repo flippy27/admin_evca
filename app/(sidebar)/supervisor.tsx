@@ -898,45 +898,15 @@ function SupervisorContent({ colors, spacing }: any) {
           DASHBOARD DEL PATIO
         </Text>
         <View style={{ gap: spacing.md }}>
-          {/* Utilización */}
-          <Card>
-            <CardContent
-              style={{
-                padding: spacing.md,
-                backgroundColor: "#E8F5E9",
-                borderRadius: 8,
-                gap: spacing.sm,
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: spacing.sm,
-                }}
-              >
-                <Ionicons name="trending-up" size={20} color="#2E7D32" />
-                <Text variant="caption" style={{ color: "#2E7D32" }}>
-                  Utilización
-                </Text>
-              </View>
-              <Text variant="h2" weight="bold" style={{ color: "#2E7D32" }}>
-                30%
-              </Text>
-              <Text variant="caption" style={{ color: "#558B2F" }}>
-                3 de 10 conectores
-              </Text>
-            </CardContent>
-          </Card>
-
-          {/* Energy & Chargers Row */}
+          {/* Row 1: Utilización & Energía */}
           <View style={{ flexDirection: "row", gap: spacing.md }}>
             <Card style={{ flex: 1 }}>
               <CardContent
                 style={{
                   padding: spacing.md,
-                  backgroundColor: "#E3F2FD",
+                  backgroundColor: "#E8F5E9",
                   borderRadius: 8,
+                  gap: spacing.sm,
                 }}
               >
                 <View
@@ -944,23 +914,22 @@ function SupervisorContent({ colors, spacing }: any) {
                     flexDirection: "row",
                     alignItems: "center",
                     gap: spacing.sm,
-                    marginBottom: spacing.sm,
                   }}
                 >
-                  <Ionicons name="flash" size={20} color={colors.primary} />
-                  <Text variant="caption" style={{ color: colors.primary }}>
-                    Energía Total
+                  <Ionicons name="trending-up" size={20} color="#2E7D32" />
+                  <Text variant="caption" style={{ color: "#2E7D32" }}>
+                    Utilización
                   </Text>
                 </View>
                 <Text
-                  variant="h3"
+                  variant="h2"
                   weight="bold"
-                  style={{ color: colors.primary }}
+                  style={{ color: "#2E7D32" }}
                 >
-                  245.0
+                  30%
                 </Text>
-                <Text variant="caption" style={{ color: "#1565C0" }}>
-                  kWh entregados
+                <Text variant="caption" style={{ color: "#558B2F" }}>
+                  3 de 10 conectores
                 </Text>
               </CardContent>
             </Card>
@@ -969,8 +938,9 @@ function SupervisorContent({ colors, spacing }: any) {
               <CardContent
                 style={{
                   padding: spacing.md,
-                  backgroundColor: "#F3E5F5",
+                  backgroundColor: "#E3F2FD",
                   borderRadius: 8,
+                  gap: spacing.sm,
                 }}
               >
                 <View
@@ -978,7 +948,43 @@ function SupervisorContent({ colors, spacing }: any) {
                     flexDirection: "row",
                     alignItems: "center",
                     gap: spacing.sm,
-                    marginBottom: spacing.sm,
+                  }}
+                >
+                  <Ionicons name="flash" size={20} color={colors.primary} />
+                  <Text variant="caption" style={{ color: colors.primary }}>
+                    Energía Total
+                  </Text>
+                </View>
+                <Text
+                  variant="h2"
+                  weight="bold"
+                  style={{ color: colors.primary }}
+                >
+                  245.0
+                </Text>
+                <Text variant="caption" style={{ color: "#1565C0" }}>
+                  kWh entregados hoy
+                </Text>
+              </CardContent>
+            </Card>
+          </View>
+
+          {/* Row 2: Cargadores & Alertas */}
+          <View style={{ flexDirection: "row", gap: spacing.md }}>
+            <Card style={{ flex: 1 }}>
+              <CardContent
+                style={{
+                  padding: spacing.md,
+                  backgroundColor: "#F3E5F5",
+                  borderRadius: 8,
+                  gap: spacing.sm,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: spacing.sm,
                   }}
                 >
                   <Ionicons name="flash" size={20} color="#6A1B9A" />
@@ -986,7 +992,11 @@ function SupervisorContent({ colors, spacing }: any) {
                     Cargadores
                   </Text>
                 </View>
-                <Text variant="h3" weight="bold" style={{ color: "#6A1B9A" }}>
+                <Text
+                  variant="h2"
+                  weight="bold"
+                  style={{ color: "#6A1B9A" }}
+                >
                   5/5
                 </Text>
                 <Text variant="caption" style={{ color: "#6A1B9A" }}>
@@ -1001,6 +1011,7 @@ function SupervisorContent({ colors, spacing }: any) {
                   padding: spacing.md,
                   backgroundColor: "#FFEBEE",
                   borderRadius: 8,
+                  gap: spacing.sm,
                 }}
               >
                 <View
@@ -1008,19 +1019,22 @@ function SupervisorContent({ colors, spacing }: any) {
                     flexDirection: "row",
                     alignItems: "center",
                     gap: spacing.sm,
-                    marginBottom: spacing.sm,
                   }}
                 >
-                  <Ionicons name="alert" size={20} color="#C62828" />
+                  <Ionicons name="alert-circle" size={20} color="#C62828" />
                   <Text variant="caption" style={{ color: "#C62828" }}>
                     Alertas
                   </Text>
                 </View>
-                <Text variant="h3" weight="bold" style={{ color: "#C62828" }}>
+                <Text
+                  variant="h2"
+                  weight="bold"
+                  style={{ color: "#C62828" }}
+                >
                   1
                 </Text>
                 <Text variant="caption" style={{ color: "#C62828" }}>
-                  con falla
+                  con falla activa
                 </Text>
               </CardContent>
             </Card>
