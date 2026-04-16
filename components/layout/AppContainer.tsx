@@ -9,6 +9,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { usePathname } from "expo-router";
 import { Sidebar } from "./Sidebar";
 import { getThemeColors } from "@/theme";
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 
 // Sidebar context
 const SidebarContext = createContext<{
@@ -29,7 +30,8 @@ interface AppContainerProps {
 
 export function AppContainer({ children }: AppContainerProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const colors = getThemeColors("light");
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
   const insets = useSafeAreaInsets();
 
   const closeSidebar = () => setSidebarOpen(false);

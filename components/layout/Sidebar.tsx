@@ -18,6 +18,7 @@ import { usePermissions } from "@/lib/hooks/use-permissions";
 import { useAuthStore } from "@/lib/stores/auth.store";
 import { AuthPermissionsEnum } from "@/lib/config/permissions";
 import { getThemeColors, spacing } from "@/theme";
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -34,7 +35,8 @@ interface NavItem {
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const router = useRouter();
   const segments = useSegments();
-  const colors = getThemeColors("light");
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
   const { hasPermission } = usePermissions();
   const logout = useAuthStore((state) => state.logout);
 
