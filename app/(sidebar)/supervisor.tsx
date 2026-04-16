@@ -477,6 +477,104 @@ function OperadorContent({ colors, spacing }: any) {
 function MantenedorContent({ colors, spacing }: any) {
   return (
     <>
+      {/* Energy Summary */}
+      <Card>
+        <CardContent style={{ gap: spacing.md }}>
+          <Text
+            variant="caption"
+            weight="bold"
+            style={{ color: colors.mutedForeground }}
+          >
+            RESUMEN ENERGÉTICO DEL PATIO
+          </Text>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.md }}>
+            {/* Voltaje Prom */}
+            <View
+              style={{
+                flex: 0.48,
+                padding: spacing.md,
+                backgroundColor: "#E0F7FA",
+                borderRadius: 8,
+                gap: spacing.sm,
+              }}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
+                <Ionicons name="water" size={16} color="#00838F" />
+                <Text variant="caption" style={{ color: "#00838F" }}>
+                  Voltaje Prom.
+                </Text>
+              </View>
+              <Text variant="h3" weight="bold" style={{ color: "#00838F" }}>
+                230.5 V
+              </Text>
+            </View>
+
+            {/* Temp Máx */}
+            <View
+              style={{
+                flex: 0.48,
+                padding: spacing.md,
+                backgroundColor: "#FFF3E0",
+                borderRadius: 8,
+                gap: spacing.sm,
+              }}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
+                <Ionicons name="alert" size={16} color="#E65100" />
+                <Text variant="caption" style={{ color: "#E65100" }}>
+                  Temp. Máx.
+                </Text>
+              </View>
+              <Text variant="h3" weight="bold" style={{ color: "#E65100" }}>
+                42.5 °C
+              </Text>
+            </View>
+
+            {/* Potencia Total */}
+            <View
+              style={{
+                flex: 0.48,
+                padding: spacing.md,
+                backgroundColor: "#E8EAF6",
+                borderRadius: 8,
+                gap: spacing.sm,
+              }}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
+                <Ionicons name="flash" size={16} color="#283593" />
+                <Text variant="caption" style={{ color: "#283593" }}>
+                  Potencia Total
+                </Text>
+              </View>
+              <Text variant="h3" weight="bold" style={{ color: "#283593" }}>
+                7.27 kW
+              </Text>
+            </View>
+
+            {/* Temp Prom */}
+            <View
+              style={{
+                flex: 0.48,
+                padding: spacing.md,
+                backgroundColor: "#E0F7FA",
+                borderRadius: 8,
+                gap: spacing.sm,
+              }}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
+                <Ionicons name="thermometer" size={16} color="#00838F" />
+                <Text variant="caption" style={{ color: "#00838F" }}>
+                  Temp. Prom.
+                </Text>
+              </View>
+              <Text variant="h3" weight="bold" style={{ color: "#00838F" }}>
+                40.7 °C
+              </Text>
+            </View>
+          </View>
+        </CardContent>
+      </Card>
+
       {/* Status Counts */}
       <View
         style={{
