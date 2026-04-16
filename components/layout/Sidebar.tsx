@@ -75,6 +75,16 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       route: "energy-resources",
     },
     {
+      label: "Supervisor",
+      icon: "eye",
+      route: "supervisor",
+    },
+    {
+      label: "Showcase",
+      icon: "sparkles",
+      route: "showcase",
+    },
+    {
       label: "Profile",
       icon: "person",
       route: "profile",
