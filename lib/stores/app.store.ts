@@ -34,6 +34,7 @@ export const useAppStore = create<AppState>((set) => ({
   },
 
   setColorScheme: async (scheme: 'light' | 'dark' | 'system') => {
+    console.log('[AppStore] setColorScheme called with:', scheme);
     set({ colorScheme: scheme });
     try {
       const stored = await AsyncStorage.getItem(STORAGE_KEY);

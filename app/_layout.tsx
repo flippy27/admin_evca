@@ -5,14 +5,14 @@ import {
 } from "@react-navigation/native";
 import { Stack, useRouter, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { I18nextProvider } from "react-i18next";
+import { useColorScheme as useRNColorScheme } from "react-native";
 import "react-native-reanimated";
 
 import { LoadingOverlayComponent } from "@/components/ui/LoadingOverlay";
 import { OfflineIndicator } from "@/components/ui/OfflineIndicator";
 import { ToastContainer } from "@/components/ui/Toast";
-import { useColorScheme } from "@/hooks/use-color-scheme";
 import i18n from "@/lib/i18n";
 import { useAppStore } from "@/lib/stores/app.store";
 import { useAuthStore } from "@/lib/stores/auth.store";
@@ -28,7 +28,20 @@ export const unstable_settings = {
 export default function RootLayout() {
   const router = useRouter();
   const segments = useSegments();
-  const colorScheme = useColorScheme();
+
+  // Get theme preference from app store
+  const appColorScheme = useAppStore((state) => state.colorScheme);
+  const rnColorScheme = useRNColorScheme();
+
+  // Resolve theme: if 'system', use device preference, otherwise use user's selection
+  const colorScheme = useMemo(() => {
+    if (appColorScheme === 'system') {
+      return rnColorScheme;
+    }
+    return appColorScheme;
+  }, [appColorScheme, rnColorScheme]);
+
+  console.log('[RootLayout] colorScheme:', { appColorScheme, rnColorScheme, resolved: colorScheme });
 
   // Auth state
   const sessionState = useAuthStore((state) => state.sessionState);
