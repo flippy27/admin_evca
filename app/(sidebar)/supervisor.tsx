@@ -657,11 +657,23 @@ function MantenedorContent({ colors, spacing }: any) {
               {location}
             </Text>
             {[1, 2].map((charger) => (
-              <Card key={charger} style={{ borderLeftWidth: 4, borderLeftColor: charger === 1 ? "#4CAF50" : "#F44336" }}>
+              <Card key={charger}>
                 <CardContent style={{ gap: spacing.md }}>
                   {/* Charger Header */}
-                  <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                    <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm }}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: spacing.sm,
+                      }}
+                    >
                       <Text variant="body" weight="bold">
                         Cargador CB-0{charger}
                       </Text>
@@ -673,7 +685,10 @@ function MantenedorContent({ colors, spacing }: any) {
                           borderRadius: 4,
                         }}
                       >
-                        <Text variant="caption" style={{ color: "#2E7D32", fontWeight: "600" }}>
+                        <Text
+                          variant="caption"
+                          style={{ color: "#2E7D32", fontWeight: "600" }}
+                        >
                           Online
                         </Text>
                       </View>
@@ -686,7 +701,10 @@ function MantenedorContent({ colors, spacing }: any) {
                             borderRadius: 4,
                           }}
                         >
-                          <Text variant="caption" style={{ color: "#C62828", fontWeight: "600" }}>
+                          <Text
+                            variant="caption"
+                            style={{ color: "#C62828", fontWeight: "600" }}
+                          >
                             1 falla
                           </Text>
                         </View>
@@ -696,7 +714,13 @@ function MantenedorContent({ colors, spacing }: any) {
 
                   {/* Connector C1 */}
                   <View style={{ gap: spacing.xs }}>
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
                       <Text variant="caption" weight="bold">
                         C1
                       </Text>
@@ -708,16 +732,39 @@ function MantenedorContent({ colors, spacing }: any) {
                           borderRadius: 4,
                         }}
                       >
-                        <Text variant="caption" style={{ color: "#1565C0", fontWeight: "600" }}>
+                        <Text
+                          variant="caption"
+                          style={{ color: "#1565C0", fontWeight: "600" }}
+                        >
                           Cargando
                         </Text>
                       </View>
                     </View>
-                    <View style={{ flexDirection: "row", gap: spacing.md }}>
-                      <Text variant="caption" style={{ color: colors.mutedForeground }}>V 230.5</Text>
-                      <Text variant="caption" style={{ color: colors.mutedForeground }}>A 16.2</Text>
-                      <Text variant="caption" style={{ color: colors.mutedForeground }}>kW 3.734</Text>
-                      <Text variant="caption" style={{ color: colors.mutedForeground }}>°C 42.5</Text>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                      <Text
+                        variant="caption"
+                        style={{ color: colors.mutedForeground }}
+                      >
+                        V 230.5
+                      </Text>
+                      <Text
+                        variant="caption"
+                        style={{ color: colors.mutedForeground }}
+                      >
+                        A 16.2
+                      </Text>
+                      <Text
+                        variant="caption"
+                        style={{ color: colors.mutedForeground }}
+                      >
+                        kW 3.734
+                      </Text>
+                      <Text
+                        variant="caption"
+                        style={{ color: colors.mutedForeground }}
+                      >
+                        °C 42.5
+                      </Text>
                     </View>
                   </View>
 
@@ -727,16 +774,30 @@ function MantenedorContent({ colors, spacing }: any) {
                       gap: spacing.xs,
                       paddingHorizontal: spacing.sm,
                       paddingVertical: spacing.sm,
-                      backgroundColor: charger === 2 ? "#FFEBEE" : "transparent",
+                      backgroundColor:
+                        charger === 2 ? "#FFEBEE" : "transparent",
                       borderRadius: 4,
                     }}
                   >
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                      <Text variant="caption" weight="bold" style={{ color: charger === 2 ? "#C62828" : "black" }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Text
+                        variant="caption"
+                        weight="bold"
+                        style={{ color: charger === 2 ? "#C62828" : "black" }}
+                      >
                         C2
                       </Text>
                       {charger === 2 ? (
-                        <Text variant="caption" style={{ color: "#C62828", fontWeight: "600" }}>
+                        <Text
+                          variant="caption"
+                          style={{ color: "#C62828", fontWeight: "600" }}
+                        >
                           Falla
                         </Text>
                       ) : (
@@ -748,28 +809,58 @@ function MantenedorContent({ colors, spacing }: any) {
                             borderRadius: 4,
                           }}
                         >
-                          <Text variant="caption" style={{ color: "#6A1B9A", fontWeight: "600" }}>
+                          <Text
+                            variant="caption"
+                            style={{ color: "#6A1B9A", fontWeight: "600" }}
+                          >
                             Finalizando
                           </Text>
                         </View>
                       )}
                     </View>
-                    <View style={{ flexDirection: "row", gap: spacing.md }}>
-                      <Text variant="caption" style={{ color: charger === 2 ? "#C62828" : colors.mutedForeground }}>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                      <Text
+                        variant="caption"
+                        style={{
+                          color:
+                            charger === 2 ? "#C62828" : colors.mutedForeground,
+                        }}
+                      >
                         V {charger === 2 ? "229.8" : "229.8"}
                       </Text>
-                      <Text variant="caption" style={{ color: charger === 2 ? "#C62828" : colors.mutedForeground }}>
+                      <Text
+                        variant="caption"
+                        style={{
+                          color:
+                            charger === 2 ? "#C62828" : colors.mutedForeground,
+                        }}
+                      >
                         A {charger === 2 ? "0.5" : "0.5"}
                       </Text>
-                      <Text variant="caption" style={{ color: charger === 2 ? "#C62828" : colors.mutedForeground }}>
+                      <Text
+                        variant="caption"
+                        style={{
+                          color:
+                            charger === 2 ? "#C62828" : colors.mutedForeground,
+                        }}
+                      >
                         kW {charger === 2 ? "0.115" : "0.115"}
                       </Text>
-                      <Text variant="caption" style={{ color: charger === 2 ? "#C62828" : colors.mutedForeground }}>
+                      <Text
+                        variant="caption"
+                        style={{
+                          color:
+                            charger === 2 ? "#C62828" : colors.mutedForeground,
+                        }}
+                      >
                         °C {charger === 2 ? "38.2" : "38.2"}
                       </Text>
                     </View>
                     {charger === 2 && (
-                      <Text variant="caption" style={{ color: "#C62828", fontStyle: "italic" }}>
+                      <Text
+                        variant="caption"
+                        style={{ color: "#C62828", fontStyle: "italic" }}
+                      >
                         Sin datos energéticos
                       </Text>
                     )}
