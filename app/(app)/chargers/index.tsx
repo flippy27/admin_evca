@@ -509,30 +509,40 @@ export default function ChargersScreen() {
             </View>
 
             {/* List */}
-            <FlatList
-              data={filteredChargers}
-              renderItem={renderChargerItem}
-              keyExtractor={(item) => item.id}
-              contentContainerStyle={{
-                paddingHorizontal: spacing.lg,
-                paddingBottom: spacing.xl,
-              }}
-              refreshControl={
-                <RefreshControl
-                  refreshing={chargersLoading}
-                  onRefresh={handleRefresh}
-                />
-              }
-              ListEmptyComponent={
-                chargersLoading ? (
-                  <View
-                    style={{ paddingHorizontal: spacing.lg, paddingVertical: spacing.lg, gap: spacing.md }}
-                  >
-                    {Array.from({ length: 3 }).map((_, idx) => (
-                      <SkeletonCard key={idx} lines={2} />
-                    ))}
-                  </View>
-                ) : (
+            {chargersLoading ? (
+              <ScrollView
+                contentContainerStyle={{
+                  paddingHorizontal: spacing.lg,
+                  paddingVertical: spacing.lg,
+                  gap: spacing.md,
+                }}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={chargersLoading}
+                    onRefresh={handleRefresh}
+                  />
+                }
+              >
+                {Array.from({ length: 3 }).map((_, idx) => (
+                  <SkeletonCard key={idx} lines={2} />
+                ))}
+              </ScrollView>
+            ) : (
+              <FlatList
+                data={filteredChargers}
+                renderItem={renderChargerItem}
+                keyExtractor={(item) => item.id}
+                contentContainerStyle={{
+                  paddingHorizontal: spacing.lg,
+                  paddingBottom: spacing.xl,
+                }}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={chargersLoading}
+                    onRefresh={handleRefresh}
+                  />
+                }
+                ListEmptyComponent={
                   <View style={{ alignItems: "center", paddingVertical: spacing.xl }}>
                     <Text variant="body" style={{ color: colors.mutedForeground }}>
                       {searchText
@@ -540,13 +550,13 @@ export default function ChargersScreen() {
                         : "No data. Pull to refresh."}
                     </Text>
                   </View>
-                )
-              }
-              onEndReached={() => {
-                if (page < totalPages) handleNextPage();
-              }}
-              onEndReachedThreshold={0.1}
-            />
+                }
+                onEndReached={() => {
+                  if (page < totalPages) handleNextPage();
+                }}
+                onEndReachedThreshold={0.1}
+              />
+            )}
           </>
         ) : (
           <ScrollView

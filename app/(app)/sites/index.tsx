@@ -351,39 +351,46 @@ export default function SitesScreen() {
             </View>
 
             {/* List */}
-            <FlatList
-              data={filteredSites}
-              renderItem={renderSiteItem}
-              keyExtractor={(item) => String(item.location_ID)}
-              contentContainerStyle={{
-                paddingHorizontal: spacing.lg,
-                paddingBottom: spacing.xl,
-              }}
-              refreshControl={
-                <RefreshControl refreshing={sitesLoading} onRefresh={handleRefresh} />
-              }
-              ListEmptyComponent={
-                sitesLoading ? (
-                  <View
-                    style={{ paddingHorizontal: spacing.lg, paddingVertical: spacing.lg, gap: spacing.md }}
-                  >
-                    {Array.from({ length: 3 }).map((_, idx) => (
-                      <SkeletonCard key={idx} lines={3} />
-                    ))}
-                  </View>
-                ) : (
+            {sitesLoading ? (
+              <ScrollView
+                contentContainerStyle={{
+                  paddingHorizontal: spacing.lg,
+                  paddingVertical: spacing.lg,
+                  gap: spacing.md,
+                }}
+                refreshControl={
+                  <RefreshControl refreshing={sitesLoading} onRefresh={handleRefresh} />
+                }
+              >
+                {Array.from({ length: 3 }).map((_, idx) => (
+                  <SkeletonCard key={idx} lines={3} />
+                ))}
+              </ScrollView>
+            ) : (
+              <FlatList
+                data={filteredSites}
+                renderItem={renderSiteItem}
+                keyExtractor={(item) => String(item.location_ID)}
+                contentContainerStyle={{
+                  paddingHorizontal: spacing.lg,
+                  paddingBottom: spacing.xl,
+                }}
+                refreshControl={
+                  <RefreshControl refreshing={sitesLoading} onRefresh={handleRefresh} />
+                }
+                ListEmptyComponent={
                   <View style={{ alignItems: "center", paddingVertical: spacing.xl }}>
                     <Text variant="body" style={{ color: colors.mutedForeground }}>
                       {searchText ? "No sites found" : "No data. Pull to refresh."}
                     </Text>
                   </View>
-                )
-              }
-              onEndReached={() => {
-                if (page < totalPages) handleNextPage();
-              }}
-              onEndReachedThreshold={0.1}
-            />
+                }
+                onEndReached={() => {
+                  if (page < totalPages) handleNextPage();
+                }}
+                onEndReachedThreshold={0.1}
+              />
+            )}
           </>
         ) : (
           <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
