@@ -1,17 +1,18 @@
 import React from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
-import { colors, spacing, radius, shadows } from '../../theme';
+import { getThemeColors, spacing, radius, shadows } from '../../theme';
+import { useResolvedColorScheme } from '../../hooks/use-color-scheme';
 
 interface CardProps {
   children: React.ReactNode;
   style?: ViewStyle;
-  isDark?: boolean;
   shadow?: 'sm' | 'md' | 'lg';
 }
 
 export const Card = React.forwardRef<View, CardProps>(
-  ({ children, style, isDark = false, shadow = 'sm' }, ref) => {
-    const themeColors = isDark ? colors.dark : colors.light;
+  ({ children, style, shadow = 'sm' }, ref) => {
+    const resolvedScheme = useResolvedColorScheme();
+    const themeColors = getThemeColors(resolvedScheme);
     const shadowStyle = shadows[shadow];
 
     return (
@@ -53,15 +54,6 @@ export const CardContent = ({ children, style }: CardContentProps) => (
   <View style={[styles.content, style]}>{children}</View>
 );
 
-interface CardFooterProps {
-  children: React.ReactNode;
-  style?: ViewStyle;
-}
-
-export const CardFooter = ({ children, style }: CardFooterProps) => (
-  <View style={[styles.footer, style]}>{children}</View>
-);
-
 const styles = StyleSheet.create({
   card: {
     borderRadius: radius.lg,
@@ -70,16 +62,11 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.lg,
+    paddingVertical: spacing.lg,
     paddingBottom: spacing.md,
   },
   content: {
     paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-  },
-  footer: {
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.lg,
-    paddingTop: spacing.md,
+    paddingVertical: spacing.lg,
   },
 });
