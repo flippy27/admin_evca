@@ -479,42 +479,41 @@ function MantenedorContent({ colors, spacing }: any) {
   return (
     <>
       {/* Status Counts */}
-      <Card>
-        <CardContent>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-around",
-              gap: spacing.md,
-            }}
-          >
-            <View style={{ alignItems: "center" }}>
-              <Text variant="h2" weight="bold" style={{ color: "#4CAF50" }}>
-                8
-              </Text>
-              <Text variant="caption" style={{ color: colors.mutedForeground }}>
-                Operativos
-              </Text>
-            </View>
-            <View style={{ alignItems: "center" }}>
-              <Text variant="h2" weight="bold" style={{ color: "#F44336" }}>
-                1
-              </Text>
-              <Text variant="caption" style={{ color: colors.mutedForeground }}>
-                Con Falla
-              </Text>
-            </View>
-            <View style={{ alignItems: "center" }}>
-              <Text variant="h2" weight="bold" style={{ color: "#FFC107" }}>
-                1
-              </Text>
-              <Text variant="caption" style={{ color: colors.mutedForeground }}>
-                Suspendidos
-              </Text>
-            </View>
-          </View>
-        </CardContent>
-      </Card>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-around",
+          paddingVertical: spacing.lg,
+          paddingHorizontal: spacing.lg,
+          backgroundColor: colors.background,
+          gap: spacing.md,
+        }}
+      >
+        <View style={{ alignItems: "center" }}>
+          <Text variant="h2" weight="bold" style={{ color: "#4CAF50" }}>
+            8
+          </Text>
+          <Text variant="caption" style={{ color: colors.mutedForeground }}>
+            Operativos
+          </Text>
+        </View>
+        <View style={{ alignItems: "center" }}>
+          <Text variant="h2" weight="bold" style={{ color: "#F44336" }}>
+            1
+          </Text>
+          <Text variant="caption" style={{ color: colors.mutedForeground }}>
+            Con Falla
+          </Text>
+        </View>
+        <View style={{ alignItems: "center" }}>
+          <Text variant="h2" weight="bold" style={{ color: "#FFC107" }}>
+            1
+          </Text>
+          <Text variant="caption" style={{ color: colors.mutedForeground }}>
+            Suspendidos
+          </Text>
+        </View>
+      </View>
 
       {/* Location Chargers */}
       <View style={{ gap: spacing.lg, paddingBottom: spacing.xl }}>
@@ -523,7 +522,13 @@ function MantenedorContent({ colors, spacing }: any) {
             <Text variant="h4" weight="bold">
               {location}
             </Text>
-            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.md }}>
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                gap: spacing.md,
+              }}
+            >
               {[1, 2].map((charger) => (
                 <Card
                   key={charger}
@@ -533,14 +538,7 @@ function MantenedorContent({ colors, spacing }: any) {
                     borderLeftColor: charger === 1 ? "#4CAF50" : "#F44336",
                   }}
                 >
-                <CardContent style={{ gap: spacing.md }}>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
+                  <CardContent style={{ gap: spacing.md }}>
                     <View
                       style={{
                         flexDirection: "row",
@@ -549,37 +547,32 @@ function MantenedorContent({ colors, spacing }: any) {
                       }}
                     >
                       <Ionicons
-                        name="battery-full"
-                        size={24}
+                        name="square"
+                        size={20}
                         color={charger === 1 ? "#4CAF50" : "#F44336"}
                       />
                       <Text variant="body" weight="bold">
                         Cargador CB-0{charger}
                       </Text>
                     </View>
-                    <Badge
-                      label={charger === 1 ? "Online" : "Con falla"}
-                      variant={charger === 1 ? "secondary" : "destructive"}
-                    />
-                  </View>
-                  {[1, 2].map((connector) => (
-                    <View
-                      key={connector}
-                      style={{ paddingVertical: spacing.sm, gap: spacing.xs }}
-                    >
-                      <Text variant="caption" weight="bold">
-                        C{connector}
-                      </Text>
-                      <View style={{ flexDirection: "row", gap: spacing.md }}>
-                        <Text variant="caption">V 230.5</Text>
-                        <Text variant="caption">A 16.2</Text>
-                        <Text variant="caption">kW 3.734</Text>
-                        <Text variant="caption">°C 42.5</Text>
+                    {[1, 2].map((connector) => (
+                      <View
+                        key={connector}
+                        style={{ paddingVertical: spacing.sm, gap: spacing.xs }}
+                      >
+                        <Text variant="caption" weight="bold">
+                          C{connector}
+                        </Text>
+                        <View style={{ flexDirection: "row", gap: spacing.md }}>
+                          <Text variant="caption">V 230.5</Text>
+                          <Text variant="caption">A 16.2</Text>
+                          <Text variant="caption">kW 3.734</Text>
+                          <Text variant="caption">°C 42.5</Text>
+                        </View>
                       </View>
-                    </View>
-                  ))}
-                </CardContent>
-              </Card>
+                    ))}
+                  </CardContent>
+                </Card>
               ))}
             </View>
           </View>
@@ -847,7 +840,7 @@ function SupervisorContent({ colors, spacing }: any) {
                 <Card
                   key={charger}
                   style={{
-                    flex: 0.48,
+                    flex: 1,
                   }}
                 >
                   <CardContent style={{ gap: spacing.sm }}>
