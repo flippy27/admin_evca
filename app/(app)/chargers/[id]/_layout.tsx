@@ -1,8 +1,11 @@
 import { getThemeColors } from "@/theme";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native";
 
 export default function ChargerDetailLayout() {
   const colors = getThemeColors("light");
+  const router = useRouter();
 
   return (
     <Stack
@@ -12,6 +15,11 @@ export default function ChargerDetailLayout() {
         headerStyle: {
           backgroundColor: colors.card,
         },
+        headerLeft: () => (
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="chevron-back" size={24} color={colors.primary} />
+          </TouchableOpacity>
+        ),
         contentStyle: { backgroundColor: colors.background },
       }}
     >
@@ -31,6 +39,12 @@ export default function ChargerDetailLayout() {
         name="configuration"
         options={{
           title: "Configuration",
+        }}
+      />
+      <Stack.Screen
+        name="edit"
+        options={{
+          title: "Edit Charger",
         }}
       />
     </Stack>

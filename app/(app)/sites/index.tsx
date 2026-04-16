@@ -55,6 +55,8 @@ export default function SitesScreen() {
   const [activeTab, setActiveTab] = useState<SitesTab>("list");
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
+  const [actionModalOpen, setActionModalOpen] = useState(false);
+  const [selectedSiteId, setSelectedSiteId] = useState<string | null>(null);
 
   // Show error toast when API fails
   useApiErrorToast(sitesError, "Failed to load sites. Try again.");
@@ -101,10 +103,28 @@ export default function SitesScreen() {
   if (!hasAccess) return null;
 
   const handleSitePress = (siteId: string) => {
-    router.push({
-      pathname: "/sites/[id]" as any,
-      params: { id: siteId },
-    });
+    setSelectedSiteId(siteId);
+    setActionModalOpen(true);
+  };
+
+  const handleEditSite = () => {
+    if (selectedSiteId) {
+      setActionModalOpen(false);
+      router.push({
+        pathname: "/sites/[id]" as any,
+        params: { id: selectedSiteId },
+      });
+    }
+  };
+
+  const handleEnergyManagement = () => {
+    if (selectedSiteId) {
+      setActionModalOpen(false);
+      router.push({
+        pathname: "/energy" as any,
+        params: { siteId: selectedSiteId },
+      });
+    }
   };
 
   const handleRefresh = () => {
@@ -396,6 +416,47 @@ export default function SitesScreen() {
                   </Text>
                 </TouchableOpacity>
               ))}
+            </View>
+          </ScrollView>
+        </BottomDrawer>
+
+        {/* Site Actions Modal */}
+        <BottomDrawer
+          visible={actionModalOpen}
+          onClose={() => setActionModalOpen(false)}
+          title="Site Options"
+          height={200}
+        >
+          <ScrollView style={{ paddingBottom: spacing.lg }}>
+            <View style={{ gap: spacing.md }}>
+              <TouchableOpacity
+                onPress={handleEnergyManagement}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingVertical: spacing.md,
+                  gap: spacing.md,
+                }}
+              >
+                <Ionicons name="flash" size={20} color={colors.primary} />
+                <Text variant="body" weight="semibold">
+                  Gestión energética
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleEditSite}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingVertical: spacing.md,
+                  gap: spacing.md,
+                }}
+              >
+                <Ionicons name="pencil" size={20} color={colors.primary} />
+                <Text variant="body" weight="semibold">
+                  Editar
+                </Text>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </BottomDrawer>

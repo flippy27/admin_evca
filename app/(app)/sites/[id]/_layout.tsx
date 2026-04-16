@@ -1,8 +1,11 @@
 import { getThemeColors } from "@/theme";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native";
 
 export default function SiteDetailLayout() {
   const colors = getThemeColors("light");
+  const router = useRouter();
 
   return (
     <Stack
@@ -12,13 +15,30 @@ export default function SiteDetailLayout() {
         headerStyle: {
           backgroundColor: colors.card,
         },
+        headerLeft: () => (
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="chevron-back" size={24} color={colors.primary} />
+          </TouchableOpacity>
+        ),
         contentStyle: { backgroundColor: colors.background },
       }}
     >
       <Stack.Screen
+        name="index"
+        options={{
+          title: "Site Details",
+        }}
+      />
+      <Stack.Screen
         name="profile"
         options={{
           title: "Site Profile",
+        }}
+      />
+      <Stack.Screen
+        name="edit"
+        options={{
+          title: "Edit Site",
         }}
       />
     </Stack>
