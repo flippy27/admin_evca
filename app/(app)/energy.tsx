@@ -18,19 +18,26 @@ export default function EnergyManagementScreen() {
         {/* Header with back button */}
         <View
           style={{
-            flexDirection: "row",
-            alignItems: "center",
             paddingHorizontal: spacing.lg,
             paddingVertical: spacing.md,
             borderBottomWidth: 1,
             borderBottomColor: colors.border,
             backgroundColor: colors.card,
+            alignItems: "center",
           }}
         >
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={{
+              position: "absolute",
+              left: spacing.md,
+              top: spacing.md,
+              zIndex: 10,
+            }}
+          >
             <Ionicons name="chevron-back" size={24} color={colors.primary} />
           </TouchableOpacity>
-          <Text variant="h3" weight="bold" style={{ marginLeft: spacing.md }}>
+          <Text variant="h3" weight="bold">
             Gestión energética
           </Text>
         </View>
