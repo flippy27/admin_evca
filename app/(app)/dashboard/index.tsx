@@ -96,8 +96,12 @@ export default function DashboardScreen() {
   };
 
   const handleRefresh = () => {
-    fetchChargers(1, 100);
-    fetchSites(1, 100);
+    fetchChargers(1, 100, {
+      siteId: selectedLocationIds.length > 0 ? selectedLocationIds : undefined,
+    });
+    fetchSites(1, 100, {
+      siteId: selectedLocationIds.length > 0 ? selectedLocationIds : undefined,
+    });
   };
 
   return (
