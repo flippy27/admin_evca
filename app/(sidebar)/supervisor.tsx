@@ -414,7 +414,7 @@ function MantenedorContent({ colors, spacing }: any) {
               {location}
             </Text>
             {[1, 2].map((charger) => (
-              <Card key={charger} style={{ borderLeftWidth: 4, borderLeftColor: charger === 1 ? "#4CAF50" : "#F44336" }}>
+              <Card key={charger} style={{ borderWidth: 0, borderLeftWidth: 4, borderLeftColor: charger === 1 ? "#4CAF50" : "#F44336" }}>
                 <CardContent style={{ gap: spacing.md }}>
                   <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                     <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm }}>
@@ -576,7 +576,7 @@ function SupervisorContent({ colors, spacing }: any) {
             Alertas Activas
           </Text>
         </View>
-        <Card style={{ borderLeftWidth: 4, borderLeftColor: "#C62828" }}>
+        <Card style={{ borderWidth: 0, borderLeftWidth: 4, borderLeftColor: "#C62828" }}>
           <CardContent style={{ gap: spacing.sm }}>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <Text variant="body" weight="bold">
@@ -606,6 +606,7 @@ function SupervisorContent({ colors, spacing }: any) {
                   key={charger}
                   style={{
                     flex: 0.48,
+                    borderWidth: 0,
                     borderLeftWidth: 4,
                     borderLeftColor:
                       charger === 1 ? "#4CAF50" : charger === 2 ? "#F44336" : "#FFC107",
