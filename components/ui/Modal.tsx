@@ -6,6 +6,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { getThemeColors, spacing } from '../../theme';
+import { useResolvedColorScheme } from '../../hooks/use-color-scheme';
 import { Text } from './Text';
 import { Button } from './Button';
 
@@ -30,7 +31,8 @@ export function Modal({
   actions,
   closeOnBackdropPress = true,
 }: ModalProps) {
-  const colors = getThemeColors('light');
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
 
   return (
     <RNModal

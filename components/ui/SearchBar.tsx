@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, TextInput, StyleSheet, Pressable, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getThemeColors, spacing } from '../../theme';
+import { useResolvedColorScheme } from '../../hooks/use-color-scheme';
 
 interface SearchBarProps {
   placeholder?: string;
@@ -17,7 +18,8 @@ export function SearchBar({
   style,
 }: SearchBarProps) {
   const [text, setText] = useState('');
-  const colors = getThemeColors('light');
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
 
   useEffect(() => {
     const timer = setTimeout(() => {

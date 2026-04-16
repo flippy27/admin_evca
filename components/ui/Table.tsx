@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { getThemeColors, spacing } from '../../theme';
+import { useResolvedColorScheme } from '../../hooks/use-color-scheme';
 import { Text } from './Text';
 
 interface TableColumn {
@@ -18,7 +19,8 @@ interface TableProps {
 }
 
 export function Table({ columns, data, keyExtractor, onRowPress }: TableProps) {
-  const colors = getThemeColors('light');
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
 
   const getCellWidth = (col: TableColumn): string | number => {
     if (!col.width) return `${100 / columns.length}%`;

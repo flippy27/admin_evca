@@ -5,6 +5,7 @@ import { Button } from './Button'
 import { Text } from './Text'
 import { Card } from './Card'
 import { spacing, getThemeColors } from '../../theme'
+import { useResolvedColorScheme } from '../../hooks/use-color-scheme'
 
 interface OCPPModalProps {
   visible: boolean
@@ -39,7 +40,8 @@ export function OCPPModal({
   onEdit,
   onClose,
 }: OCPPModalProps) {
-  const colors = getThemeColors('light')
+  const resolvedScheme = useResolvedColorScheme()
+  const colors = getThemeColors(resolvedScheme)
 
   return (
     <Modal visible={visible} onClose={onClose} title={`${chargerName} (${chargerId})`}>

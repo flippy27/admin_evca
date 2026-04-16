@@ -6,6 +6,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, View, StyleSheet, ViewStyle } from 'react-native';
 import { getThemeColors, spacing } from '@/theme';
+import { useResolvedColorScheme } from '@/hooks/use-color-scheme';
 
 interface SkeletonProps {
   width?: string | number;
@@ -20,7 +21,8 @@ export function Skeleton({
   borderRadius: radius_ = 4,
   style,
 }: SkeletonProps) {
-  const colors = getThemeColors('light');
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
   const fadeAnim = useRef(new Animated.Value(0.5)).current;
 
   useEffect(() => {

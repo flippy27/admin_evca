@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 import { getThemeColors } from '@/theme';
+import { useResolvedColorScheme } from '@/hooks/use-color-scheme';
 
 interface SkeletonProps {
   width?: number | string;
@@ -12,10 +13,6 @@ interface SkeletonProps {
 interface SkeletonLineProps extends SkeletonProps {
   numberOfLines?: number;
 }
-
-const colors = getThemeColors('light');
-const baseColor = colors.muted;
-const highlightColor = colors.background;
 
 /**
  * Animated shimmer effect
@@ -62,6 +59,10 @@ export const SkeletonLine: React.FC<SkeletonLineProps> = ({
   marginBottom = 8,
   numberOfLines = 1,
 }) => {
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = useMemo(() => getThemeColors(resolvedScheme), [resolvedScheme]);
+  const baseColor = colors.muted;
+
   return (
     <View style={{ marginBottom: marginBottom * numberOfLines }}>
       {Array.from({ length: numberOfLines }).map((_, i) => (
@@ -88,6 +89,10 @@ export const SkeletonCircle: React.FC<{ size?: number; marginBottom?: number }> 
   size = 40,
   marginBottom = 0,
 }) => {
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = useMemo(() => getThemeColors(resolvedScheme), [resolvedScheme]);
+  const baseColor = colors.muted;
+
   return (
     <ShimmerAnimation>
       <View
@@ -112,6 +117,10 @@ export const SkeletonRectangle: React.FC<SkeletonProps> = ({
   borderRadius = 8,
   marginBottom = 0,
 }) => {
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = useMemo(() => getThemeColors(resolvedScheme), [resolvedScheme]);
+  const baseColor = colors.muted;
+
   return (
     <ShimmerAnimation>
       <View

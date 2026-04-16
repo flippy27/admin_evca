@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, ScrollView, Pressable, StyleSheet } from 'react-native';
 import { getThemeColors, spacing } from '../../theme';
+import { useResolvedColorScheme } from '../../hooks/use-color-scheme';
 import { Text } from './Text';
 
 interface Tab {
@@ -18,7 +19,8 @@ interface TabsProps {
 
 export function Tabs({ tabs, defaultKey, onChange, lazy = false }: TabsProps) {
   const [activeKey, setActiveKey] = useState(defaultKey || tabs[0]?.key);
-  const colors = getThemeColors('light');
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
 
   const handlePress = (key: string) => {
     setActiveKey(key);

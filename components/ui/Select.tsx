@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Pressable, FlatList, StyleSheet, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getThemeColors, spacing } from '../../theme';
+import { useResolvedColorScheme } from '../../hooks/use-color-scheme';
 import { Text } from './Text';
 import { Modal } from './Modal';
 
@@ -28,7 +29,8 @@ export function Select({
   style,
 }: SelectProps) {
   const [modalVisible, setModalVisible] = useState(false);
-  const colors = getThemeColors('light');
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
 
   const selectedLabel = options.find((opt) => opt.value === value)?.label ?? placeholder ?? 'Select';
 

@@ -17,14 +17,16 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Text } from './Text';
 import { Button } from './Button';
-import { getThemeColors, spacing } from '@/theme';
+import { getThemeColors } from '@/theme';
+import { useResolvedColorScheme } from '@/hooks/use-color-scheme';
 import { useLocationsStore } from '@/lib/stores/locations.store';
 
 export function LocationSelector() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const insets = useSafeAreaInsets();
-  const colors = getThemeColors('light');
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
 
   const { locations, selectedLocationIds, setSelectedLocationIds, selectAll, clearSelection } =
     useLocationsStore();

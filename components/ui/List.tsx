@@ -7,6 +7,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import { getThemeColors, spacing } from '../../theme';
+import { useResolvedColorScheme } from '../../hooks/use-color-scheme';
 import { Text } from './Text';
 
 interface ListProps<T> {
@@ -32,7 +33,8 @@ export function List<T>({
   empty,
   style,
 }: ListProps<T>) {
-  const colors = getThemeColors('light');
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
 
   if (error) {
     return (

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { getThemeColors, spacing } from '../../theme';
+import { useResolvedColorScheme } from '../../hooks/use-color-scheme';
 import { Text } from './Text';
 
 interface DataPoint {
@@ -16,7 +17,8 @@ interface ChartProps {
 }
 
 export function Chart({ type, data, title, height = 200 }: ChartProps) {
-  const colors = getThemeColors('light');
+  const resolvedScheme = useResolvedColorScheme();
+  const colors = getThemeColors(resolvedScheme);
   const maxValue = Math.max(...data.map((d) => d.value), 1);
 
   return (
