@@ -1,6 +1,6 @@
 # CRUD Operations - Create, Read, Update, Delete Forms
 
-**Status:** All missing - need 8 forms total (4 for Chargers, 4 for Sites).
+**Status:** ✅ Complete - All 8 forms implemented (4 Chargers + 4 Sites)
 
 ## Forms Architecture
 
@@ -13,9 +13,10 @@ All CRUD forms follow pattern:
 
 ## Chargers CRUD
 
-### 1. Create Charger Form
+### 1. Create Charger Form ✅
 
 **Route:** `/(app)/chargers/create`
+**Status:** Implemented - POST /bff/chargers with nested payload structure
 
 ```typescript
 // app/(app)/chargers/create.tsx
@@ -139,9 +140,10 @@ createCharger: async (data: CreateChargerRequest) => {
 }
 ```
 
-### 2. Edit Charger Form
+### 2. Edit Charger Form ✅
 
 **Route:** `/(app)/chargers/[id]/edit`
+**Status:** Implemented - PUT /bff/chargers/{id} with data pre-population
 
 ```typescript
 // app/(app)/chargers/[id]/edit.tsx
@@ -178,7 +180,9 @@ updateCharger: async (id: string, data: UpdateChargerRequest) => {
 }
 ```
 
-### 3. Delete Charger
+### 3. Delete Charger ✅
+
+**Implemented:** Dialog confirmation on detail screen with DELETE /bff/chargers/{id}
 
 **Add to charger detail screen:**
 
@@ -276,49 +280,49 @@ export default function ChargerDetail() {
 }
 ```
 
-## Sites CRUD
+## Sites CRUD ✅
 
-Similar pattern to Chargers:
+Implemented same pattern as Chargers:
 
-### 1. Create Site
+### 1. Create Site ✅
 **Route:** `/(app)/sites/create`
-**API:** `POST /bff/sites`
+**API:** `POST /bff/sites` with nested address structure
 
-### 2. Edit Site
+### 2. Edit Site ✅
 **Route:** `/(app)/sites/[id]/edit`
-**API:** `PUT /bff/sites/{id}`
+**API:** `PUT /bff/sites/{id}` with data pre-population
 
-### 3. Delete Site
+### 3. Delete Site ✅
 **API:** `DELETE /bff/sites/{id}`
-**Show confirmation alert**
+**Implemented:** Confirmation alert on detail screen
 
-### 4. Site Detail
+### 4. Site Detail ✅
 **Route:** `/(app)/sites/[id]`
-**Fields:** location_name, address, city, country, timezone, coordinates, connectors count
+**Fields:** location_name, address, city, country, timezone, coordinates, Edit/Delete buttons
 
 ## Implementation Checklist
 
 ### Week 1 - Phase 1
-- [ ] Create Charger form (POST)
-- [ ] Edit Charger form (PUT)
-- [ ] Delete Charger with confirmation
-- [ ] Charger detail screen
-- [ ] Add create button to chargers list screen
-- [ ] Add edit button to charger detail
+- [x] Create Charger form (POST)
+- [x] Edit Charger form (PUT)
+- [x] Delete Charger with confirmation
+- [x] Charger detail screen
+- [x] Add create button to chargers list screen
+- [x] Add edit button to charger detail
 - [ ] Test all 3 operations with real API
 
 ### Week 2 - Phase 2
-- [ ] Create Site form (POST)
-- [ ] Edit Site form (PUT)
-- [ ] Delete Site with confirmation
-- [ ] Site detail screen
-- [ ] Navigation from list to detail
+- [x] Create Site form (POST)
+- [x] Edit Site form (PUT)
+- [x] Delete Site with confirmation
+- [x] Site detail screen
+- [x] Navigation from list to detail
 - [ ] Test with real API
 
 ### Week 3 - Validation & Polish
 - [ ] Form validation (required fields, format)
-- [ ] Error messages (show API error in toast)
-- [ ] Loading states (disable form during submission)
+- [x] Error messages (show API error in toast)
+- [x] Loading states (disable form during submission)
 - [ ] Optimistic updates (update list before API response)
 - [ ] Undo on error (restore previous value if API fails)
 
