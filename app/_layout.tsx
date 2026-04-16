@@ -63,10 +63,11 @@ export default function RootLayout() {
 
     const inAuthGroup = segments[0] === "(auth)";
     const inAppGroup = segments[0] === "(app)";
+    const inSidebarGroup = segments[0] === "(sidebar)";
 
     if (sessionState === "authenticated") {
       // Authenticated → go to dashboard (main app entry point)
-      if (!inAppGroup) {
+      if (!inAppGroup && !inSidebarGroup) {
         router.replace("/(app)/dashboard");
       }
     } else {
@@ -83,6 +84,7 @@ export default function RootLayout() {
         <Stack>
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(app)" options={{ headerShown: false }} />
+          <Stack.Screen name="(sidebar)" options={{ headerShown: false }} />
         </Stack>
         <OfflineIndicator />
         <ToastContainer />
