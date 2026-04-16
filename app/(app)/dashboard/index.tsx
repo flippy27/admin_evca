@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, ScrollView, RefreshControl, Dimensions } from "react-native";
+import { View, ScrollView, RefreshControl, Dimensions, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useSidebar } from "@/components/layout/AppContainer";
 import { PieChart, BarChart } from "react-native-chart-kit";
 import { SkeletonLine, SkeletonCard, SkeletonChart, SkeletonGrid } from "@/components/ui/SkeletonLoader";
 import { Badge } from "@/components/ui/Badge";
@@ -19,6 +20,7 @@ import { getThemeColors, spacing } from "@/theme";
 
 export default function DashboardScreen() {
   const { t } = useTranslation();
+  const { openSidebar } = useSidebar();
   const user = useAuthStore((state) => state.user);
   const colors = getThemeColors("light");
 
@@ -117,16 +119,60 @@ export default function DashboardScreen() {
         }
       >
         {/* Header */}
-        <View style={{ marginLeft: 50 }}>
-          <Text variant="h2" weight="bold">
-            {t("common.ui.pageTitles.dashboard") || "Dashboard"}
-          </Text>
-          <Text
-            variant="body"
-            style={{ color: colors.mutedForeground, marginTop: spacing.sm }}
+        <View style={{ flexDirection: "row", alignItems: "flex-start", gap: spacing.md }}>
+          {/* Hamburger Menu Button */}
+          <TouchableOpacity
+            onPress={openSidebar}
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 8,
+              backgroundColor: colors.card,
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 4,
+            }}
           >
-            Welcome back, {user?.fullName?.split(" ")[0] || "User"}
-          </Text>
+            <View style={{ gap: 4 }}>
+              <View
+                style={{
+                  width: 20,
+                  height: 2,
+                  backgroundColor: colors.foreground,
+                  borderRadius: 1,
+                }}
+              />
+              <View
+                style={{
+                  width: 20,
+                  height: 2,
+                  backgroundColor: colors.foreground,
+                  borderRadius: 1,
+                }}
+              />
+              <View
+                style={{
+                  width: 20,
+                  height: 2,
+                  backgroundColor: colors.foreground,
+                  borderRadius: 1,
+                }}
+              />
+            </View>
+          </TouchableOpacity>
+
+          {/* Title Section */}
+          <View style={{ flex: 1 }}>
+            <Text variant="h2" weight="bold">
+              {t("common.ui.pageTitles.dashboard") || "Dashboard"}
+            </Text>
+            <Text
+              variant="body"
+              style={{ color: colors.mutedForeground, marginTop: spacing.sm }}
+            >
+              Welcome back, {user?.fullName?.split(" ")[0] || "User"}
+            </Text>
+          </View>
         </View>
 
         {/* Location Selector */}
