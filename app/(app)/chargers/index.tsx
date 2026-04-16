@@ -163,12 +163,18 @@ export default function ChargersScreen() {
 
   const handleRefresh = () => {
     clearError("chargers");
-    fetchChargers(1, 20);
+    const { selectedLocationIds } = useLocationsStore.getState();
+    fetchChargers(1, 20, {
+      siteId: selectedLocationIds.length > 0 ? selectedLocationIds : undefined,
+    });
   };
 
   const handleNextPage = () => {
     if (page < totalPages) {
-      fetchChargers(page + 1, 20);
+      const { selectedLocationIds } = useLocationsStore.getState();
+      fetchChargers(page + 1, 20, {
+        siteId: selectedLocationIds.length > 0 ? selectedLocationIds : undefined,
+      });
     }
   };
 
