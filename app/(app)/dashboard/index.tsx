@@ -109,7 +109,7 @@ export default function DashboardScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView
-        contentContainerStyle={{ padding: spacing.lg, gap: spacing.lg }}
+        contentContainerStyle={{ paddingHorizontal: spacing.lg, paddingTop: spacing.md, paddingBottom: spacing.lg, gap: spacing.lg }}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
