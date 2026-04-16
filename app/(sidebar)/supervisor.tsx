@@ -3,13 +3,17 @@ import { Card, CardContent } from "@/components/ui/Card";
 import { Text } from "@/components/ui/Text";
 import { getThemeColors, spacing } from "@/theme";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type RoleType = "operador" | "mantenedor" | "supervisor";
 
 export default function SupervisorScreen() {
+  const router = useRouter();
   const colors = getThemeColors("light");
+  const insets = useSafeAreaInsets();
   const [selectedRole, setSelectedRole] = useState<RoleType>("supervisor");
   const [selectedLocation, setSelectedLocation] = useState("Terminal Maipú");
   const [roleDrawerOpen, setRoleDrawerOpen] = useState(false);
@@ -53,8 +57,22 @@ export default function SupervisorScreen() {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
+            gap: spacing.md,
           }}
         >
+          {/* Hamburger Button */}
+          <TouchableOpacity
+            onPress={() => setSidebarOpen(!sidebarOpen)}
+            style={{
+              width: 40,
+              height: 40,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Ionicons name="menu" size={28} color={colors.foreground} />
+          </TouchableOpacity>
+
           <View style={{ flex: 1 }}>
             <Text variant="h3" weight="bold">
               Workforce App
@@ -214,32 +232,159 @@ export default function SupervisorScreen() {
           left: 0,
           top: 0,
           bottom: 0,
-          width: 200,
+          width: 280,
           backgroundColor: colors.card,
-          transform: [{ translateX: sidebarOpen ? 0 : -200 }],
+          transform: [{ translateX: sidebarOpen ? 0 : -280 }],
           zIndex: 1000,
         }}
       >
-        <SafeAreaView style={{ flex: 1, padding: spacing.lg }}>
-          <Text variant="h4" weight="bold" style={{ marginBottom: spacing.lg }}>
-            Menu
-          </Text>
-          {/* Sidebar items */}
+        <SafeAreaView style={{ flex: 1, flexDirection: "column" }}>
+          {/* Header */}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingHorizontal: spacing.lg,
+              paddingBottom: spacing.lg,
+              borderBottomWidth: 1,
+              borderBottomColor: colors.border,
+            }}
+          >
+            <TouchableOpacity onPress={() => setSidebarOpen(false)}>
+              <Ionicons name="close" size={28} color={colors.foreground} />
+            </TouchableOpacity>
+            <View>
+              <Text variant="h4" weight="bold">
+                Workforce App
+              </Text>
+              <Text
+                variant="caption"
+                style={{ color: colors.mutedForeground }}
+              >
+                PoC v1
+              </Text>
+            </View>
+            <View style={{ width: 28 }} />
+          </View>
+
+          {/* Menu Items */}
+          <ScrollView style={{ flex: 1, paddingVertical: spacing.lg }}>
+            {/* Depot View */}
+            <TouchableOpacity
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: spacing.md,
+                paddingHorizontal: spacing.lg,
+                paddingVertical: spacing.md,
+                backgroundColor: "#E3F2FD",
+                marginHorizontal: spacing.lg,
+                marginBottom: spacing.md,
+                borderRadius: 8,
+              }}
+            >
+              <Ionicons name="home" size={20} color="#2196F3" />
+              <Text
+                variant="body"
+                weight="bold"
+                style={{ color: "#2196F3" }}
+              >
+                Depot View
+              </Text>
+            </TouchableOpacity>
+
+            {/* Sesiones de Carga */}
+            <TouchableOpacity
+              onPress={() => {
+                router.push("/(sidebar)/sesiones-carga");
+                setSidebarOpen(false);
+              }}
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: spacing.md,
+                paddingHorizontal: spacing.lg,
+                paddingVertical: spacing.md,
+              }}
+            >
+              <Ionicons
+                name="time"
+                size={20}
+                color={colors.mutedForeground}
+              />
+              <Text variant="body" style={{ color: colors.foreground }}>
+                Sesiones de Carga
+              </Text>
+            </TouchableOpacity>
+
+            {/* Foco del Rol Section */}
+            <View style={{ paddingHorizontal: spacing.lg, marginTop: spacing.lg }}>
+              <Text
+                variant="caption"
+                weight="bold"
+                style={{ color: colors.mutedForeground }}
+              >
+                FOCO DEL ROL
+              </Text>
+            </View>
+
+            {/* Role Actions */}
+            {[
+              "Iniciar / Detener carga",
+              "Desbloquear conectores",
+              "Tecles masivos",
+            ].map((action, idx) => (
+              <TouchableOpacity
+                key={idx}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: spacing.md,
+                  paddingHorizontal: spacing.lg,
+                  paddingVertical: spacing.md,
+                }}
+              >
+                <Ionicons name="time" size={16} color="#9C27B0" />
+                <Text variant="body" style={{ color: colors.foreground }}>
+                  {action}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          {/* Footer */}
+          <View
+            style={{
+              paddingHorizontal: spacing.lg,
+              paddingVertical: spacing.md,
+              borderTopWidth: 1,
+              borderTopColor: colors.border,
+              gap: spacing.xs,
+            }}
+          >
+            <Text
+              variant="caption"
+              style={{ color: colors.mutedForeground }}
+            >
+              Centro de Carga & EVCA Admin
+            </Text>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
+              <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                Rol:
+              </Text>
+              <Text
+                variant="caption"
+                weight="bold"
+                style={{ color: colors.foreground }}
+              >
+                {selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)}
+              </Text>
+            </View>
+          </View>
         </SafeAreaView>
       </View>
 
-      {/* Hamburger Button */}
-      <TouchableOpacity
-        onPress={() => setSidebarOpen(!sidebarOpen)}
-        style={{
-          position: "absolute",
-          left: spacing.lg,
-          top: spacing.xl,
-          zIndex: 1001,
-        }}
-      >
-        <Ionicons name="menu" size={32} color={colors.foreground} />
-      </TouchableOpacity>
 
       {/* Role Drawer */}
       <BottomDrawer
@@ -478,12 +623,12 @@ function OperadorContent({ colors, spacing }: any) {
             <Text variant="h4" weight="bold">
               {location}
             </Text>
-            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.md }}>
+            <View style={{ flexDirection: "row", gap: spacing.md }}>
               {[1, 2].map((charger) => (
                 <View
                   key={charger}
                   style={{
-                    flex: 0.48,
+                    flex: 1,
                     borderWidth: 1,
                     borderColor: colors.border,
                     borderRadius: 12,
@@ -593,7 +738,9 @@ function OperadorContent({ colors, spacing }: any) {
                           borderWidth: 1,
                           borderColor: "#2196F3",
                           borderRadius: 8,
-                          gap: spacing.xs,
+                          flexDirection: "row",
+                          gap: spacing.sm,
+                          alignItems: "center",
                         }}
                       >
                         <Text variant="caption" style={{ color: "#2196F3" }}>
@@ -614,6 +761,9 @@ function OperadorContent({ colors, spacing }: any) {
                           borderWidth: 1,
                           borderColor: "#F44336",
                           borderRadius: 8,
+                          flexDirection: "row",
+                          gap: spacing.sm,
+                          alignItems: "center",
                         }}
                       >
                         <Text variant="caption" style={{ color: "#F44336" }}>
