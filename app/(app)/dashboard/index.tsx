@@ -117,16 +117,22 @@ export default function DashboardScreen() {
         }
       >
         {/* Header */}
-        <View>
-          <Text variant="h2" weight="bold">
-            {t("common.ui.pageTitles.dashboard") || "Dashboard"}
-          </Text>
-          <Text
-            variant="body"
-            style={{ color: colors.mutedForeground, marginTop: spacing.sm }}
-          >
-            Welcome back, {user?.fullName?.split(" ")[0] || "User"}
-          </Text>
+        <View style={{ flexDirection: "row", alignItems: "flex-start", gap: spacing.md }}>
+          {/* Spacer for hamburger menu */}
+          <View style={{ width: 40 }} />
+
+          {/* Title Section */}
+          <View style={{ flex: 1 }}>
+            <Text variant="h2" weight="bold">
+              {t("common.ui.pageTitles.dashboard") || "Dashboard"}
+            </Text>
+            <Text
+              variant="body"
+              style={{ color: colors.mutedForeground, marginTop: spacing.sm }}
+            >
+              Welcome back, {user?.fullName?.split(" ")[0] || "User"}
+            </Text>
+          </View>
         </View>
 
         {/* Location Selector */}
