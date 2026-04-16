@@ -32,6 +32,7 @@ interface AuthState {
   expiresIn: number | null;
   refreshExpiresIn: number | null;
   tokenTimestamp: number | null;
+  hydrated: boolean;
 
   // Actions
   login: (email: string, password: string, rememberMe: boolean) => Promise<boolean>;
@@ -53,6 +54,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   expiresIn: null,
   refreshExpiresIn: null,
   tokenTimestamp: null,
+  hydrated: false,
 
   // Login flow (2 steps)
   login: async (email: string, password: string, rememberMe: boolean) => {
@@ -274,9 +276,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           sessionState: 'authenticated',
         });
       }
+
+      // Mark as hydrated after restoration completes
+      set({ hydrated: true });
     } catch (error) {
       console.error('Restore session error:', error);
-      set({ sessionState: 'failed' });
+      set({ sessionState: 'failed', hydrated: true });
     }
   },
 

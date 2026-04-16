@@ -8,6 +8,7 @@ import { AuthPermissionsEnum } from '../config/permissions';
 
 export function usePermissions() {
   const user = useAuthStore((state) => state.user);
+  const hydrated = useAuthStore((state) => state.hydrated);
 
   const permissions = user?.permissions ?? [];
   const roles = user?.roles ?? [];
@@ -21,5 +22,6 @@ export function usePermissions() {
     hasRole: (role: string): boolean => roles.includes(role),
     permissions,
     roles,
+    hydrated,
   };
 }
