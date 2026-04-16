@@ -246,8 +246,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             });
           }
         } catch (error) {
-          console.error('Silent refresh failed:', error);
-          await get().logout();
+          console.warn('Silent refresh failed, clearing session:', error);
+          // Clear session data gracefully instead of full logout
+          await SecureStore.deleteItemAsync(STORAGE_KEY);
+          set({
+            sessionState: 'unauthenticated',
+            user: null,
+            accessToken: null,
+            refreshToken: null,
+          });
         }
       } else {
         // Tokens are still valid
@@ -280,8 +287,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       // Mark as hydrated after restoration completes
       set({ hydrated: true });
     } catch (error) {
-      console.error('Restore session error:', error);
-      set({ sessionState: 'failed', hydrated: true });
+      console.warn('Restore session error:', error);
+      set({ sessionState: 'unauthenticated', hydrated: true });
     }
   },
 
