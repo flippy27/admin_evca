@@ -530,7 +530,9 @@ function OperadorContent({ colors, spacing }: any) {
                           borderWidth: 1,
                           borderColor: "#2196F3",
                           borderRadius: 8,
-                          gap: spacing.xs,
+                          flexDirection: "row",
+                          gap: spacing.sm,
+                          alignItems: "center",
                         }}
                       >
                         <Text variant="caption" style={{ color: "#2196F3" }}>
@@ -551,7 +553,9 @@ function OperadorContent({ colors, spacing }: any) {
                           borderWidth: 1,
                           borderColor: "#9C27B0",
                           borderRadius: 8,
-                          gap: spacing.xs,
+                          flexDirection: "row",
+                          gap: spacing.sm,
+                          alignItems: "center",
                         }}
                       >
                         <Text variant="caption" style={{ color: "#9C27B0" }}>
