@@ -1134,17 +1134,12 @@ function SupervisorContent({ colors, spacing }: any) {
             </Text>
             <View
               style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
                 gap: spacing.md,
               }}
             >
               {[1, 2].map((charger) => (
                 <Card
                   key={charger}
-                  style={{
-                    flex: 1,
-                  }}
                 >
                   <CardContent style={{ gap: spacing.sm }}>
                     <View
