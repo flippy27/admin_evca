@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/Card'
 import { Text } from '@/components/ui/Text'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
+import { Tabs } from '@/components/ui/Tabs'
 import { useToast } from '@/components/ui/Toast'
 import { usePermissionGuard } from '@/lib/hooks/usePermissionGuard'
 import { AuthPermissionsEnum } from '@/lib/config/permissions'
@@ -24,6 +25,7 @@ export default function ChargerDetailScreen() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [activeTab, setActiveTab] = useState('overview')
 
   useEffect(() => {
     if (id) {
@@ -194,29 +196,29 @@ export default function ChargerDetailScreen() {
         </Card>
       )}
 
+      {/* Tab Navigation */}
+      <View style={styles.tabNavigation}>
+        {['overview', 'live', 'history', 'config'].map((tab) => (
+          <Button
+            key={tab}
+            label={tab.charAt(0).toUpperCase() + tab.slice(1)}
+            onPress={() => {
+              if (tab === 'live') router.push(`/chargers/${id}/live`)
+              else if (tab === 'history') router.push(`/chargers/${id}/history`)
+              else if (tab === 'config') router.push(`/chargers/${id}/configuration`)
+              else setActiveTab(tab)
+            }}
+            variant={activeTab === tab || (tab === 'overview' && !activeTab) ? 'primary' : 'secondary'}
+            style={styles.tabButton}
+          />
+        ))}
+      </View>
+
       {/* Actions */}
       <Card style={styles.actionsCard}>
         <Button
-          label="View Live Data"
-          onPress={() => router.push(`/chargers/${id}/live`)}
-        />
-        <Button
-          label="View History"
-          onPress={() => router.push(`/chargers/${id}/history`)}
-          variant="secondary"
-          style={styles.actionButton}
-        />
-        <Button
-          label="Configuration"
-          onPress={() => router.push(`/chargers/${id}/configuration`)}
-          variant="secondary"
-          style={styles.actionButton}
-        />
-        <Button
           label="Edit"
           onPress={() => router.push(`/chargers/${id}/edit`)}
-          variant="secondary"
-          style={styles.actionButton}
         />
         <Button
           label={deleting ? 'Deleting...' : 'Delete'}
@@ -309,6 +311,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#333',
     fontWeight: '500',
+  },
+  tabNavigation: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 16,
+    flexWrap: 'wrap',
+  },
+  tabButton: {
+    flex: 1,
+    minWidth: 70,
   },
   actionsCard: {
     marginBottom: 32,
