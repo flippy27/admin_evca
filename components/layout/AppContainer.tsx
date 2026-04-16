@@ -6,6 +6,7 @@
 import React, { ReactNode, useState } from "react";
 import { View, TouchableOpacity } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRoute } from "expo-router";
 import { Sidebar } from "./Sidebar";
 import { getThemeColors } from "@/theme";
 
@@ -17,9 +18,13 @@ export function AppContainer({ children }: AppContainerProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const colors = getThemeColors("light");
   const insets = useSafeAreaInsets();
+  const route = useRoute();
 
   const closeSidebar = () => setSidebarOpen(false);
   const openSidebar = () => setSidebarOpen(true);
+
+  // Hide menu button in detail screens (they have their own back button)
+  const isDetailScreen = route.name?.includes("[id]") || route.name === "energy";
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
@@ -46,12 +51,12 @@ export function AppContainer({ children }: AppContainerProps) {
       {/* Content with SafeAreaView for notch */}
       <SafeAreaView style={{ flex: 1, position: "relative" }}>
         {/* Menu Toggle Button */}
-        {!sidebarOpen && (
+        {!sidebarOpen && !isDetailScreen && (
           <TouchableOpacity
             onPress={openSidebar}
             style={{
               position: "absolute",
-              top: insets.top + 12,
+              top: insets.top + 16,
               left: 12,
               width: 40,
               height: 40,
