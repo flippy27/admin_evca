@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useColorScheme as useRNColorScheme } from 'react-native';
+import { useAppStore } from '@/lib/stores/app.store';
 
 /**
  * To support static rendering, this value needs to be re-calculated on the client side for web
@@ -11,11 +12,18 @@ export function useColorScheme() {
     setHasHydrated(true);
   }, []);
 
-  const colorScheme = useRNColorScheme();
+  const rnColorScheme = useRNColorScheme();
+  const appColorScheme = useAppStore((state) => state.colorScheme);
 
-  if (hasHydrated) {
-    return colorScheme;
+  if (!hasHydrated) {
+    return 'light';
   }
 
-  return 'light';
+  // If user selected 'system', use device preference
+  if (appColorScheme === 'system') {
+    return rnColorScheme;
+  }
+
+  // Otherwise return user's selection
+  return appColorScheme;
 }
