@@ -6,7 +6,7 @@
 import React, { ReactNode, useState } from "react";
 import { View, TouchableOpacity } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useRoute } from "expo-router";
+import { usePathname } from "expo-router";
 import { Sidebar } from "./Sidebar";
 import { getThemeColors } from "@/theme";
 
@@ -24,7 +24,8 @@ export function AppContainer({ children }: AppContainerProps) {
   const openSidebar = () => setSidebarOpen(true);
 
   // Hide menu button in detail screens (they have their own back button)
-  const isDetailScreen = route.name?.includes("[id]") || route.name === "energy";
+  const pathname = usePathname();
+  const isDetailScreen = pathname?.includes("[id]") || pathname?.includes("energy");
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
