@@ -1,6 +1,12 @@
 # JWT Token Lifecycle
 
-**Status:** ✅ Complete - Login, refresh, claims extraction, permission validation all implemented
+**Status:** ✅ Complete - Login, refresh, claims extraction, permission validation all implemented and verified
+
+**Endpoint Details:**
+- Login: `POST /bff/auth/login` - returns `payload.data` with tokens
+- Refresh: `POST /bff/auth/refresh` - accepts `{refreshToken}`, returns `payload` with tokens
+- Single-flight pattern prevents concurrent refresh requests
+- Interceptor auto-retries failed requests with refreshed token
 
 ## Token Structure
 
