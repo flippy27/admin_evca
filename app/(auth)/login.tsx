@@ -32,7 +32,7 @@ interface LoginForm {
   rememberMe: boolean;
 }
 
-// Animated particle component
+// Animated particle component - more visible blurred circles
 function AnimatedParticle({
   delay,
   duration,
@@ -42,7 +42,7 @@ function AnimatedParticle({
   duration: number;
   position: { top: number; left: number; size: number };
 }) {
-  const opacity = useRef(new Animated.Value(0.3)).current;
+  const opacity = useRef(new Animated.Value(0.4)).current;
   const scale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -52,13 +52,13 @@ function AnimatedParticle({
           Animated.delay(delay),
           Animated.parallel([
             Animated.timing(opacity, {
-              toValue: 0.6,
+              toValue: 0.8,
               duration: duration / 2,
               easing: Easing.inOut(Easing.ease),
               useNativeDriver: true,
             }),
             Animated.timing(scale, {
-              toValue: 1.2,
+              toValue: 1.15,
               duration: duration / 2,
               easing: Easing.inOut(Easing.ease),
               useNativeDriver: true,
@@ -66,7 +66,7 @@ function AnimatedParticle({
           ]),
           Animated.parallel([
             Animated.timing(opacity, {
-              toValue: 0.3,
+              toValue: 0.4,
               duration: duration / 2,
               easing: Easing.inOut(Easing.ease),
               useNativeDriver: true,
@@ -96,15 +96,54 @@ function AnimatedParticle({
         borderRadius: position.size / 2,
         opacity,
         transform: [{ scale }],
+        backgroundColor: "rgba(70, 163, 181, 0.5)",
+        shadowColor: "rgba(70, 163, 181, 0.6)",
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.8,
+        shadowRadius: 20,
       }}
-    >
-      <View
-        style={{
-          flex: 1,
-          borderRadius: position.size / 2,
-          backgroundColor: "rgba(80, 191, 197, 0.3)",
-        }}
-      />
+    />
+  );
+}
+
+// Shine animation component for text
+function ShiningText({
+  text,
+  variant = "body",
+  weight = "normal",
+  color = "#ffffff",
+}: {
+  text: string;
+  variant?: "caption" | "body" | "h3";
+  weight?: "normal" | "semibold" | "bold";
+  color?: string;
+}) {
+  const shineOpacity = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(shineOpacity, {
+          toValue: 1.3,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(shineOpacity, {
+          toValue: 1,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]),
+    ).start();
+  }, [shineOpacity]);
+
+  return (
+    <Animated.View style={{ opacity: shineOpacity }}>
+      <Text variant={variant} weight={weight} style={{ color }}>
+        {text}
+      </Text>
     </Animated.View>
   );
 }
@@ -184,21 +223,21 @@ export default function LoginScreen() {
       end={{ x: 1, y: 1 }}
       style={{ flex: 1 }}
     >
-      {/* Animated particles background */}
+      {/* Animated particles background - larger and more visible */}
       <AnimatedParticle
         delay={0}
         duration={8000}
-        position={{ top: 60, left: 40, size: 120 }}
+        position={{ top: 100, left: 20, size: 200 }}
       />
       <AnimatedParticle
         delay={2000}
         duration={10000}
-        position={{ top: screenWidth * 0.3, left: screenWidth * 0.7, size: 100 }}
+        position={{ top: screenWidth * 0.25, left: screenWidth * 0.65, size: 180 }}
       />
       <AnimatedParticle
         delay={4000}
         duration={12000}
-        position={{ top: screenWidth * 0.6, left: 30, size: 80 }}
+        position={{ top: screenWidth * 0.55, left: 10, size: 160 }}
       />
 
       <View style={{ flex: 1, paddingTop: insets.top, paddingBottom: insets.bottom }}>
@@ -211,15 +250,13 @@ export default function LoginScreen() {
           }}
           showsVerticalScrollIndicator={false}
         >
-          {/* Logo - Dhemax with animated particles effect */}
+          {/* Logo - Dhemax with animated shine effect */}
           <View style={{ alignItems: "center", marginBottom: spacing.xxl }}>
             <View
               style={{
                 marginBottom: spacing.lg,
                 alignItems: "center",
                 justifyContent: "center",
-                width: 120,
-                height: 50,
               }}
             >
               <Text
@@ -227,21 +264,17 @@ export default function LoginScreen() {
                 weight="bold"
                 style={{
                   color: "#ffffff",
-                  fontSize: 28,
+                  fontSize: 32,
+                  marginBottom: spacing.sm,
                 }}
               >
                 DHEMAX
               </Text>
-              <Text
+              <ShiningText
+                text="The Smart Inside Mobility"
                 variant="caption"
-                style={{
-                  color: "rgba(255, 255, 255, 0.8)",
-                  fontSize: 10,
-                  marginTop: 2,
-                }}
-              >
-                The Smart Inside Mobility
-              </Text>
+                color="rgba(255, 255, 255, 0.9)"
+              />
             </View>
             <Text
               variant="h3"
@@ -249,6 +282,7 @@ export default function LoginScreen() {
               style={{
                 color: "#ffffff",
                 textAlign: "center",
+                marginTop: spacing.lg,
               }}
             >
               {t("auth.login.loginTitle")}
