@@ -131,12 +131,12 @@ export default function SitesScreen() {
   const renderSiteItem = ({ item }: { item: any }) => (
     <TouchableOpacity
       activeOpacity={0.7}
-      onPress={() => handleSitePress(item.id)}
+      onPress={() => handleSitePress(item.location_ID)}
       style={{ marginBottom: spacing.md }}
     >
       <Card>
         <CardContent style={{ gap: spacing.md }}>
-          {/* Header: Name & Status */}
+          {/* Header: Name */}
           <View
             style={{
               flexDirection: "row",
@@ -145,15 +145,11 @@ export default function SitesScreen() {
             }}
           >
             <Text variant="h4" weight="bold">
-              {item.name}
+              {item.location_name}
             </Text>
-            <Badge
-              label={item.status === "active" ? "Active" : "Inactive"}
-              variant={item.status === "active" ? "secondary" : "outline"}
-            />
           </View>
 
-          {/* Location & Chargers */}
+          {/* Details Row */}
           <View
             style={{
               flexDirection: "row",
@@ -163,19 +159,28 @@ export default function SitesScreen() {
           >
             <View style={{ flex: 1 }}>
               <Text variant="caption" style={{ color: colors.mutedForeground }}>
-                Location
+                Número de conectores
               </Text>
               <Text variant="body" weight="bold">
-                {item.city || item.address || "Unknown"}
+                {item.location_connectors_count || 0}
               </Text>
             </View>
 
-            <View>
+            <View style={{ flex: 1 }}>
               <Text variant="caption" style={{ color: colors.mutedForeground }}>
-                Chargers
+                Dirección
               </Text>
-              <Text variant="body" weight="bold">
-                {item.chargerCount || 0}
+              <Text variant="body" weight="bold" numberOfLines={1}>
+                {item.location_address || "Unknown"}
+              </Text>
+            </View>
+
+            <View style={{ flex: 1 }}>
+              <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                Comuna
+              </Text>
+              <Text variant="body" weight="bold" numberOfLines={1}>
+                {item.location_commune || "Unknown"}
               </Text>
             </View>
           </View>
@@ -304,7 +309,7 @@ export default function SitesScreen() {
             <FlatList
               data={filteredSites}
               renderItem={renderSiteItem}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => String(item.location_ID)}
               contentContainerStyle={{
                 paddingHorizontal: spacing.lg,
                 paddingBottom: spacing.xl,
