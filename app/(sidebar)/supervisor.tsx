@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { SafeAreaView, ScrollView, View, TouchableOpacity, Modal } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { Text } from "@/components/ui/Text";
-import { Card, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { BottomDrawer } from "@/components/ui/BottomDrawer";
+import { Card, CardContent } from "@/components/ui/Card";
+import { Text } from "@/components/ui/Text";
 import { getThemeColors, spacing } from "@/theme";
+import { Ionicons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
 
 type RoleType = "operador" | "mantenedor" | "supervisor";
 
@@ -27,9 +27,12 @@ export default function SupervisorScreen() {
   };
 
   const roleDesc = {
-    operador: "Gestión de conectores • Inicio/Parada de carga • Control en tiempo real",
-    mantenedor: "Mantenimiento preventivo • Historial de servicios • Alertas técnicas",
-    supervisor: "Estado general del patio • KPIs operacionales • Alertas y monitoreo",
+    operador:
+      "Gestión de conectores • Inicio/Parada de carga • Control en tiempo real",
+    mantenedor:
+      "Mantenimiento preventivo • Historial de servicios • Alertas técnicas",
+    supervisor:
+      "Estado general del patio • KPIs operacionales • Alertas y monitoreo",
   };
 
   const roleIcon = {
@@ -83,7 +86,13 @@ export default function SupervisorScreen() {
         </View>
 
         {/* Location Dropdown */}
-        <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.lg, gap: spacing.md }}>
+        <View
+          style={{
+            paddingHorizontal: spacing.lg,
+            paddingTop: spacing.lg,
+            gap: spacing.md,
+          }}
+        >
           <TouchableOpacity
             onPress={() => setLocationDrawerOpen(true)}
             style={{
@@ -96,7 +105,11 @@ export default function SupervisorScreen() {
             <Text variant="h4" weight="bold">
               {selectedLocation}
             </Text>
-            <Ionicons name="chevron-down" size={20} color={colors.mutedForeground} />
+            <Ionicons
+              name="chevron-down"
+              size={20}
+              color={colors.mutedForeground}
+            />
           </TouchableOpacity>
 
           {/* Active Connectors */}
@@ -108,7 +121,10 @@ export default function SupervisorScreen() {
             }}
           >
             <Ionicons name="flash" size={20} color="#4CAF50" />
-            <Text variant="body" style={{ color: "#4CAF50", fontWeight: "600" }}>
+            <Text
+              variant="body"
+              style={{ color: "#4CAF50", fontWeight: "600" }}
+            >
               3/10
             </Text>
             <Text variant="body" style={{ color: colors.mutedForeground }}>
@@ -129,9 +145,23 @@ export default function SupervisorScreen() {
             gap: spacing.sm,
           }}
         >
-          <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm }}>
-            <Ionicons name={roleIcon[selectedRole] as any} size={24} color="white" />
-            <Text variant="body" weight="bold" style={{ color: "white", textTransform: "capitalize" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: spacing.sm,
+            }}
+          >
+            <Ionicons
+              name={roleIcon[selectedRole] as any}
+              size={24}
+              color="white"
+            />
+            <Text
+              variant="body"
+              weight="bold"
+              style={{ color: "white", textTransform: "capitalize" }}
+            >
               {selectedRole === "operador"
                 ? "Operador de Patio"
                 : selectedRole === "mantenedor"
@@ -145,10 +175,22 @@ export default function SupervisorScreen() {
         </View>
 
         {/* Content - Role Specific */}
-        <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.lg, gap: spacing.lg }}>
-          {selectedRole === "operador" && <OperadorContent colors={colors} spacing={spacing} />}
-          {selectedRole === "mantenedor" && <MantenedorContent colors={colors} spacing={spacing} />}
-          {selectedRole === "supervisor" && <SupervisorContent colors={colors} spacing={spacing} />}
+        <View
+          style={{
+            paddingHorizontal: spacing.lg,
+            paddingTop: spacing.lg,
+            gap: spacing.lg,
+          }}
+        >
+          {selectedRole === "operador" && (
+            <OperadorContent colors={colors} spacing={spacing} />
+          )}
+          {selectedRole === "mantenedor" && (
+            <MantenedorContent colors={colors} spacing={spacing} />
+          )}
+          {selectedRole === "supervisor" && (
+            <SupervisorContent colors={colors} spacing={spacing} />
+          )}
         </View>
       </ScrollView>
 
@@ -207,7 +249,9 @@ export default function SupervisorScreen() {
         title="Select Role"
         height={250}
       >
-        <ScrollView style={{ paddingBottom: spacing.lg, paddingHorizontal: spacing.lg }}>
+        <ScrollView
+          style={{ paddingBottom: spacing.lg, paddingHorizontal: spacing.lg }}
+        >
           <View style={{ gap: spacing.md }}>
             {roles.map((role) => (
               <TouchableOpacity
@@ -229,15 +273,22 @@ export default function SupervisorScreen() {
                     height: 20,
                     borderRadius: 4,
                     borderWidth: 2,
-                    borderColor: selectedRole === role ? roleColor[role] : colors.border,
-                    backgroundColor: selectedRole === role ? roleColor[role] : "transparent",
+                    borderColor:
+                      selectedRole === role ? roleColor[role] : colors.border,
+                    backgroundColor:
+                      selectedRole === role ? roleColor[role] : "transparent",
                     justifyContent: "center",
                     alignItems: "center",
                   }}
                 >
-                  {selectedRole === role && <Ionicons name="checkmark" size={14} color="white" />}
+                  {selectedRole === role && (
+                    <Ionicons name="checkmark" size={14} color="white" />
+                  )}
                 </View>
-                <Text variant="body" weight={selectedRole === role ? "bold" : "normal"}>
+                <Text
+                  variant="body"
+                  weight={selectedRole === role ? "bold" : "normal"}
+                >
                   {role.charAt(0).toUpperCase() + role.slice(1)}
                 </Text>
               </TouchableOpacity>
@@ -253,7 +304,9 @@ export default function SupervisorScreen() {
         title="Select Location"
         height={250}
       >
-        <ScrollView style={{ paddingBottom: spacing.lg, paddingHorizontal: spacing.lg }}>
+        <ScrollView
+          style={{ paddingBottom: spacing.lg, paddingHorizontal: spacing.lg }}
+        >
           <View style={{ gap: spacing.md }}>
             {locations.map((location) => (
               <TouchableOpacity
@@ -269,7 +322,12 @@ export default function SupervisorScreen() {
                 <Text
                   variant="body"
                   weight={selectedLocation === location ? "bold" : "normal"}
-                  style={{ color: selectedLocation === location ? colors.primary : colors.foreground }}
+                  style={{
+                    color:
+                      selectedLocation === location
+                        ? colors.primary
+                        : colors.foreground,
+                  }}
                 >
                   {location}
                 </Text>
@@ -288,10 +346,19 @@ function OperadorContent({ colors, spacing }: any) {
       {/* Connector Counts */}
       <Card>
         <CardContent>
-          <Text variant="caption" style={{ color: colors.mutedForeground, marginBottom: spacing.md }}>
+          <Text
+            variant="caption"
+            style={{ color: colors.mutedForeground, marginBottom: spacing.md }}
+          >
             CONECTORES DEL PATIO
           </Text>
-          <View style={{ flexDirection: "row", justifyContent: "space-around", gap: spacing.md }}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-around",
+              gap: spacing.md,
+            }}
+          >
             <View style={{ alignItems: "center" }}>
               <Text variant="h2" weight="bold" style={{ color: "#2196F3" }}>
                 3
@@ -330,7 +397,14 @@ function OperadorContent({ colors, spacing }: any) {
 
       {/* Active Sessions */}
       <View>
-        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: spacing.md }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: spacing.md,
+          }}
+        >
           <Text variant="body" weight="bold">
             Sesiones Activas (4)
           </Text>
@@ -339,26 +413,56 @@ function OperadorContent({ colors, spacing }: any) {
           </Text>
         </View>
         {[
-          { id: "CB-01 · C1", bus: "BUS 12345678", energy: "45.3 kWh", time: "2797 min" },
-          { id: "CB-01 · C2", bus: "BUS 87654321", energy: "78.2 kWh", time: "2857 min" },
-          { id: "CB-01-B · C1", bus: "BUS 55667788", energy: "32.1 kWh", time: "2782 min" },
+          {
+            id: "CB-01 · C1",
+            bus: "BUS 12345678",
+            energy: "45.3 kWh",
+            time: "2797 min",
+          },
+          {
+            id: "CB-01 · C2",
+            bus: "BUS 87654321",
+            energy: "78.2 kWh",
+            time: "2857 min",
+          },
+          {
+            id: "CB-01-B · C1",
+            bus: "BUS 55667788",
+            energy: "32.1 kWh",
+            time: "2782 min",
+          },
         ].map((session, idx) => (
           <Card key={idx} style={{ marginBottom: spacing.md }}>
             <CardContent style={{ gap: spacing.sm }}>
-              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
                 <View>
                   <Text variant="body" weight="bold">
                     {session.id}
                   </Text>
-                  <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                  <Text
+                    variant="caption"
+                    style={{ color: colors.mutedForeground }}
+                  >
                     {session.bus}
                   </Text>
                 </View>
                 <View style={{ alignItems: "flex-end" }}>
-                  <Text variant="body" weight="bold" style={{ color: colors.primary }}>
+                  <Text
+                    variant="body"
+                    weight="bold"
+                    style={{ color: colors.primary }}
+                  >
                     {session.energy}
                   </Text>
-                  <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                  <Text
+                    variant="caption"
+                    style={{ color: colors.mutedForeground }}
+                  >
                     {session.time}
                   </Text>
                 </View>
@@ -377,7 +481,13 @@ function MantenedorContent({ colors, spacing }: any) {
       {/* Status Counts */}
       <Card>
         <CardContent>
-          <View style={{ flexDirection: "row", justifyContent: "space-around", gap: spacing.md }}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-around",
+              gap: spacing.md,
+            }}
+          >
             <View style={{ alignItems: "center" }}>
               <Text variant="h2" weight="bold" style={{ color: "#4CAF50" }}>
                 8
@@ -413,20 +523,50 @@ function MantenedorContent({ colors, spacing }: any) {
             <Text variant="h4" weight="bold">
               {location}
             </Text>
-            {[1, 2].map((charger) => (
-              <Card key={charger} style={{ borderLeftWidth: 4, borderLeftColor: charger === 1 ? "#4CAF50" : "#F44336" }}>
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.md }}>
+              {[1, 2].map((charger) => (
+                <Card
+                  key={charger}
+                  style={{
+                    flex: 0.48,
+                    borderLeftWidth: 4,
+                    borderLeftColor: charger === 1 ? "#4CAF50" : "#F44336",
+                  }}
+                >
                 <CardContent style={{ gap: spacing.md }}>
-                  <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                    <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm }}>
-                      <Ionicons name="battery-full" size={24} color={charger === 1 ? "#4CAF50" : "#F44336"} />
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: spacing.sm,
+                      }}
+                    >
+                      <Ionicons
+                        name="battery-full"
+                        size={24}
+                        color={charger === 1 ? "#4CAF50" : "#F44336"}
+                      />
                       <Text variant="body" weight="bold">
                         Cargador CB-0{charger}
                       </Text>
                     </View>
-                    <Badge label={charger === 1 ? "Online" : "Con falla"} variant={charger === 1 ? "secondary" : "destructive"} />
+                    <Badge
+                      label={charger === 1 ? "Online" : "Con falla"}
+                      variant={charger === 1 ? "secondary" : "destructive"}
+                    />
                   </View>
                   {[1, 2].map((connector) => (
-                    <View key={connector} style={{ paddingVertical: spacing.sm, gap: spacing.xs }}>
+                    <View
+                      key={connector}
+                      style={{ paddingVertical: spacing.sm, gap: spacing.xs }}
+                    >
                       <Text variant="caption" weight="bold">
                         C{connector}
                       </Text>
@@ -440,7 +580,8 @@ function MantenedorContent({ colors, spacing }: any) {
                   ))}
                 </CardContent>
               </Card>
-            ))}
+              ))}
+            </View>
           </View>
         ))}
       </View>
@@ -453,7 +594,11 @@ function SupervisorContent({ colors, spacing }: any) {
     <>
       {/* Dashboard KPIs */}
       <View>
-        <Text variant="caption" weight="bold" style={{ color: colors.mutedForeground, marginBottom: spacing.md }}>
+        <Text
+          variant="caption"
+          weight="bold"
+          style={{ color: colors.mutedForeground, marginBottom: spacing.md }}
+        >
           DASHBOARD DEL PATIO
         </Text>
         <View style={{ gap: spacing.md }}>
@@ -467,7 +612,13 @@ function SupervisorContent({ colors, spacing }: any) {
                 gap: spacing.sm,
               }}
             >
-              <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: spacing.sm,
+                }}
+              >
                 <Ionicons name="trending-up" size={20} color="#2E7D32" />
                 <Text variant="caption" style={{ color: "#2E7D32" }}>
                   Utilización
@@ -485,14 +636,31 @@ function SupervisorContent({ colors, spacing }: any) {
           {/* Energy & Chargers Row */}
           <View style={{ flexDirection: "row", gap: spacing.md }}>
             <Card style={{ flex: 1 }}>
-              <CardContent style={{ padding: spacing.md, backgroundColor: "#E3F2FD", borderRadius: 8 }}>
-                <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm, marginBottom: spacing.sm }}>
+              <CardContent
+                style={{
+                  padding: spacing.md,
+                  backgroundColor: "#E3F2FD",
+                  borderRadius: 8,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: spacing.sm,
+                    marginBottom: spacing.sm,
+                  }}
+                >
                   <Ionicons name="flash" size={20} color={colors.primary} />
                   <Text variant="caption" style={{ color: colors.primary }}>
                     Energía Total
                   </Text>
                 </View>
-                <Text variant="h3" weight="bold" style={{ color: colors.primary }}>
+                <Text
+                  variant="h3"
+                  weight="bold"
+                  style={{ color: colors.primary }}
+                >
                   245.0
                 </Text>
                 <Text variant="caption" style={{ color: "#1565C0" }}>
@@ -502,8 +670,21 @@ function SupervisorContent({ colors, spacing }: any) {
             </Card>
 
             <Card style={{ flex: 1 }}>
-              <CardContent style={{ padding: spacing.md, backgroundColor: "#F3E5F5", borderRadius: 8 }}>
-                <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm, marginBottom: spacing.sm }}>
+              <CardContent
+                style={{
+                  padding: spacing.md,
+                  backgroundColor: "#F3E5F5",
+                  borderRadius: 8,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: spacing.sm,
+                    marginBottom: spacing.sm,
+                  }}
+                >
                   <Ionicons name="flash" size={20} color="#6A1B9A" />
                   <Text variant="caption" style={{ color: "#6A1B9A" }}>
                     Cargadores
@@ -519,8 +700,21 @@ function SupervisorContent({ colors, spacing }: any) {
             </Card>
 
             <Card style={{ flex: 1 }}>
-              <CardContent style={{ padding: spacing.md, backgroundColor: "#FFEBEE", borderRadius: 8 }}>
-                <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm, marginBottom: spacing.sm }}>
+              <CardContent
+                style={{
+                  padding: spacing.md,
+                  backgroundColor: "#FFEBEE",
+                  borderRadius: 8,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: spacing.sm,
+                    marginBottom: spacing.sm,
+                  }}
+                >
                   <Ionicons name="alert" size={20} color="#C62828" />
                   <Text variant="caption" style={{ color: "#C62828" }}>
                     Alertas
@@ -541,10 +735,22 @@ function SupervisorContent({ colors, spacing }: any) {
       {/* Connector Distribution */}
       <Card>
         <CardContent style={{ gap: spacing.md }}>
-          <Text variant="caption" weight="bold" style={{ color: colors.mutedForeground }}>
+          <Text
+            variant="caption"
+            weight="bold"
+            style={{ color: colors.mutedForeground }}
+          >
             DISTRIBUCIÓN DE CONECTORES
           </Text>
-          <View style={{ height: 12, borderRadius: 4, flexDirection: "row", overflow: "hidden", gap: 2 }}>
+          <View
+            style={{
+              height: 12,
+              borderRadius: 4,
+              flexDirection: "row",
+              overflow: "hidden",
+              gap: 2,
+            }}
+          >
             <View style={{ flex: 3, backgroundColor: "#2196F3" }} />
             <View style={{ flex: 2, backgroundColor: "#9C27B0" }} />
             <View style={{ flex: 3, backgroundColor: "#00BCD4" }} />
@@ -559,8 +765,22 @@ function SupervisorContent({ colors, spacing }: any) {
               { color: "#F44336", label: "Falla (1)" },
               { color: "#FFC107", label: "Suspendido (1)" },
             ].map((item, idx) => (
-              <View key={idx} style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm }}>
-                <View style={{ width: 12, height: 12, borderRadius: 2, backgroundColor: item.color }} />
+              <View
+                key={idx}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: spacing.sm,
+                }}
+              >
+                <View
+                  style={{
+                    width: 12,
+                    height: 12,
+                    borderRadius: 2,
+                    backgroundColor: item.color,
+                  }}
+                />
                 <Text variant="caption">{item.label}</Text>
               </View>
             ))}
@@ -570,19 +790,35 @@ function SupervisorContent({ colors, spacing }: any) {
 
       {/* Active Alerts */}
       <View style={{ gap: spacing.md }}>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm }}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: spacing.sm,
+          }}
+        >
           <Ionicons name="alert" size={24} color="#C62828" />
           <Text variant="h4" weight="bold" style={{ color: "#C62828" }}>
             Alertas Activas
           </Text>
         </View>
-        <Card style={{ borderLeftWidth: 4, borderLeftColor: "#C62828" }}>
+        <Card style={{}}>
           <CardContent style={{ gap: spacing.sm }}>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
               <Text variant="body" weight="bold">
                 Cargador CB-02 · C2
               </Text>
-              <Text variant="body" weight="bold" style={{ color: colors.primary }}>
+              <Text
+                variant="body"
+                weight="bold"
+                style={{ color: colors.primary }}
+              >
                 Ver →
               </Text>
             </View>
@@ -600,34 +836,69 @@ function SupervisorContent({ colors, spacing }: any) {
             <Text variant="h4" weight="bold">
               {location}
             </Text>
-            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.md }}>
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                gap: spacing.md,
+              }}
+            >
               {[1, 2].map((charger) => (
                 <Card
                   key={charger}
                   style={{
                     flex: 0.48,
-                    borderLeftWidth: 4,
-                    borderLeftColor:
-                      charger === 1 ? "#4CAF50" : charger === 2 ? "#F44336" : "#FFC107",
                   }}
                 >
                   <CardContent style={{ gap: spacing.sm }}>
-                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
                       <Text variant="body" weight="bold">
                         Cargador CB-0{charger}
                       </Text>
-                      <Text variant="body" weight="bold" style={{ color: colors.primary }}>
+                      <Text
+                        variant="body"
+                        weight="bold"
+                        style={{ color: colors.primary }}
+                      >
                         {charger === 1 ? "125 kW" : "110 kW"}
                       </Text>
                     </View>
-                    <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: spacing.xs,
+                      }}
+                    >
                       {charger === 1 && (
                         <>
-                          <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: "#2196F3" }} />
-                          <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: "#9C27B0" }} />
+                          <View
+                            style={{
+                              width: 8,
+                              height: 8,
+                              borderRadius: 4,
+                              backgroundColor: "#2196F3",
+                            }}
+                          />
+                          <View
+                            style={{
+                              width: 8,
+                              height: 8,
+                              borderRadius: 4,
+                              backgroundColor: "#9C27B0",
+                            }}
+                          />
                         </>
                       )}
-                      <Text variant="caption" style={{ color: colors.mutedForeground }}>
+                      <Text
+                        variant="caption"
+                        style={{ color: colors.mutedForeground }}
+                      >
                         {charger === 1 ? "1/2 activos" : "1/2 activos"}
                       </Text>
                     </View>
