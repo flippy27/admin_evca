@@ -140,6 +140,7 @@ export default function DashboardScreen() {
               backgroundColor: colors.card,
               justifyContent: "center",
               alignItems: "center",
+              marginTop: 2,
             }}
           >
             <View style={{ gap: 4 }}>
