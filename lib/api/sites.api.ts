@@ -7,8 +7,8 @@ import { Site, SiteDetail, SitesListResponse, SiteDetailResponse } from '../type
 
 export const sitesApi = {
   /**
-   * GET /bff/sites - List sites
-   * Maps pageSize -> size, siteId -> location_ids (as repeated params)
+   * GET /bff/locations - List sites/locations
+   * Maps pageSize -> size, siteId -> location_ids (as comma-separated)
    */
   list: async (params?: {
     page?: number;
@@ -39,7 +39,7 @@ export const sitesApi = {
     }
 
     const queryString = queryParts.join('&');
-    const url = `/bff/sites?${queryString}`;
+    const url = `/bff/locations?${queryString}`;
 
     const response = await bffClient.get<SitesListResponse>(url);
     return response;
