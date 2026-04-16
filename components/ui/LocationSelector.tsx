@@ -11,7 +11,9 @@ import {
   Modal,
   Dimensions,
   StyleSheet,
+  TextInput,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Text } from './Text';
 import { Button } from './Button';
@@ -20,6 +22,8 @@ import { useLocationsStore } from '@/lib/stores/locations.store';
 
 export function LocationSelector() {
   const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const insets = useSafeAreaInsets();
   const colors = getThemeColors('light');
 
   const { locations, selectedLocationIds, setSelectedLocationIds, selectAll, clearSelection } =
@@ -28,6 +32,10 @@ export function LocationSelector() {
   const selectedNames = locations
     .filter((loc) => selectedLocationIds.includes(loc.id))
     .map((loc) => loc.name);
+
+  const filteredLocations = locations.filter((loc) =>
+    loc.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleToggle = (id: string) => {
     const updated = selectedLocationIds.includes(id)
@@ -122,6 +130,7 @@ export function LocationSelector() {
             {
               backgroundColor: colors.card,
               height: Math.min(Dimensions.get('window').height * 0.7, 450),
+              paddingTop: insets.top,
             },
           ]}
         >
@@ -142,80 +151,116 @@ export function LocationSelector() {
             </TouchableOpacity>
           </View>
 
-          {/* Select All */}
-          <TouchableOpacity
-            onPress={() => {
-              if (selectedLocationIds.length === locations.length) {
-                clearSelection();
-              } else {
-                selectAll();
-              }
-            }}
-            style={[
-              styles.option,
-              {
-                backgroundColor:
-                  selectedLocationIds.length === locations.length ? colors.primary + '10' : 'transparent',
-              },
-            ]}
-          >
-            <View
+          {/* Search Input */}
+          <View style={[styles.searchContainer, { paddingHorizontal: 16, paddingVertical: 12 }]}>
+            <Ionicons name="search" size={18} color={colors.mutedForeground} style={{ marginRight: 8 }} />
+            <TextInput
               style={[
-                styles.checkbox,
+                styles.searchInput,
                 {
-                  borderColor: colors.primary,
+                  color: colors.foreground,
+                  borderColor: colors.border,
+                },
+              ]}
+              placeholder="Buscar ubicación..."
+              placeholderTextColor={colors.mutedForeground}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
+          </View>
+
+          {/* Select All (only shown if searching or not filtered) */}
+          {searchQuery === '' && (
+            <TouchableOpacity
+              onPress={() => {
+                if (selectedLocationIds.length === locations.length) {
+                  clearSelection();
+                } else {
+                  selectAll();
+                }
+              }}
+              style={[
+                styles.option,
+                {
                   backgroundColor:
-                    selectedLocationIds.length === locations.length
-                      ? colors.primary
-                      : 'transparent',
+                    selectedLocationIds.length === locations.length ? colors.primary + '10' : 'transparent',
                 },
               ]}
             >
-              {selectedLocationIds.length === locations.length && (
-                <Ionicons name="checkmark" size={16} color="white" />
-              )}
-            </View>
-            <Text variant="body" weight="bold" style={{ color: colors.primary }}>
-              Seleccionar todos
-            </Text>
-          </TouchableOpacity>
+              <View
+                style={[
+                  styles.checkbox,
+                  {
+                    borderColor: colors.primary,
+                    backgroundColor:
+                      selectedLocationIds.length === locations.length
+                        ? colors.primary
+                        : 'transparent',
+                  },
+                ]}
+              >
+                {selectedLocationIds.length === locations.length && (
+                  <Ionicons name="checkmark" size={16} color="white" />
+                )}
+              </View>
+              <Text variant="body" weight="bold" style={{ color: colors.primary }}>
+                Seleccionar todos
+              </Text>
+            </TouchableOpacity>
+          )}
 
           {/* Location List */}
           <ScrollView style={styles.optionList}>
-            {locations.map((location) => {
-              const isSelected = selectedLocationIds.includes(location.id);
-              return (
-                <TouchableOpacity
-                  key={location.id}
-                  onPress={() => handleToggle(location.id)}
-                  style={[
-                    styles.option,
-                    {
-                      backgroundColor: isSelected ? colors.primary + '10' : 'transparent',
-                    },
-                  ]}
-                >
-                  <View
+            {filteredLocations.length > 0 ? (
+              filteredLocations.map((location) => {
+                const isSelected = selectedLocationIds.includes(location.id);
+                return (
+                  <TouchableOpacity
+                    key={location.id}
+                    onPress={() => handleToggle(location.id)}
                     style={[
-                      styles.checkbox,
+                      styles.option,
                       {
-                        borderColor: colors.primary,
-                        backgroundColor: isSelected ? colors.primary : 'transparent',
+                        backgroundColor: isSelected ? colors.primary + '10' : 'transparent',
                       },
                     ]}
                   >
-                    {isSelected && <Ionicons name="checkmark" size={16} color="white" />}
-                  </View>
-                  <Text variant="body" style={{ color: colors.foreground }}>
-                    {location.name}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
+                    <View
+                      style={[
+                        styles.checkbox,
+                        {
+                          borderColor: colors.primary,
+                          backgroundColor: isSelected ? colors.primary : 'transparent',
+                        },
+                      ]}
+                    >
+                      {isSelected && <Ionicons name="checkmark" size={16} color="white" />}
+                    </View>
+                    <Text variant="body" style={{ color: colors.foreground }}>
+                      {location.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })
+            ) : (
+              <View style={{ padding: 16, alignItems: 'center' }}>
+                <Text variant="body" style={{ color: colors.mutedForeground }}>
+                  No se encontraron ubicaciones
+                </Text>
+              </View>
+            )}
           </ScrollView>
 
           {/* Footer - Apply Button */}
-          <View style={[styles.dropdownFooter, { borderTopColor: colors.border }]}>
+          <View
+            style={[
+              styles.dropdownFooter,
+              {
+                borderTopColor: colors.border,
+                paddingBottom: insets.bottom + 12,
+              },
+            ]}
+          >
             <Button label="Aplicar" variant="primary" onPress={handleApply} fullWidth />
           </View>
         </View>
@@ -264,6 +309,18 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderBottomWidth: 1,
   },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+  },
+  searchInput: {
+    flex: 1,
+    paddingVertical: 10,
+    fontSize: 16,
+  },
   optionList: {
     flex: 1,
   },
@@ -284,6 +341,7 @@ const styles = StyleSheet.create({
   },
   dropdownFooter: {
     paddingVertical: 12,
+    paddingHorizontal: 16,
     borderTopWidth: 1,
   },
 });
