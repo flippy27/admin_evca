@@ -10,7 +10,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import ConnectorDot from "./ConnectorDot";
 
-export default function SupervisorView() {
+interface SupervisorViewProps {
+  selectedLocation?: { location_id: string; location_name: string } | null;
+}
+
+export default function SupervisorView({ selectedLocation }: SupervisorViewProps) {
   const scheme = useResolvedColorScheme();
   const colors = getThemeColors(scheme);
   const navigation = useNavigation();

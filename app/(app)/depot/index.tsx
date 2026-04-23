@@ -51,6 +51,25 @@ export default function DepotView() {
 
   const selectedLocation = locations.find((l) => l.location_id === selectedLocationId);
 
+  // Calculate active connectors for selected location
+  const chargers = useChargersStore((state) => state.chargers || []);
+  const activeConnectorStats = useMemo(() => {
+    if (!selectedLocation) return { active: 0, total: 0 };
+
+    const locationChargers = chargers.filter((c: any) => {
+      const locName = c.site?.name || c.location || "Unknown";
+      return locName === selectedLocation.location_name;
+    });
+
+    const total = locationChargers.reduce((sum, c: any) => sum + (c.connectors?.length || 0), 0);
+    const charging = locationChargers.reduce(
+      (sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Charging").length || 0),
+      0
+    );
+
+    return { active: charging, total };
+  }, [selectedLocation, chargers]);
+
   const roleConfig: Record<Role, { label: string; color: string }> = {
     operator: { label: "Operador de Patio", color: "#8b5cf6" },
     supervisor: { label: "Supervisor", color: "#22c55e" },
@@ -170,16 +189,22 @@ export default function DepotView() {
         <TouchableOpacity
           onPress={() => setShowLocationDropdown(!showLocationDropdown)}
           style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            paddingHorizontal: spacing.md,
-            paddingVertical: spacing.sm,
+            flex: 1,
           }}
         >
-          <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>
+          <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground, marginBottom: spacing.xs }}>
             {selectedLocation?.location_name || "Cargando..."}
           </Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
+            <Ionicons name="flash" size={14} color="#22c55e" />
+            <Text style={{ fontSize: 12, color: "#22c55e", fontWeight: "500" }}>
+              {activeConnectorStats.active}/{activeConnectorStats.total}
+            </Text>
+            <Text style={{ fontSize: 12, color: colors.mutedForeground }}>conectores activos</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => setShowLocationDropdown(!showLocationDropdown)}>
           <Ionicons
             name={showLocationDropdown ? "chevron-up" : "chevron-down"}
             size={18}
@@ -243,9 +268,9 @@ export default function DepotView() {
       <RoleBanner role={selectedRole} />
 
       {/* Role-specific Content */}
-      {selectedRole === "operator" && <OperadorView />}
-      {selectedRole === "supervisor" && <SupervisorView />}
-      {selectedRole === "maintainer" && <MantenedorView />}
+      {selectedRole === "operator" && <OperadorView selectedLocation={selectedLocation} />}
+      {selectedRole === "supervisor" && <SupervisorView selectedLocation={selectedLocation} />}
+      {selectedRole === "maintainer" && <MantenedorView selectedLocation={selectedLocation} />}
     </SafeAreaView>
   );
 }

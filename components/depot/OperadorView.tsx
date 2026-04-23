@@ -19,27 +19,6 @@ const COLORS = {
   online: "#22c55e",
 };
 
-const StatCard = ({
-  value,
-  label,
-  color,
-  colors,
-}: {
-  value: number;
-  label: string;
-  color: string;
-  colors: ReturnType<typeof getThemeColors>;
-}) => (
-  <Card style={{ flex: 1, minWidth: "45%", padding: spacing.md, alignItems: "center" }}>
-    <Text style={{ fontSize: 24, fontWeight: "bold", color }}>
-      {value}
-    </Text>
-    <Text style={{ color: colors.mutedForeground, fontSize: 12, marginTop: spacing.xs }}>
-      {label}
-    </Text>
-  </Card>
-);
-
 const SessionCard = ({
   chargerName,
   connectorId,
@@ -89,13 +68,25 @@ const SessionCard = ({
   );
 };
 
-export default function OperadorView() {
+interface OperadorViewProps {
+  selectedLocation?: { location_id: string; location_name: string } | null;
+}
+
+export default function OperadorView({ selectedLocation }: OperadorViewProps) {
   const scheme = useResolvedColorScheme();
   const colors = getThemeColors(scheme);
   const navigation = useNavigation();
 
-  const chargers = useChargersStore((state) => state.chargers || []);
+  const allChargers = useChargersStore((state) => state.chargers || []);
   const sessions = useChargingSessionsStore((state: any) => state.sessions || []);
+
+  // Filter chargers by selected location
+  const chargers = selectedLocation
+    ? allChargers.filter((c: any) => {
+        const locName = c.site?.name || c.location || "Unknown";
+        return locName === selectedLocation.location_name;
+      })
+    : allChargers;
 
   useEffect(() => {
     useChargersStore.getState().fetchChargers();
@@ -133,12 +124,42 @@ export default function OperadorView() {
         <Text style={{ fontSize: 12, fontWeight: "600", color: colors.mutedForeground, marginBottom: spacing.md, textTransform: "uppercase" }}>
           Conectores del Patio
         </Text>
-        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.md }}>
-          <StatCard value={stats.charging} label="Cargando" color={COLORS.charging} colors={colors} />
-          <StatCard value={stats.available} label="Disponible" color={COLORS.available} colors={colors} />
-          <StatCard value={stats.finishing} label="Finalizando" color={COLORS.finishing} colors={colors} />
-          <StatCard value={stats.faulted} label="Falla" color={COLORS.faulted} colors={colors} />
-        </View>
+        <Card style={{ padding: spacing.md }}>
+          <View style={{ flexDirection: "row", justifyContent: "space-around", gap: spacing.sm }}>
+            <View style={{ flex: 1, alignItems: "center" }}>
+              <Text style={{ fontSize: 28, fontWeight: "bold", color: COLORS.charging }}>
+                {stats.charging}
+              </Text>
+              <Text style={{ color: colors.mutedForeground, fontSize: 12, marginTop: spacing.xs }}>
+                Cargando
+              </Text>
+            </View>
+            <View style={{ flex: 1, alignItems: "center" }}>
+              <Text style={{ fontSize: 28, fontWeight: "bold", color: COLORS.available }}>
+                {stats.available}
+              </Text>
+              <Text style={{ color: colors.mutedForeground, fontSize: 12, marginTop: spacing.xs }}>
+                Disponible
+              </Text>
+            </View>
+            <View style={{ flex: 1, alignItems: "center" }}>
+              <Text style={{ fontSize: 28, fontWeight: "bold", color: COLORS.finishing }}>
+                {stats.finishing}
+              </Text>
+              <Text style={{ color: colors.mutedForeground, fontSize: 12, marginTop: spacing.xs }}>
+                Finalizando
+              </Text>
+            </View>
+            <View style={{ flex: 1, alignItems: "center" }}>
+              <Text style={{ fontSize: 28, fontWeight: "bold", color: COLORS.faulted }}>
+                {stats.faulted}
+              </Text>
+              <Text style={{ color: colors.mutedForeground, fontSize: 12, marginTop: spacing.xs }}>
+                Falla
+              </Text>
+            </View>
+          </View>
+        </Card>
       </View>
 
       {/* Active Sessions */}

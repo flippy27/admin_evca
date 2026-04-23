@@ -27,7 +27,11 @@ const mockEnergyData: Record<
   "charger-3-c02": { voltage: 230, current: 24, power: 5.5, temperature: 41, frequency: 50 },
 };
 
-export default function MantenedorView() {
+interface MantenedorViewProps {
+  selectedLocation?: { location_id: string; location_name: string } | null;
+}
+
+export default function MantenedorView({ selectedLocation }: MantenedorViewProps) {
   const scheme = useResolvedColorScheme();
   const colors = getThemeColors(scheme);
   const navigation = useNavigation();
