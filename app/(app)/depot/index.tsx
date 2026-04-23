@@ -1,18 +1,21 @@
-import { useState, useMemo, useEffect } from "react";
-import { TouchableOpacity, View, SafeAreaView } from "react-native";
-import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
-import { getThemeColors, spacing, colors as themeColors } from "@/theme";
-import { Text } from "@/components/ui/Text";
-import { Ionicons } from "@expo/vector-icons";
-import RoleBanner from "@/components/depot/RoleBanner";
-import OperadorView from "@/components/depot/OperadorView";
-import SupervisorView from "@/components/depot/SupervisorView";
 import MantenedorView from "@/components/depot/MantenedorView";
-import { usePermissions } from "@/lib/hooks/use-permissions";
+import OperadorView from "@/components/depot/OperadorView";
+import RoleBanner from "@/components/depot/RoleBanner";
+import SupervisorView from "@/components/depot/SupervisorView";
 import { useSidebar } from "@/components/layout/AppContainer";
-import { useChargersStore } from "@/lib/stores/chargers.store";
-import { useLocations } from "@/lib/hooks/use-locations";
+import { Text } from "@/components/ui/Text";
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { mockChargers } from "@/lib/data/mockData";
+import { useLocations } from "@/lib/hooks/use-locations";
+import { usePermissions } from "@/lib/hooks/use-permissions";
+import { logger } from "@/lib/services/logger";
+import { useChargersStore } from "@/lib/stores/chargers.store";
+import { getThemeColors, spacing, colors as themeColors } from "@/theme";
+import { Ionicons } from "@expo/vector-icons";
+import { useEffect, useMemo, useState } from "react";
+import { SafeAreaView, TouchableOpacity, View, TextInput, ScrollView, ActivityIndicator } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAuthStore } from "@/lib/stores/auth.store";
 
 type Role = "operator" | "supervisor" | "maintainer";
 
@@ -31,14 +34,35 @@ export default function DepotView() {
     return available.length > 0 ? available : (["operator"] as Role[]);
   }, [roles]);
 
-  const [selectedRole, setSelectedRole] = useState<Role>(availableRoles[0] as Role || "operator");
+  const [selectedRole, setSelectedRole] = useState<Role>(
+    (availableRoles[0] as Role) || "operator",
+  );
   const [showRoleDropdown, setShowRoleDropdown] = useState(false);
   const [showTerminalDropdown, setShowTerminalDropdown] = useState(false);
+  const [searchLocationQuery, setSearchLocationQuery] = useState<string>("");
 
   // Fetch locations from backend
   const { locations, fetchLocations } = useLocations();
+  const { user } = useAuthStore();
+  const { fetchChargers, chargersLoading, selectedLocationId, setSelectedLocationId } = useChargersStore();
   const [selectedTerminal, setSelectedTerminal] = useState<string>("");
 
+  // Restore selected location from AsyncStorage on mount
+  useEffect(() => {
+    const restoreLocation = async () => {
+      try {
+        const saved = await AsyncStorage.getItem("selectedLocationId");
+        if (saved) {
+          setSelectedLocationId(saved);
+        }
+      } catch (error) {
+        logger.error("[DepotView] Failed to restore location", error);
+      }
+    };
+    restoreLocation();
+  }, []);
+
+  // Fetch locations from backend
   useEffect(() => {
     fetchLocations();
   }, [fetchLocations]);
@@ -46,33 +70,73 @@ export default function DepotView() {
   // Set default terminal to first available
   useEffect(() => {
     if (locations.length > 0 && !selectedTerminal) {
-      setSelectedTerminal(locations[0].location_name);
+      const firstLocation = locations[0];
+      setSelectedTerminal(firstLocation.location_name);
+      setSelectedLocationId(firstLocation.location_id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locations]);
+
+  // When selected location changes, fetch chargers and persist
+  useEffect(() => {
+    if (selectedLocationId) {
+      const selectedLoc = locations.find((loc) => loc.location_id === selectedLocationId);
+      if (selectedLoc) {
+        setSelectedTerminal(selectedLoc.location_name);
+      }
+      // Fetch chargers for this location
+      fetchChargers(1, 10, { siteId: selectedLocationId, companyId: user?.companyExternalId });
+      // Save to AsyncStorage
+      AsyncStorage.setItem("selectedLocationId", selectedLocationId).catch((err) =>
+        logger.error("[DepotView] Failed to save location", err),
+      );
+    }
+  }, [selectedLocationId]);
 
   // Get chargers from store or use mock
   const storeChargers = useChargersStore((state) => state.chargers || []);
   const chargers = storeChargers.length > 0 ? storeChargers : mockChargers;
 
+  // Filter locations by search query
+  const filteredLocations = useMemo(() => {
+    return locations.filter((loc) =>
+      loc.location_name.toLowerCase().includes(searchLocationQuery.toLowerCase()),
+    );
+  }, [locations, searchLocationQuery]);
+
   // Calculate stats from chargers
   const stats = useMemo(() => {
-    const total = chargers.reduce((sum, c: any) => sum + (c.connectors?.length || 0), 0);
+    const total = chargers.reduce(
+      (sum, c: any) => sum + (c.connectors?.length || 0),
+      0,
+    );
     const charging = chargers.reduce(
-      (sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Charging").length || 0),
-      0
+      (sum, c: any) =>
+        sum +
+        (c.connectors?.filter((cn: any) => cn.status === "Charging").length ||
+          0),
+      0,
     );
     const available = chargers.reduce(
-      (sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Available").length || 0),
-      0
+      (sum, c: any) =>
+        sum +
+        (c.connectors?.filter((cn: any) => cn.status === "Available").length ||
+          0),
+      0,
     );
     const finishing = chargers.reduce(
-      (sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Finishing").length || 0),
-      0
+      (sum, c: any) =>
+        sum +
+        (c.connectors?.filter((cn: any) => cn.status === "Finishing").length ||
+          0),
+      0,
     );
     const faulted = chargers.reduce(
-      (sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Faulted").length || 0),
-      0
+      (sum, c: any) =>
+        sum +
+        (c.connectors?.filter((cn: any) => cn.status === "Faulted").length ||
+          0),
+      0,
     );
 
     return { total, charging, available, finishing, faulted };
@@ -108,10 +172,18 @@ export default function DepotView() {
         </TouchableOpacity>
 
         <View style={{ flex: 1, alignItems: "center" }}>
-          <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: "600",
+              color: colors.foreground,
+            }}
+          >
             Workforce App
           </Text>
-          <Text style={{ fontSize: 11, color: colors.mutedForeground }}>Admin EVCA</Text>
+          <Text style={{ fontSize: 11, color: colors.mutedForeground }}>
+            Admin EVCA
+          </Text>
         </View>
 
         {/* Role Selector */}
@@ -160,16 +232,25 @@ export default function DepotView() {
                     style={{
                       paddingHorizontal: spacing.md,
                       paddingVertical: spacing.sm,
-                      borderBottomWidth: role !== availableRoles[availableRoles.length - 1] ? 1 : 0,
+                      borderBottomWidth:
+                        role !== availableRoles[availableRoles.length - 1]
+                          ? 1
+                          : 0,
                       borderBottomColor: colors.border,
-                      backgroundColor: selectedRole === role ? colors.primary + "10" : "transparent",
+                      backgroundColor:
+                        selectedRole === role
+                          ? colors.primary + "10"
+                          : "transparent",
                     }}
                   >
                     <Text
                       style={{
                         fontSize: 12,
                         fontWeight: selectedRole === role ? "600" : "400",
-                        color: selectedRole === role ? roleConfig[role].color : colors.foreground,
+                        color:
+                          selectedRole === role
+                            ? roleConfig[role].color
+                            : colors.foreground,
                       }}
                     >
                       {roleConfig[role].label}
@@ -195,12 +276,31 @@ export default function DepotView() {
           position: "relative",
         }}
       >
-        <TouchableOpacity onPress={() => setShowTerminalDropdown(!showTerminalDropdown)}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs, marginBottom: spacing.xs }}>
-            <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>
+        <TouchableOpacity
+          onPress={() => setShowTerminalDropdown(!showTerminalDropdown)}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: spacing.xs,
+              marginBottom: spacing.xs,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "600",
+                color: colors.foreground,
+              }}
+            >
               {selectedTerminal}
             </Text>
-            <Ionicons name={showTerminalDropdown ? "chevron-up" : "chevron-down"} size={14} color={colors.foreground} />
+            <Ionicons
+              name={showTerminalDropdown ? "chevron-up" : "chevron-down"}
+              size={14}
+              color={colors.foreground}
+            />
           </View>
         </TouchableOpacity>
         {showTerminalDropdown && (
@@ -218,40 +318,95 @@ export default function DepotView() {
               zIndex: 10,
             }}
           >
-            {locations.map((location) => (
-              <TouchableOpacity
-                key={location.location_id}
-                onPress={() => {
-                  setSelectedTerminal(location.location_name);
-                  setShowTerminalDropdown(false);
-                }}
-                style={{
-                  paddingHorizontal: spacing.md,
-                  paddingVertical: spacing.sm,
-                  borderBottomWidth: location !== locations[locations.length - 1] ? 1 : 0,
-                  borderBottomColor: colors.border,
-                  backgroundColor: selectedTerminal === location.location_name ? colors.primary + "10" : "transparent",
-                }}
-              >
+            <TextInput
+              style={{
+                padding: spacing.md,
+                borderBottomWidth: 1,
+                borderBottomColor: colors.border,
+                color: colors.foreground,
+                fontSize: 12,
+              }}
+              placeholder="Buscar terminal..."
+              placeholderTextColor={colors.mutedForeground}
+              value={searchLocationQuery}
+              onChangeText={setSearchLocationQuery}
+            />
+            <ScrollView style={{ maxHeight: 250 }}>
+              {filteredLocations.length > 0 ? (
+                filteredLocations.map((location, idx) => (
+                  <TouchableOpacity
+                    key={location.location_id}
+                    onPress={() => {
+                      setSelectedLocationId(location.location_id);
+                      setShowTerminalDropdown(false);
+                      setSearchLocationQuery("");
+                    }}
+                    style={{
+                      paddingHorizontal: spacing.md,
+                      paddingVertical: spacing.sm,
+                      borderBottomWidth: idx !== filteredLocations.length - 1 ? 1 : 0,
+                      borderBottomColor: colors.border,
+                      backgroundColor:
+                        selectedLocationId === location.location_id
+                          ? colors.primary + "10"
+                          : "transparent",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        fontWeight:
+                          selectedLocationId === location.location_id
+                            ? "600"
+                            : "400",
+                        color:
+                          selectedLocationId === location.location_id
+                            ? colors.primary
+                            : colors.foreground,
+                      }}
+                    >
+                      {location.location_name}
+                    </Text>
+                  </TouchableOpacity>
+                ))
+              ) : (
                 <Text
                   style={{
+                    padding: spacing.md,
+                    color: colors.mutedForeground,
                     fontSize: 12,
-                    fontWeight: selectedTerminal === location.location_name ? "600" : "400",
-                    color: selectedTerminal === location.location_name ? colors.primary : colors.foreground,
                   }}
                 >
-                  {location.location_name}
+                  Sin resultados
                 </Text>
-              </TouchableOpacity>
-            ))}
+              )}
+            </ScrollView>
           </View>
         )}
-        <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
-          <Ionicons name="flash" size={14} color={themeColors.connectorStatus.online} />
-          <Text style={{ fontSize: 12, color: themeColors.connectorStatus.online, fontWeight: "500" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: spacing.xs,
+          }}
+        >
+          <Ionicons
+            name="flash"
+            size={14}
+            color={themeColors.connectorStatus.online}
+          />
+          <Text
+            style={{
+              fontSize: 12,
+              color: themeColors.connectorStatus.online,
+              fontWeight: "500",
+            }}
+          >
             {stats.charging}/{stats.total}
           </Text>
-          <Text style={{ fontSize: 12, color: colors.mutedForeground }}>conectores activos</Text>
+          <Text style={{ fontSize: 12, color: colors.mutedForeground }}>
+            conectores activos
+          </Text>
         </View>
       </View>
 

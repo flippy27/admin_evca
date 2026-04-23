@@ -1,6 +1,6 @@
-import { useAuthStore } from "@/lib/stores/auth.store";
 import { bffClient } from "@/lib/api/client";
-import { useState, useCallback } from "react";
+import { useAuthStore } from "@/lib/stores/auth.store";
+import { useCallback, useState } from "react";
 
 export interface LocationAddress {
   location_address_latitude: string;
@@ -37,7 +37,7 @@ export function useLocations() {
     setError(null);
     try {
       const response = await bffClient.get(
-        `/users/${user.userId}/locations?companyId=${user.companyId}&enabled=true`
+        `bff/users/${user.userId}/locations?companyId=${user.companyId}&enabled=true`
       );
       console.log("Locations fetched:", response.data.payload);
       setLocations(response.data.payload || []);

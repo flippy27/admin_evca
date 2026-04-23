@@ -15,6 +15,9 @@ import { logger } from '../services/logger';
 import { handleError } from '../services/errorHandler';
 
 interface ChargersState {
+  // Location filter
+  selectedLocationId: string | null;
+
   // List state
   chargers: Charger[];
   chargersLoading: boolean;
@@ -45,6 +48,7 @@ interface ChargersState {
   configError: string | null;
 
   // Actions
+  setSelectedLocationId: (locationId: string | null) => void;
   fetchChargers: (page?: number, pageSize?: number, filters?: any) => Promise<void>;
   fetchChargerDetail: (id: string) => Promise<void>;
   fetchLiveData: (id: string) => Promise<void>;
@@ -57,6 +61,8 @@ interface ChargersState {
 
 export const useChargersStore = create<ChargersState>((set, get) => ({
   // Initial state
+  selectedLocationId: null,
+
   chargers: [],
   chargersLoading: false,
   chargersError: null,
@@ -80,6 +86,11 @@ export const useChargersStore = create<ChargersState>((set, get) => ({
   config: null,
   configLoading: false,
   configError: null,
+
+  // ========== LOCATION FILTER ==========
+  setSelectedLocationId: (locationId: string | null) => {
+    set({ selectedLocationId: locationId });
+  },
 
   // ========== CHARGERS LIST ==========
   fetchChargers: async (page = 1, pageSize = 20, filters = {}) => {
