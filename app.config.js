@@ -78,13 +78,39 @@ module.exports = ({ config }) => {
     },
     extra: {
       ...(config.extra || {}),
-      apiUrl: process.env.API_BASE_URL,
-      userMgmtUrl: process.env.USER_MGMT_URL,
-      encryptionKey: process.env.TOKEN_ENCRYPTION_KEY,
-      hmacSecret: process.env.HMAC_SECRET,
-      environment: process.env.ENVIRONMENT,
-      debug: process.env.DEBUG === 'true',
-      httpLogLevel: process.env.HTTP_LOG_LEVEL,
+      // API Configuration
+      apiUrl: process.env.API_BASE_URL || 'https://emobility-bff.dev.dhemax.link/',
+      apiTimeout: parseInt(process.env.API_TIMEOUT || '30000', 10),
+      httpLogLevel: parseInt(process.env.HTTP_LOG_LEVEL || '1', 10),
+
+      // Authentication
+      authProvider: process.env.AUTH_PROVIDER || 'keycloak',
+      authRealm: process.env.AUTH_REALM || 'evca',
+      authClientId: process.env.AUTH_CLIENT_ID || 'admin-evca-mobile',
+      encryptionKey: process.env.TOKEN_ENCRYPTION_KEY || 'your-32-char-encryption-key-here',
+
+      // App Configuration
+      environment: process.env.ENVIRONMENT || 'development',
+      appVersion: process.env.APP_VERSION || '1.0.0',
+      debug: process.env.DEBUG === 'true' || false,
+      enableMockApi: process.env.ENABLE_MOCK_API === 'true',
+      enableOfflineSupport: process.env.ENABLE_OFFLINE_SUPPORT !== 'false',
+
+      // Services
+      analyticsEnabled: process.env.ANALYTICS_ENABLED === 'true',
+      analyticsKey: process.env.ANALYTICS_KEY || '',
+      sentryEnabled: process.env.SENTRY_ENABLED === 'true',
+      sentryDsn: process.env.SENTRY_DSN || '',
+
+      // Localization
+      defaultLanguage: process.env.DEFAULT_LANGUAGE || 'es',
+      defaultTheme: process.env.DEFAULT_THEME || 'system',
+
+      // EAS Build
+      easProjectId: process.env.EAS_PROJECT_ID || '',
+      easBuildChannel: process.env.EAS_BUILD_CHANNEL || 'production',
+
+      // Maestro
       maestro: {
         appId,
         appVariant,
