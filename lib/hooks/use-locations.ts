@@ -39,7 +39,6 @@ export function useLocations() {
       const response = await bffClient.get(
         `bff/users/${user.userId}/locations?companyId=${user.companyId}&enabled=true`
       );
-      console.log("Locations fetched:", response.data.payload);
       setLocations(response.data.payload || []);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Error fetching locations";

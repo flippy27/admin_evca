@@ -61,7 +61,7 @@ export const useChargingSessionsStore = create<ChargingSessionsState>((set, get)
         page: currentPage,
         pageSize: request.pagination?.per_page || 20,
         totalPages: res.data.pagination?.total_pages || 1,
-        total: res.data.pagination?.total || 0,
+        total: res.data.pagination?.total_items || res.data.pagination?.total || 0,
         sessionsLoading: false,
       });
 

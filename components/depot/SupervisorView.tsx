@@ -42,10 +42,21 @@ export default function SupervisorView({ selectedLocation }: SupervisorViewProps
 
   const stats = useMemo(() => {
     const charging = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Charging").length || 0), 0);
-    const total = chargers.reduce((sum, c: any) => sum + (c.connectors?.length || 0), 0);
     const faulted = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Faulted").length || 0), 0);
+    const finishing = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Finishing").length || 0), 0);
+    const available = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Available").length || 0), 0);
+    const suspended = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Suspended").length || 0), 0);
     const online = chargers.filter((c: any) => c.online).length;
     const totalEnergy = sessions.filter((s: any) => s.status === "Active" || s.status === "active").reduce((sum: number, s: any) => sum + (s.energy || 0), 0);
+
+    // Total connectors (all except Offline/Unavailable)
+    const total = chargers.reduce((sum, c: any) => {
+      const activeCount = c.connectors?.filter((cn: any) => cn.status !== "Offline" && cn.status !== "Unavailable").length || 0;
+      return sum + activeCount;
+    }, 0);
+
+    // Unavailable = total - sum of all known states
+    const unavailable = total - charging - faulted - finishing - available - suspended;
 
     return {
       utilization: total > 0 ? Math.round((charging / total) * 100) : 0,
@@ -54,10 +65,10 @@ export default function SupervisorView({ selectedLocation }: SupervisorViewProps
       totalChargers: chargers.length,
       faulted,
       charging,
-      finishing: chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Finishing").length || 0), 0),
-      available: chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Available").length || 0), 0),
-      suspended: chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Suspended").length || 0), 0),
-      unavailable: total - charging - faulted - (chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Finishing").length || 0), 0)) - (chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Available").length || 0), 0)) - (chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Suspended").length || 0), 0)),
+      finishing,
+      available,
+      suspended,
+      unavailable: Math.max(0, unavailable),
       total,
     };
   }, [chargers, sessions]);

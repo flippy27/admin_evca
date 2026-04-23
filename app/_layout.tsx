@@ -14,10 +14,10 @@ import { LoadingOverlayComponent } from "@/components/ui/LoadingOverlay";
 import { OfflineIndicator } from "@/components/ui/OfflineIndicator";
 import { ToastContainer } from "@/components/ui/Toast";
 import { onRefreshFailed } from "@/lib/api/client";
+import { usePermissions } from "@/lib/hooks/use-permissions";
 import i18n from "@/lib/i18n";
 import { useAppStore } from "@/lib/stores/app.store";
 import { useAuthStore } from "@/lib/stores/auth.store";
-import { usePermissions } from "@/lib/hooks/use-permissions";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -42,11 +42,11 @@ export default function RootLayout() {
     return appColorScheme;
   }, [appColorScheme, rnColorScheme]);
 
-  console.log("[RootLayout] colorScheme:", {
-    appColorScheme,
-    rnColorScheme,
-    resolved: colorScheme,
-  });
+  // console.log("[RootLayout] colorScheme:", {
+  //   appColorScheme,
+  //   rnColorScheme,
+  //   resolved: colorScheme,
+  // });
 
   // Auth state
   const sessionState = useAuthStore((state) => state.sessionState);

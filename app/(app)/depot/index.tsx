@@ -3,20 +3,26 @@ import OperadorView from "@/components/depot/OperadorView";
 import RoleBanner from "@/components/depot/RoleBanner";
 import SupervisorView from "@/components/depot/SupervisorView";
 import { useSidebar } from "@/components/layout/AppContainer";
+import { SkeletonCard } from "@/components/ui/SkeletonLoader";
 import { Text } from "@/components/ui/Text";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { mockChargers } from "@/lib/data/mockData";
 import { useLocations } from "@/lib/hooks/use-locations";
 import { usePermissions } from "@/lib/hooks/use-permissions";
 import { logger } from "@/lib/services/logger";
+import { useAuthStore } from "@/lib/stores/auth.store";
 import { useChargersStore } from "@/lib/stores/chargers.store";
 import { getThemeColors, spacing, colors as themeColors } from "@/theme";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useMemo, useState } from "react";
-import { SafeAreaView, TouchableOpacity, View, TextInput, ScrollView, ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useAuthStore } from "@/lib/stores/auth.store";
-import { SkeletonCard } from "@/components/ui/SkeletonLoader";
+import { useEffect, useMemo, useState } from "react";
+import {
+  SafeAreaView,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 type Role = "operator" | "supervisor" | "maintainer";
 
@@ -45,7 +51,14 @@ export default function DepotView() {
   // Fetch locations from backend
   const { locations, fetchLocations } = useLocations();
   const { user } = useAuthStore();
-  const { fetchChargers, chargersLoading, chargersError, clearError, selectedLocationId, setSelectedLocationId } = useChargersStore();
+  const {
+    fetchChargers,
+    chargersLoading,
+    chargersError,
+    clearError,
+    selectedLocationId,
+    setSelectedLocationId,
+  } = useChargersStore();
   const [selectedTerminal, setSelectedTerminal] = useState<string>("");
 
   // Restore selected location from AsyncStorage on mount
@@ -81,15 +94,20 @@ export default function DepotView() {
   // When selected location changes, fetch chargers and persist
   useEffect(() => {
     if (selectedLocationId) {
-      const selectedLoc = locations.find((loc) => loc.location_id === selectedLocationId);
+      const selectedLoc = locations.find(
+        (loc) => loc.location_id === selectedLocationId,
+      );
       if (selectedLoc) {
         setSelectedTerminal(selectedLoc.location_name);
       }
       // Fetch chargers for this location
-      fetchChargers(1, 10, { siteId: selectedLocationId, companyId: user?.companyExternalId });
+      fetchChargers(1, 10, {
+        siteId: selectedLocationId,
+        companyId: user?.companyExternalId,
+      });
       // Save to AsyncStorage
-      AsyncStorage.setItem("selectedLocationId", selectedLocationId).catch((err) =>
-        logger.error("[DepotView] Failed to save location", err),
+      AsyncStorage.setItem("selectedLocationId", selectedLocationId).catch(
+        (err) => logger.error("[DepotView] Failed to save location", err),
       );
     }
   }, [selectedLocationId]);
@@ -101,16 +119,14 @@ export default function DepotView() {
   // Filter locations by search query
   const filteredLocations = useMemo(() => {
     return locations.filter((loc) =>
-      loc.location_name.toLowerCase().includes(searchLocationQuery.toLowerCase()),
+      loc.location_name
+        .toLowerCase()
+        .includes(searchLocationQuery.toLowerCase()),
     );
   }, [locations, searchLocationQuery]);
 
   // Calculate stats from chargers
   const stats = useMemo(() => {
-    const total = chargers.reduce(
-      (sum, c: any) => sum + (c.connectors?.length || 0),
-      0,
-    );
     const charging = chargers.reduce(
       (sum, c: any) =>
         sum +
@@ -139,12 +155,39 @@ export default function DepotView() {
           0),
       0,
     );
+    const suspended = chargers.reduce(
+      (sum, c: any) =>
+        sum +
+        (c.connectors?.filter((cn: any) => cn.status === "Suspended").length ||
+          0),
+      0,
+    );
 
-    return { total, charging, available, finishing, faulted };
+    // Total connectors (all except Offline/Unavailable)
+    const total = chargers.reduce((sum, c: any) => {
+      const activeCount =
+        c.connectors?.filter(
+          (cn: any) => cn.status !== "Offline" && cn.status !== "Unavailable",
+        ).length || 0;
+      return sum + activeCount;
+    }, 0);
+
+    // Active connectors = non-offline count
+    const active = charging + available + finishing + faulted + suspended;
+
+    return {
+      total,
+      charging,
+      available,
+      finishing,
+      faulted,
+      suspended,
+      active,
+    };
   }, [chargers]);
 
   const roleConfig: Record<Role, { label: string; color: string }> = {
-    operator: { label: "Operador de Patio", color: themeColors.roles.operador },
+    operator: { label: "Operador", color: themeColors.roles.operador },
     supervisor: { label: "Supervisor", color: themeColors.roles.supervisor },
     maintainer: { label: "Mantenedor", color: themeColors.roles.mantenedor },
   };
@@ -345,7 +388,8 @@ export default function DepotView() {
                     style={{
                       paddingHorizontal: spacing.md,
                       paddingVertical: spacing.sm,
-                      borderBottomWidth: idx !== filteredLocations.length - 1 ? 1 : 0,
+                      borderBottomWidth:
+                        idx !== filteredLocations.length - 1 ? 1 : 0,
                       borderBottomColor: colors.border,
                       backgroundColor:
                         selectedLocationId === location.location_id
@@ -428,8 +472,19 @@ export default function DepotView() {
             justifyContent: "space-between",
           }}
         >
-          <View style={{ flex: 1, flexDirection: "row", alignItems: "center", gap: spacing.md }}>
-            <Ionicons name="alert-circle" size={20} color={colors.destructive} />
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: spacing.md,
+            }}
+          >
+            <Ionicons
+              name="alert-circle"
+              size={20}
+              color={colors.destructive}
+            />
             <Text
               style={{
                 flex: 1,

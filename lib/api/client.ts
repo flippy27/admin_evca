@@ -3,11 +3,11 @@
  * Handles token injection, 401 refresh, error mapping, and HTTP logging
  */
 
-import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { ENV } from '../config/env';
-import { ENDPOINTS, AUTH_WHITELIST } from './endpoints';
-import { logger } from '../services/logger';
 import { extractErrorMessage } from '../services/errorHandler';
+import { logger } from '../services/logger';
+import { AUTH_WHITELIST } from './endpoints';
 
 // HTTP Logging levels
 enum HttpLogLevel {
@@ -46,7 +46,7 @@ function logHttpRequest(method: string, url: string, config?: InternalAxiosReque
       if (safeHeaders['Authorization']) {
         safeHeaders['Authorization'] = safeHeaders['Authorization'].toString().substring(0, 20) + '...';
       }
-      logger.debug(`${prefix} Headers:`, safeHeaders);
+      //logger.debug(`${prefix} Headers:`, safeHeaders);
     }
     if (config?.params) {
       logger.debug(`${prefix} Query Params:`, config.params);
@@ -70,11 +70,11 @@ function logHttpResponse(method: string, url: string, response: AxiosResponse) {
   }
 
   if (LOG_LEVEL >= HttpLogLevel.DETAILED) {
-    logger.debug(`${prefix} Response headers:`, response.headers);
+    //logger.debug(`${prefix} Response headers:`, response.headers);
   }
 
   // Always log response body for easier debugging
-  logger.debug(`${prefix} Response body:`, JSON.stringify(response.data, null, 2));
+  //logger.debug(`${prefix} Response body:`, JSON.stringify(response.data, null, 2));
 }
 
 function logHttpError(method: string, url: string, error: AxiosError) {

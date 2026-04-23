@@ -3,25 +3,83 @@
  */
 
 export interface ChargingSession {
+  // Session identifiers
   id?: string;
-  session_id?: string;
-  charger_id: string;
+  transaction_id?: string;
+  empresas_id?: number;
+
+  // Charger info
+  charger_id?: string;
+  charger_name?: string;
   ocpp_id?: string;
+  charger_status?: string;
+  charger_type?: string;
+  charger_manufacturer?: string;
+  charger_model?: string;
+
+  // Connector info
   connector_id?: string;
+  connector_number?: number;
+  connector_name?: string;
+  connector_alias?: string;
+  connector_type?: string;
+  connector_electric_type?: string;
+  connector_max_voltage?: string;
+  connector_max_current?: string;
+  connector_max_power?: string;
+  connector_status?: string;
+
+  // Location info
   location_id?: string;
-  license_plate?: string;
-  rfid?: string;
+  location_name?: string;
+  location_address?: string;
+  location_city?: string;
+  location_country?: string;
+  charging_station_name?: string;
+
+  // Session times
   session_start_datetime?: string;
+  session_start_time?: string;
   session_stop_datetime?: string;
-  duration_minutes?: number;
-  energy_kwh?: number;
-  initial_soc?: number;
-  final_soc?: number;
-  min_power_kw?: number;
-  max_power_kw?: number;
-  meter_start?: number;
-  meter_stop?: number;
+  session_stop_time?: string;
+  session_duration?: string;
+
+  // Meter data
+  session_start_meter_energy?: string;
+  session_stop_meter_energy?: string;
+  delivered_energy?: string;
+
+  // Vehicle & RFID
+  license_plate?: string;
+  evccid?: string;
+  vin?: string;
+  external_user_id?: string;
+  id_tag_start?: string;
+  id_tag_stop?: string;
+
+  // State of charge
+  first_soc?: string | number;
+  last_soc?: string | number;
+  first_energy?: string | number;
+  last_energy?: string | number;
+
+  // Power data
+  first_power?: string | number;
+  last_power?: string | number;
+  min_power?: string | number;
+  max_power?: string | number;
+
+  // Timestamps
+  first_datetime?: string;
+  last_datetime?: string;
+  start_transaction_inserted_datetime?: string;
+  stop_transaction_inserted_datetime?: string;
+
+  // Legacy/mapped fields
   status?: string;
+  energy_kwh?: number;
+  duration_minutes?: number;
+  rfid?: string;
 }
 
 export interface ChargingSessionFilters {
@@ -69,7 +127,14 @@ export interface SessionsPayload {
   license_plates?: string[];
 }
 
+export interface SessionsRequestMeta {
+  operation?: string;
+  company_id?: number;
+  user_id?: number;
+}
+
 export interface SessionsRequest {
+  meta?: SessionsRequestMeta;
   payload?: SessionsPayload;
   filters?: ChargingSessionFilters;
   pagination?: {
@@ -85,14 +150,22 @@ export interface SessionsRequest {
 export interface SessionsListResponse {
   payload: ChargingSession[];
   pagination?: {
+    current_page?: number;
     page?: number;
     per_page?: number;
+    total_items?: number;
     total?: number;
     total_pages?: number;
+    has_next?: boolean;
+    has_previous?: boolean;
   };
   meta?: {
     success?: boolean;
     operation?: string;
     execution_time_ms?: number;
+    correlation_id?: string;
+    microservices_called?: string[];
+    schemaVersion?: string;
+    generatedAt?: string;
   };
 }

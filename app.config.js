@@ -1,8 +1,8 @@
-const dotenv = require('dotenv');
-const path = require('path');
+const dotenv = require('dotenv')
+const path = require('path')
 
 // Determine environment from NODE_ENV or APP_ENV, default to 'dev'
-const env = process.env.NODE_ENV || process.env.APP_ENV || 'dev';
+const env = process.env.NODE_ENV || process.env.APP_ENV || 'dev'
 
 // Map environment names to .env files
 const envFileMap = {
@@ -13,46 +13,43 @@ const envFileMap = {
   staging: '.env.stg',
   prod: '.env.prod',
   production: '.env.prod',
-};
+}
 
-const envFile = envFileMap[env] || '.env.dev';
+const envFile = envFileMap[env] || '.env.dev'
 
 // Load environment-specific .env file
-console.log(`[app.config.js] Loading environment: ${env} (${envFile})`);
-dotenv.config({ path: path.join(__dirname, envFile) });
+console.log(`[app.config.js] Loading environment: ${env} (${envFile})`)
+dotenv.config({ path: path.join(__dirname, envFile) })
 
 module.exports = ({ config }) => {
-  const appVariant = process.env.APP_VARIANT || "production";
-  const isDev = appVariant === "development";
-  const isStaging = appVariant === "staging";
-  const isPreview = isDev || isStaging;
+  const appVariant = process.env.APP_VARIANT || 'production'
+  const isDev = appVariant === 'development'
+  const isStaging = appVariant === 'staging'
 
-  const appName = isPreview ? "RNExpoThree (Dev)" : "RNExpoThree";
-  const appId = isPreview
-    ? "com.example.rnexpothree.dev"
-    : "com.example.rnexpothree";
+  const appName = 'Workforce'
+  const appId = 'com.dhemax.workforce'
 
-  const resolvedVersion = config.version || "1.0.0";
-  const resolvedBuildNumber = config?.ios?.buildNumber || "1";
+  const resolvedVersion = config.version || '1.0.0'
+  const resolvedBuildNumber = config?.ios?.buildNumber || '1'
   const resolvedVersionCode = Number.parseInt(
     String(config?.android?.versionCode || 1),
-    10
-  );
+    10,
+  )
 
   return {
     ...config,
     name: appName,
-    slug: "rn-expo-three",
+    slug: 'rn-expo-three',
     version: resolvedVersion,
-    orientation: "portrait",
-    icon: "./assets/images/icon.png",
-    scheme: "rn-expo-three",
-    userInterfaceStyle: "automatic",
+    orientation: 'portrait',
+    icon: './assets/images/icon.png',
+    scheme: 'rn-expo-three',
+    userInterfaceStyle: 'automatic',
     splash: {
-      resizeMode: "contain",
-      backgroundColor: "#FFFFFF",
+      resizeMode: 'contain',
+      backgroundColor: '#FFFFFF',
     },
-    assetBundlePatterns: ["**/*"],
+    assetBundlePatterns: ['**/*'],
     ios: {
       ...(config.ios || {}),
       supportsTablet: true,
@@ -61,25 +58,28 @@ module.exports = ({ config }) => {
     },
     android: {
       ...(config.android || {}),
-      versionCode: Number.isFinite(resolvedVersionCode) ? resolvedVersionCode : 1,
-      icon: "./assets/images/adaptive-icon.png",
+      versionCode: Number.isFinite(resolvedVersionCode)
+        ? resolvedVersionCode
+        : 1,
+      icon: './assets/images/adaptive-icon.png',
       package: appId,
-      permissions: ["android.permission.ACCESS_NETWORK_STATE"],
+      permissions: ['android.permission.ACCESS_NETWORK_STATE'],
     },
     web: {
-      bundler: "metro",
-      output: "static",
-      favicon: "./assets/images/favicon.png",
+      bundler: 'metro',
+      output: 'static',
+      favicon: './assets/images/favicon.png',
       ...(config.web || {}),
     },
-    plugins: ["expo-router"],
+    plugins: ['expo-router'],
     experiments: {
       typedRoutes: true,
     },
     extra: {
       ...(config.extra || {}),
       // API Configuration
-      apiUrl: process.env.API_BASE_URL || 'https://emobility-bff.dev.dhemax.link/',
+      apiUrl:
+        process.env.API_BASE_URL || 'https://emobility-bff.dev.dhemax.link/',
       apiTimeout: parseInt(process.env.API_TIMEOUT || '30000', 10),
       httpLogLevel: parseInt(process.env.HTTP_LOG_LEVEL || '1', 10),
 
@@ -87,7 +87,8 @@ module.exports = ({ config }) => {
       authProvider: process.env.AUTH_PROVIDER || 'keycloak',
       authRealm: process.env.AUTH_REALM || 'evca',
       authClientId: process.env.AUTH_CLIENT_ID || 'admin-evca-mobile',
-      encryptionKey: process.env.TOKEN_ENCRYPTION_KEY || 'your-32-char-encryption-key-here',
+      encryptionKey:
+        process.env.TOKEN_ENCRYPTION_KEY || 'your-32-char-encryption-key-here',
 
       // App Configuration
       environment: process.env.ENVIRONMENT || 'development',
@@ -116,5 +117,5 @@ module.exports = ({ config }) => {
         appVariant,
       },
     },
-  };
-};
+  }
+}

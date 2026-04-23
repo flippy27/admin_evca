@@ -43,13 +43,24 @@ export default function OperadorView() {
 
   // Stats from chargers
   const stats = useMemo(() => {
-    return {
-      charging: chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Charging").length || 0), 0),
-      available: chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Available").length || 0), 0),
-      finishing: chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Finishing").length || 0), 0),
-      faulted: chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Faulted").length || 0), 0),
-      total: chargers.reduce((sum, c: any) => sum + (c.connectors?.length || 0), 0),
-    };
+    const charging = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Charging").length || 0), 0);
+    const available = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Available").length || 0), 0);
+    const finishing = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Finishing").length || 0), 0);
+    const faulted = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Faulted").length || 0), 0);
+    const suspended = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Suspended").length || 0), 0);
+
+    // Total connectors (all except Offline/Unavailable)
+    const total = chargers.reduce((sum, c: any) => {
+      const activeCount = c.connectors?.filter((cn: any) =>
+        cn.status !== "Offline" && cn.status !== "Unavailable"
+      ).length || 0;
+      return sum + activeCount;
+    }, 0);
+
+    // Active connectors = non-offline count
+    const active = charging + available + finishing + faulted + suspended;
+
+    return { charging, available, finishing, faulted, suspended, total, active };
   }, [chargers]);
 
   const activeSessions = useMemo(() => {
