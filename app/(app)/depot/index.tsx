@@ -11,6 +11,7 @@ import MantenedorView from "@/components/depot/MantenedorView";
 import { usePermissions } from "@/lib/hooks/use-permissions";
 import { useSidebar } from "@/components/layout/AppContainer";
 import { useLocations } from "@/lib/hooks/use-locations";
+import { useChargersStore } from "@/lib/stores/chargers.store";
 
 type Role = "operator" | "supervisor" | "maintainer";
 
@@ -37,9 +38,11 @@ export default function DepotView() {
   // Locations
   const { locations, loading: locationsLoading, fetchLocations } = useLocations();
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
+  const chargers = useChargersStore((state) => state.chargers || []);
 
   useEffect(() => {
     fetchLocations();
+    useChargersStore.getState().fetchChargers();
   }, [fetchLocations]);
 
   // Set default location
@@ -52,7 +55,6 @@ export default function DepotView() {
   const selectedLocation = locations.find((l) => l.location_id === selectedLocationId);
 
   // Calculate active connectors for selected location
-  const chargers = useChargersStore((state) => state.chargers || []);
   const activeConnectorStats = useMemo(() => {
     if (!selectedLocation) return { active: 0, total: 0 };
 
