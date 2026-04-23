@@ -63,6 +63,15 @@ export const colors = {
     supervisor: '#22c55e', // Green
     mantenedor: '#06b6d4', // Cyan
   },
+  // Connector status colors
+  connectorStatus: {
+    charging: '#1477FF',
+    available: '#0ACDA9',
+    finishing: '#a855f7',
+    faulted: '#ef4444',
+    suspended: '#eab308',
+    online: '#22c55e',
+  },
 };
 
 export const spacing = {

@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { TouchableOpacity, View, SafeAreaView, ScrollView } from "react-native";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
-import { getThemeColors, spacing } from "@/theme";
+import { getThemeColors, spacing, colors as themeColors } from "@/theme";
 import { Text } from "@/components/ui/Text";
 import { Ionicons } from "@expo/vector-icons";
 import RoleBanner from "@/components/depot/RoleBanner";
@@ -32,6 +32,18 @@ export default function DepotView() {
 
   const [selectedRole, setSelectedRole] = useState<Role>(availableRoles[0] as Role || "operator");
   const [showRoleDropdown, setShowRoleDropdown] = useState(false);
+  const [showTerminalDropdown, setShowTerminalDropdown] = useState(false);
+  const [selectedTerminal, setSelectedTerminal] = useState<string>("Terminal Maipú");
+
+  // Mock terminals from chargers
+  const mockTerminals = useMemo(() => {
+    const terminals = new Set<string>();
+    chargers.forEach((c: any) => {
+      const terminal = c.site?.name || c.location || "Unknown";
+      terminals.add(terminal);
+    });
+    return Array.from(terminals).sort();
+  }, [chargers]);
 
   // Get chargers from store or use mock
   const storeChargers = useChargersStore((state) => state.chargers || []);
@@ -61,9 +73,9 @@ export default function DepotView() {
   }, [chargers]);
 
   const roleConfig: Record<Role, { label: string; color: string }> = {
-    operator: { label: "Operador de Patio", color: "#8b5cf6" },
-    supervisor: { label: "Supervisor", color: "#22c55e" },
-    maintainer: { label: "Mantenedor", color: "#06b6d4" },
+    operator: { label: "Operador de Patio", color: themeColors.roles.operador },
+    supervisor: { label: "Supervisor", color: themeColors.roles.supervisor },
+    maintainer: { label: "Mantenedor", color: themeColors.roles.mantenedor },
   };
 
   useEffect(() => {
@@ -176,12 +188,65 @@ export default function DepotView() {
           paddingVertical: spacing.md,
         }}
       >
-        <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground, marginBottom: spacing.xs }}>
-          Terminal Maipú
-        </Text>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: spacing.xs }}>
+          <View style={{ flex: 1 }}>
+            <TouchableOpacity onPress={() => setShowTerminalDropdown(!showTerminalDropdown)}>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
+                <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>
+                  {selectedTerminal}
+                </Text>
+                <Ionicons name={showTerminalDropdown ? "chevron-up" : "chevron-down"} size={14} color={colors.foreground} />
+              </View>
+            </TouchableOpacity>
+            {showTerminalDropdown && (
+              <View
+                style={{
+                  position: "absolute",
+                  top: 28,
+                  left: 0,
+                  backgroundColor: colors.card,
+                  borderWidth: 1,
+                  borderColor: colors.border,
+                  borderRadius: 8,
+                  elevation: 5,
+                  zIndex: 10,
+                  minWidth: 180,
+                  marginTop: spacing.sm,
+                }}
+              >
+                {mockTerminals.map((terminal) => (
+                  <TouchableOpacity
+                    key={terminal}
+                    onPress={() => {
+                      setSelectedTerminal(terminal);
+                      setShowTerminalDropdown(false);
+                    }}
+                    style={{
+                      paddingHorizontal: spacing.md,
+                      paddingVertical: spacing.sm,
+                      borderBottomWidth: terminal !== mockTerminals[mockTerminals.length - 1] ? 1 : 0,
+                      borderBottomColor: colors.border,
+                      backgroundColor: selectedTerminal === terminal ? colors.primary + "10" : "transparent",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        fontWeight: selectedTerminal === terminal ? "600" : "400",
+                        color: selectedTerminal === terminal ? colors.primary : colors.foreground,
+                      }}
+                    >
+                      {terminal}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+          </View>
+        </View>
         <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
-          <Ionicons name="flash" size={14} color="#22c55e" />
-          <Text style={{ fontSize: 12, color: "#22c55e", fontWeight: "500" }}>
+          <Ionicons name="flash" size={14} color={themeColors.connectorStatus.online} />
+          <Text style={{ fontSize: 12, color: themeColors.connectorStatus.online, fontWeight: "500" }}>
             {stats.charging}/{stats.total}
           </Text>
           <Text style={{ fontSize: 12, color: colors.mutedForeground }}>conectores activos</Text>

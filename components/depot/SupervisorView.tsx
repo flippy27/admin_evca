@@ -1,6 +1,6 @@
 import { ScrollView, View, TouchableOpacity } from "react-native";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
-import { getThemeColors, spacing } from "@/theme";
+import { getThemeColors, spacing, colors as themeColors } from "@/theme";
 import { useChargersStore } from "@/lib/stores/chargers.store";
 import { useChargingSessionsStore } from "@/lib/stores/charging-session.store";
 import { useEffect, useMemo } from "react";
@@ -9,6 +9,8 @@ import { Card } from "@/components/ui/Card";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import ConnectorDot from "./ConnectorDot";
+
+const COLORS = themeColors.connectorStatus;
 
 interface SupervisorViewProps {
   selectedLocation?: { location_id: string; location_name: string } | null;
@@ -134,19 +136,19 @@ export default function SupervisorView({ selectedLocation }: SupervisorViewProps
         </Text>
         <View style={{ height: 16, backgroundColor: colors.muted, borderRadius: 8, overflow: "hidden", flexDirection: "row", marginBottom: spacing.md }}>
           {stats.charging > 0 && (
-            <View style={{ flex: stats.charging, backgroundColor: "#1477FF" }} />
+            <View style={{ flex: stats.charging, backgroundColor: COLORS.charging }} />
           )}
           {stats.finishing > 0 && (
-            <View style={{ flex: stats.finishing, backgroundColor: "#a855f7" }} />
+            <View style={{ flex: stats.finishing, backgroundColor: COLORS.finishing }} />
           )}
           {stats.available > 0 && (
-            <View style={{ flex: stats.available, backgroundColor: "#0ACDA9" }} />
+            <View style={{ flex: stats.available, backgroundColor: COLORS.available }} />
           )}
           {stats.faulted > 0 && (
             <View style={{ flex: stats.faulted, backgroundColor: colors.destructive }} />
           )}
           {stats.suspended > 0 && (
-            <View style={{ flex: stats.suspended, backgroundColor: "#eab308" }} />
+            <View style={{ flex: stats.suspended, backgroundColor: COLORS.suspended }} />
           )}
         </View>
 
@@ -154,19 +156,19 @@ export default function SupervisorView({ selectedLocation }: SupervisorViewProps
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.md }}>
           {stats.charging > 0 && (
             <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
-              <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: "#1477FF" }} />
+              <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.charging }} />
               <Text style={{ fontSize: 12, color: colors.mutedForeground }}>Cargando ({stats.charging})</Text>
             </View>
           )}
           {stats.finishing > 0 && (
             <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
-              <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: "#a855f7" }} />
+              <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.finishing }} />
               <Text style={{ fontSize: 12, color: colors.mutedForeground }}>Finalizando ({stats.finishing})</Text>
             </View>
           )}
           {stats.available > 0 && (
             <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
-              <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: "#0ACDA9" }} />
+              <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.available }} />
               <Text style={{ fontSize: 12, color: colors.mutedForeground }}>Disponible ({stats.available})</Text>
             </View>
           )}

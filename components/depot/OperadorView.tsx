@@ -1,6 +1,6 @@
 import { ScrollView, View, TouchableOpacity } from "react-native";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
-import { getThemeColors, spacing } from "@/theme";
+import { getThemeColors, spacing, colors as themeColors } from "@/theme";
 import { useChargersStore } from "@/lib/stores/chargers.store";
 import { useChargingSessionsStore } from "@/lib/stores/charging-session.store";
 import { useEffect, useMemo } from "react";
@@ -11,13 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import ConnectorBadge from "./ConnectorBadge";
 import { mockChargers, mockSessions } from "@/lib/data/mockData";
 
-const COLORS = {
-  charging: "#1477FF",
-  available: "#0ACDA9",
-  finishing: "#a855f7",
-  faulted: "#ef4444",
-  online: "#22c55e",
-};
+const COLORS = themeColors.connectorStatus;
 
 export default function OperadorView() {
   const scheme = useResolvedColorScheme();

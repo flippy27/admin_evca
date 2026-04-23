@@ -1,7 +1,8 @@
 import { View } from "react-native";
-import { spacing } from "@/theme";
+import { spacing, colors as themeColors } from "@/theme";
 import { Text } from "@/components/ui/Text";
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 
 interface RoleBannerProps {
   role: "operator" | "supervisor" | "maintainer";
@@ -12,29 +13,35 @@ const roleConfig = {
     iconName: "flash",
     title: "Operador de Patio",
     description: "Gestión de conectores • Inicio/Parada de carga • Control en tiempo real",
-    bgColor: "#8b5cf6", // purple
+    bgColor: themeColors.roles.operador,
   },
   supervisor: {
     iconName: "eye",
     title: "Supervisor",
     description: "Estado general del patio • KPIs operacionales • Alertas y monitoreo",
-    bgColor: "#22c55e", // green
+    bgColor: themeColors.roles.supervisor,
   },
   maintainer: {
     iconName: "settings",
     title: "Mantenedor",
     description: "Variables energéticas • Diagnóstico técnico • Configuración OCPP",
-    bgColor: "#06b6d4", // cyan
+    bgColor: themeColors.roles.mantenedor,
   },
 };
 
 export default function RoleBanner({ role }: RoleBannerProps) {
   const config = roleConfig[role];
 
+  // Gradient: darker shade to lighter shade
+  const darkerColor = config.bgColor + "CC"; // 80% opacity for darker effect
+  const lighterColor = config.bgColor + "40"; // 25% opacity for lighter effect
+
   return (
-    <View
+    <LinearGradient
+      colors={[darkerColor, lighterColor]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
       style={{
-        backgroundColor: config.bgColor,
         paddingHorizontal: spacing.lg,
         paddingVertical: spacing.md,
         gap: spacing.sm,
@@ -61,6 +68,6 @@ export default function RoleBanner({ role }: RoleBannerProps) {
       >
         {config.description}
       </Text>
-    </View>
+    </LinearGradient>
   );
 }
