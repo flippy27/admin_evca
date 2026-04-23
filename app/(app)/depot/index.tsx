@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { TouchableOpacity, View, SafeAreaView, ScrollView } from "react-native";
+import { TouchableOpacity, View, SafeAreaView } from "react-native";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { getThemeColors, spacing, colors as themeColors } from "@/theme";
 import { Text } from "@/components/ui/Text";
@@ -11,7 +11,7 @@ import MantenedorView from "@/components/depot/MantenedorView";
 import { usePermissions } from "@/lib/hooks/use-permissions";
 import { useSidebar } from "@/components/layout/AppContainer";
 import { useChargersStore } from "@/lib/stores/chargers.store";
-import { mockChargers, mockSessions } from "@/lib/data/mockData";
+import { mockChargers } from "@/lib/data/mockData";
 
 type Role = "operator" | "supervisor" | "maintainer";
 
@@ -186,64 +186,60 @@ export default function DepotView() {
           borderBottomColor: colors.border,
           paddingHorizontal: spacing.lg,
           paddingVertical: spacing.md,
+          position: "relative",
         }}
       >
-        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: spacing.xs }}>
-          <View style={{ flex: 1 }}>
-            <TouchableOpacity onPress={() => setShowTerminalDropdown(!showTerminalDropdown)}>
-              <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
-                <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>
-                  {selectedTerminal}
-                </Text>
-                <Ionicons name={showTerminalDropdown ? "chevron-up" : "chevron-down"} size={14} color={colors.foreground} />
-              </View>
-            </TouchableOpacity>
-            {showTerminalDropdown && (
-              <View
+        <TouchableOpacity onPress={() => setShowTerminalDropdown(!showTerminalDropdown)}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs, marginBottom: spacing.xs }}>
+            <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>
+              {selectedTerminal}
+            </Text>
+            <Ionicons name={showTerminalDropdown ? "chevron-up" : "chevron-down"} size={14} color={colors.foreground} />
+          </View>
+        </TouchableOpacity>
+        {showTerminalDropdown && (
+          <View
+            style={{
+              position: "absolute",
+              top: 50,
+              left: spacing.lg,
+              right: spacing.lg,
+              backgroundColor: colors.card,
+              borderWidth: 1,
+              borderColor: colors.border,
+              borderRadius: 8,
+              elevation: 5,
+              zIndex: 10,
+            }}
+          >
+            {mockTerminals.map((terminal) => (
+              <TouchableOpacity
+                key={terminal}
+                onPress={() => {
+                  setSelectedTerminal(terminal);
+                  setShowTerminalDropdown(false);
+                }}
                 style={{
-                  position: "absolute",
-                  top: 28,
-                  left: 0,
-                  backgroundColor: colors.card,
-                  borderWidth: 1,
-                  borderColor: colors.border,
-                  borderRadius: 8,
-                  elevation: 5,
-                  zIndex: 10,
-                  minWidth: 180,
-                  marginTop: spacing.sm,
+                  paddingHorizontal: spacing.md,
+                  paddingVertical: spacing.sm,
+                  borderBottomWidth: terminal !== mockTerminals[mockTerminals.length - 1] ? 1 : 0,
+                  borderBottomColor: colors.border,
+                  backgroundColor: selectedTerminal === terminal ? colors.primary + "10" : "transparent",
                 }}
               >
-                {mockTerminals.map((terminal) => (
-                  <TouchableOpacity
-                    key={terminal}
-                    onPress={() => {
-                      setSelectedTerminal(terminal);
-                      setShowTerminalDropdown(false);
-                    }}
-                    style={{
-                      paddingHorizontal: spacing.md,
-                      paddingVertical: spacing.sm,
-                      borderBottomWidth: terminal !== mockTerminals[mockTerminals.length - 1] ? 1 : 0,
-                      borderBottomColor: colors.border,
-                      backgroundColor: selectedTerminal === terminal ? colors.primary + "10" : "transparent",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        fontWeight: selectedTerminal === terminal ? "600" : "400",
-                        color: selectedTerminal === terminal ? colors.primary : colors.foreground,
-                      }}
-                    >
-                      {terminal}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            )}
+                <Text
+                  style={{
+                    fontSize: 12,
+                    fontWeight: selectedTerminal === terminal ? "600" : "400",
+                    color: selectedTerminal === terminal ? colors.primary : colors.foreground,
+                  }}
+                >
+                  {terminal}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
-        </View>
+        )}
         <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
           <Ionicons name="flash" size={14} color={themeColors.connectorStatus.online} />
           <Text style={{ fontSize: 12, color: themeColors.connectorStatus.online, fontWeight: "500" }}>
