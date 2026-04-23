@@ -38,10 +38,6 @@ export default function MantenedorView({ selectedLocation }: MantenedorViewProps
 
   const chargers = useChargersStore((state) => state.chargers || []);
 
-  useEffect(() => {
-    useChargersStore.getState().fetchChargers();
-  }, []);
-
   const stats = useMemo(() => {
     const total = chargers.reduce((sum, c: any) => sum + (c.connectors?.length || 0), 0);
     const faulted = chargers.reduce(

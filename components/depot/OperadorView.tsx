@@ -20,15 +20,26 @@ export default function OperadorView() {
 
   const storeChargers = useChargersStore((state) => state.chargers || []);
   const storeSessions = useChargingSessionsStore((state: any) => state.sessions || []);
+  const selectedLocationId = useChargersStore((state) => state.selectedLocationId);
 
   // Use store data or mock data as fallback
   const chargers = storeChargers.length > 0 ? storeChargers : mockChargers;
   const sessions = storeSessions.length > 0 ? storeSessions : mockSessions;
 
   useEffect(() => {
-    useChargersStore.getState().fetchChargers();
-    useChargingSessionsStore.getState().fetchSessions({});
-  }, []);
+    // Fetch sessions for current location if available
+    if (selectedLocationId) {
+      useChargingSessionsStore.getState().fetchSessions({
+        payload: {
+          location_ids: [selectedLocationId],
+        },
+        pagination: {
+          page: 1,
+          per_page: 20,
+        },
+      });
+    }
+  }, [selectedLocationId]);
 
   // Stats from chargers
   const stats = useMemo(() => {

@@ -38,16 +38,15 @@ export const useChargingSessionsStore = create<ChargingSessionsState>((set, get)
   fetchSessions: async (request: SessionsRequest) => {
     set({ sessionsLoading: true, sessionsError: null });
     try {
-      // Get companyExternalId from auth store (for API calls)
-      const { user } = useAuthStore.getState();
-      const companyId = user?.companyExternalId;
-
-      // Build request with company_id
+      // Build request with defaults
       const fullRequest: SessionsRequest = {
-        ...request,
+        pagination: {
+          page: 1,
+          per_page: 20,
+          ...request.pagination,
+        },
         payload: {
           ...request.payload,
-          company_id: companyId,
         },
       };
 

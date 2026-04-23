@@ -23,11 +23,22 @@ export default function SupervisorView({ selectedLocation }: SupervisorViewProps
 
   const chargers = useChargersStore((state) => state.chargers || []);
   const sessions = useChargingSessionsStore((state: any) => state.sessions || []);
+  const selectedLocationId = useChargersStore((state) => state.selectedLocationId);
 
   useEffect(() => {
-    useChargersStore.getState().fetchChargers();
-    useChargingSessionsStore.getState().fetchSessions({});
-  }, []);
+    // Fetch sessions for current location if available
+    if (selectedLocationId) {
+      useChargingSessionsStore.getState().fetchSessions({
+        payload: {
+          location_ids: [selectedLocationId],
+        },
+        pagination: {
+          page: 1,
+          per_page: 20,
+        },
+      });
+    }
+  }, [selectedLocationId]);
 
   const stats = useMemo(() => {
     const charging = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Charging").length || 0), 0);
