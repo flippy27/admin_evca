@@ -126,10 +126,10 @@ export default function MantenedorView({ selectedLocation }: MantenedorViewProps
           <View style={{ flexDirection: "row", gap: spacing.sm }}>
             <Card style={{ flex: 1, padding: spacing.md }}>
               <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs, marginBottom: spacing.sm }}>
-                <Ionicons name="speedometer" size={14} color="#14b8a6" />
+                <Ionicons name="speedometer" size={14} color="colors.accent" />
                 <Text style={{ fontSize: 11, color: colors.mutedForeground }}>Voltaje Prom.</Text>
               </View>
-              <Text style={{ fontSize: 18, fontWeight: "bold", color: "#14b8a6" }}>
+              <Text style={{ fontSize: 18, fontWeight: "bold", color: "colors.accent" }}>
                 {energyStats.avgVoltage} V
               </Text>
             </Card>
@@ -184,7 +184,7 @@ export default function MantenedorView({ selectedLocation }: MantenedorViewProps
         </Text>
         <View style={{ flexDirection: "row", gap: spacing.sm, marginBottom: spacing.lg }}>
           <Card style={{ flex: 1, padding: spacing.md, alignItems: "center" }}>
-            <Text style={{ fontSize: 20, fontWeight: "bold", color: "#22c55e", marginBottom: spacing.xs }}>
+            <Text style={{ fontSize: 20, fontWeight: "bold", color: "themeColors.connectorStatus.online", marginBottom: spacing.xs }}>
               {stats.healthy}
             </Text>
             <Text style={{ fontSize: 11, color: colors.mutedForeground }}>Operativos</Text>
@@ -235,7 +235,7 @@ export default function MantenedorView({ selectedLocation }: MantenedorViewProps
                         <View style={{ flexDirection: "row", gap: spacing.sm }}>
                           <View
                             style={{
-                              backgroundColor: charger.online ? "#22c55e" : colors.mutedForeground,
+                              backgroundColor: charger.online ? "themeColors.connectorStatus.online" : colors.mutedForeground,
                               paddingHorizontal: spacing.xs,
                               paddingVertical: spacing.xs / 2,
                               borderRadius: 4,
