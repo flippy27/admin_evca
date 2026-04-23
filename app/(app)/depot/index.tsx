@@ -16,6 +16,7 @@ import { useEffect, useMemo, useState } from "react";
 import { SafeAreaView, TouchableOpacity, View, TextInput, ScrollView, ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuthStore } from "@/lib/stores/auth.store";
+import { SkeletonCard } from "@/components/ui/SkeletonLoader";
 
 type Role = "operator" | "supervisor" | "maintainer";
 
@@ -413,10 +414,23 @@ export default function DepotView() {
       {/* Role Banner */}
       <RoleBanner role={selectedRole} />
 
-      {/* Role-specific Content */}
-      {selectedRole === "operator" && <OperadorView />}
-      {selectedRole === "supervisor" && <SupervisorView />}
-      {selectedRole === "maintainer" && <MantenedorView />}
+      {/* Loading Skeletons */}
+      {chargersLoading ? (
+        <ScrollView style={{ flex: 1, backgroundColor: colors.background }}>
+          <View style={{ padding: spacing.lg, gap: spacing.md }}>
+            <SkeletonCard lines={2} />
+            <SkeletonCard lines={3} />
+            <SkeletonCard lines={2} />
+          </View>
+        </ScrollView>
+      ) : (
+        <>
+          {/* Role-specific Content */}
+          {selectedRole === "operator" && <OperadorView />}
+          {selectedRole === "supervisor" && <SupervisorView />}
+          {selectedRole === "maintainer" && <MantenedorView />}
+        </>
+      )}
     </SafeAreaView>
   );
 }
