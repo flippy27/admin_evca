@@ -1,8 +1,25 @@
 const dotenv = require('dotenv');
 const path = require('path');
 
-// Load .env file
-dotenv.config({ path: path.join(__dirname, '.env') });
+// Determine environment from NODE_ENV or APP_ENV, default to 'dev'
+const env = process.env.NODE_ENV || process.env.APP_ENV || 'dev';
+
+// Map environment names to .env files
+const envFileMap = {
+  dev: '.env.dev',
+  development: '.env.dev',
+  qa: '.env.qa',
+  stg: '.env.stg',
+  staging: '.env.stg',
+  prod: '.env.prod',
+  production: '.env.prod',
+};
+
+const envFile = envFileMap[env] || '.env.dev';
+
+// Load environment-specific .env file
+console.log(`[app.config.js] Loading environment: ${env} (${envFile})`);
+dotenv.config({ path: path.join(__dirname, envFile) });
 
 module.exports = ({ config }) => {
   const appVariant = process.env.APP_VARIANT || "production";

@@ -1,8 +1,3 @@
-/**
- * Centralized logger service
- * Handles console logging with context
- */
-
 type LogLevel = 'info' | 'warn' | 'error' | 'debug';
 
 interface LogEntry {
@@ -14,7 +9,20 @@ interface LogEntry {
 
 class Logger {
   private logs: LogEntry[] = [];
-  private maxLogs = 100; // Keep last 100 logs in memory
+  private maxLogs = 100;
+
+  private getConsoleMethod(level: LogLevel): (...args: unknown[]) => void {
+    switch (level) {
+      case 'warn':
+        return console.warn.bind(console);
+      case 'error':
+        return console.log.bind(console); // antes era console.error
+      case 'info':
+      case 'debug':
+      default:
+        return console.log.bind(console);
+    }
+  }
 
   private log(level: LogLevel, message: string, data?: unknown) {
     const entry: LogEntry = {
@@ -24,18 +32,18 @@ class Logger {
       timestamp: new Date().toISOString(),
     };
 
-    // Keep in memory
     this.logs.push(entry);
     if (this.logs.length > this.maxLogs) {
       this.logs.shift();
     }
 
-    // Log to console
     const prefix = `[${entry.timestamp}] [${level.toUpperCase()}]`;
+    const logFn = this.getConsoleMethod(level);
+
     if (data !== undefined) {
-      console[level === 'debug' ? 'log' : level](prefix, message, data);
+      logFn(prefix, message, data);
     } else {
-      console[level === 'debug' ? 'log' : level](prefix, message);
+      logFn(prefix, message);
     }
   }
 
