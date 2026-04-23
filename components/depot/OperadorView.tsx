@@ -77,16 +77,11 @@ export default function OperadorView({ selectedLocation }: OperadorViewProps) {
   const colors = getThemeColors(scheme);
   const navigation = useNavigation();
 
-  const allChargers = useChargersStore((state) => state.chargers || []);
+  const chargers = useChargersStore((state) => state.chargers || []);
   const sessions = useChargingSessionsStore((state: any) => state.sessions || []);
 
-  // Filter chargers by selected location
-  const chargers = selectedLocation
-    ? allChargers.filter((c: any) => {
-        const locName = c.site?.name || c.location || "Unknown";
-        return locName === selectedLocation.location_name;
-      })
-    : allChargers;
+  // TODO: Filter chargers by selected location after verifying data loads
+  // For now, show all chargers to debug data loading
 
   useEffect(() => {
     useChargersStore.getState().fetchChargers();

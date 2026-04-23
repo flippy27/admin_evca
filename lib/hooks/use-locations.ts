@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/lib/stores/auth.store";
-import axios from "axios";
+import { bffClient } from "@/lib/api/client";
 import { useState, useCallback } from "react";
 
 export interface LocationAddress {
@@ -21,8 +21,6 @@ export interface Location {
   location_accessibility: string;
 }
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || "https://emobility-bff.dev.dhemax.link/bff";
-
 export function useLocations() {
   const [locations, setLocations] = useState<Location[]>([]);
   const [loading, setLoading] = useState(false);
@@ -30,14 +28,18 @@ export function useLocations() {
   const { user } = useAuthStore();
 
   const fetchLocations = useCallback(async () => {
-    if (!user?.userId || !user?.companyId) return;
+    if (!user?.userId || !user?.companyId) {
+      console.warn("useLocations: missing userId or companyId", { userId: user?.userId, companyId: user?.companyId });
+      return;
+    }
 
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(
-        `${API_BASE_URL}/users/${user.userId}/locations?companyId=${user.companyId}&enabled=true`
+      const response = await bffClient.get(
+        `/users/${user.userId}/locations?companyId=${user.companyId}&enabled=true`
       );
+      console.log("Locations fetched:", response.data.payload);
       setLocations(response.data.payload || []);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Error fetching locations";
