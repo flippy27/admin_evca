@@ -11,6 +11,7 @@ import MantenedorView from "@/components/depot/MantenedorView";
 import { usePermissions } from "@/lib/hooks/use-permissions";
 import { useSidebar } from "@/components/layout/AppContainer";
 import { useChargersStore } from "@/lib/stores/chargers.store";
+import { useLocations } from "@/lib/hooks/use-locations";
 import { mockChargers } from "@/lib/data/mockData";
 
 type Role = "operator" | "supervisor" | "maintainer";
@@ -33,17 +34,22 @@ export default function DepotView() {
   const [selectedRole, setSelectedRole] = useState<Role>(availableRoles[0] as Role || "operator");
   const [showRoleDropdown, setShowRoleDropdown] = useState(false);
   const [showTerminalDropdown, setShowTerminalDropdown] = useState(false);
-  const [selectedTerminal, setSelectedTerminal] = useState<string>("Terminal Maipú");
 
-  // Mock terminals from chargers
-  const mockTerminals = useMemo(() => {
-    const terminals = new Set<string>();
-    chargers.forEach((c: any) => {
-      const terminal = c.site?.name || c.location || "Unknown";
-      terminals.add(terminal);
-    });
-    return Array.from(terminals).sort();
-  }, [chargers]);
+  // Fetch locations from backend
+  const { locations, fetchLocations } = useLocations();
+  const [selectedTerminal, setSelectedTerminal] = useState<string>("");
+
+  useEffect(() => {
+    fetchLocations();
+  }, [fetchLocations]);
+
+  // Set default terminal to first available
+  useEffect(() => {
+    if (locations.length > 0 && !selectedTerminal) {
+      setSelectedTerminal(locations[0].location_name);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locations]);
 
   // Get chargers from store or use mock
   const storeChargers = useChargersStore((state) => state.chargers || []);
@@ -212,29 +218,29 @@ export default function DepotView() {
               zIndex: 10,
             }}
           >
-            {mockTerminals.map((terminal) => (
+            {locations.map((location) => (
               <TouchableOpacity
-                key={terminal}
+                key={location.location_id}
                 onPress={() => {
-                  setSelectedTerminal(terminal);
+                  setSelectedTerminal(location.location_name);
                   setShowTerminalDropdown(false);
                 }}
                 style={{
                   paddingHorizontal: spacing.md,
                   paddingVertical: spacing.sm,
-                  borderBottomWidth: terminal !== mockTerminals[mockTerminals.length - 1] ? 1 : 0,
+                  borderBottomWidth: location !== locations[locations.length - 1] ? 1 : 0,
                   borderBottomColor: colors.border,
-                  backgroundColor: selectedTerminal === terminal ? colors.primary + "10" : "transparent",
+                  backgroundColor: selectedTerminal === location.location_name ? colors.primary + "10" : "transparent",
                 }}
               >
                 <Text
                   style={{
                     fontSize: 12,
-                    fontWeight: selectedTerminal === terminal ? "600" : "400",
-                    color: selectedTerminal === terminal ? colors.primary : colors.foreground,
+                    fontWeight: selectedTerminal === location.location_name ? "600" : "400",
+                    color: selectedTerminal === location.location_name ? colors.primary : colors.foreground,
                   }}
                 >
-                  {terminal}
+                  {location.location_name}
                 </Text>
               </TouchableOpacity>
             ))}
