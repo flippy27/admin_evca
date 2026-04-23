@@ -1,9 +1,8 @@
 /**
  * Sidebar Navigation — mobile-optimized drawer menu
- * Shows app sections with permission-based visibility
+ * Main navigation for Depot View and Sessions
  */
 
-import { Ionicons } from "@expo/vector-icons";
 import { useRouter, useSegments } from "expo-router";
 import React from "react";
 import {
@@ -14,11 +13,10 @@ import {
   Dimensions,
 } from "react-native";
 import { Text } from "@/components/ui/Text";
-import { usePermissions } from "@/lib/hooks/use-permissions";
 import { useAuthStore } from "@/lib/stores/auth.store";
-import { AuthPermissionsEnum } from "@/lib/config/permissions";
 import { getThemeColors, spacing } from "@/theme";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
+import { Ionicons } from "@expo/vector-icons";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -29,7 +27,6 @@ interface NavItem {
   label: string;
   icon: string;
   route: string;
-  permission?: AuthPermissionsEnum;
 }
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
@@ -37,59 +34,18 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const segments = useSegments();
   const resolvedScheme = useResolvedColorScheme();
   const colors = getThemeColors(resolvedScheme);
-  const { hasPermission } = usePermissions();
   const logout = useAuthStore((state) => state.logout);
 
   const navItems: NavItem[] = [
     {
-      label: "Dashboard",
+      label: "Depot View",
       icon: "home",
-      route: "dashboard",
-      permission: AuthPermissionsEnum.DASHBOARD_VIEW,
+      route: "depot",
     },
     {
-      label: "Chargers",
-      icon: "flash-sharp",
-      route: "chargers",
-      permission: AuthPermissionsEnum.CHARGERS_VIEW,
-    },
-    {
-      label: "Sites",
-      icon: "location",
-      route: "sites",
-      permission: AuthPermissionsEnum.SITES_VIEW,
-    },
-    {
-      label: "Reports",
-      icon: "bar-chart",
-      route: "reporting",
-      permission: AuthPermissionsEnum.REPORTS_VIEW,
-    },
-    {
-      label: "Credentials",
-      icon: "key",
-      route: "credentials",
-      permission: AuthPermissionsEnum.CHARGERS_VIEW,
-    },
-    {
-      label: "Energy",
-      icon: "leaf",
-      route: "energy-resources",
-    },
-    {
-      label: "Supervisor",
-      icon: "eye",
-      route: "supervisor",
-    },
-    {
-      label: "Showcase",
-      icon: "sparkles",
-      route: "showcase",
-    },
-    {
-      label: "Profile",
-      icon: "person",
-      route: "profile",
+      label: "Sesiones de Carga",
+      icon: "time",
+      route: "sessions",
     },
   ];
 
@@ -97,8 +53,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const isActive = (route: string) => currentRoute === route;
 
   const handleNavPress = (route: string) => {
-    const path = `/(sidebar)/${route}`;
-    router.push(path as any);
+    router.push(`/(app)/${route}` as any);
     onClose();
   };
 
@@ -132,18 +87,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             borderBottomColor: colors.border,
           }}
         >
-          <Text variant="h3" weight="bold">
+          <Text style={{ fontSize: 16, fontWeight: "bold", color: colors.foreground }}>
             Menu
           </Text>
         </View>
 
         {/* Navigation Items */}
-        <ScrollView style={{ flex: 1, paddingVertical: spacing.md }}>
+        <ScrollView style={{ flex: 1, paddingVertical: spacing.sm }}>
           {navItems.map((item) => {
-            const hasAccess =
-              !item.permission || hasPermission(item.permission);
-            if (!hasAccess) return null;
-
             const active = isActive(item.route);
 
             return (
@@ -164,12 +115,12 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <Ionicons
                   name={item.icon as any}
                   size={20}
-                  color={active ? colors.primary : colors.mutedForeground}
+                  color={active ? colors.primary : colors.foreground}
                 />
                 <Text
-                  variant="body"
-                  weight={active ? "semibold" : "normal"}
                   style={{
+                    fontSize: 14,
+                    fontWeight: active ? "600" : "400",
                     color: active ? colors.primary : colors.foreground,
                   }}
                 >
@@ -180,7 +131,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           })}
         </ScrollView>
 
-        {/* Logout Button */}
+        {/* Footer - Logout */}
         <View
           style={{
             borderTopWidth: 1,
@@ -200,8 +151,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             }}
           >
             <Ionicons name="log-out" size={20} color={colors.destructive} />
-            <Text variant="body" style={{ color: colors.destructive }}>
-              Logout
+            <Text style={{ fontSize: 14, color: colors.destructive }}>
+              Cerrar Sesión
             </Text>
           </TouchableOpacity>
         </View>

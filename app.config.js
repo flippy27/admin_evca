@@ -1,81 +1,77 @@
-/**
- * Expo configuration file
- * Defines app metadata, build settings, and platform-specific options
- */
+const dotenv = require('dotenv');
+const path = require('path');
 
-export default {
-  expo: {
-    name: 'EVCA Admin',
-    slug: 'admin-evca',
-    version: '1.0.0',
-    orientation: 'portrait',
-    icon: './assets/images/icon.png',
-    scheme: 'adminevca',
-    userInterfaceStyle: 'automatic',
+// Load .env file
+dotenv.config({ path: path.join(__dirname, '.env') });
 
-    // Splash screen
+module.exports = ({ config }) => {
+  const appVariant = process.env.APP_VARIANT || "production";
+  const isDev = appVariant === "development";
+  const isStaging = appVariant === "staging";
+  const isPreview = isDev || isStaging;
+
+  const appName = isPreview ? "RNExpoThree (Dev)" : "RNExpoThree";
+  const appId = isPreview
+    ? "com.example.rnexpothree.dev"
+    : "com.example.rnexpothree";
+
+  const resolvedVersion = config.version || "1.0.0";
+  const resolvedBuildNumber = config?.ios?.buildNumber || "1";
+  const resolvedVersionCode = Number.parseInt(
+    String(config?.android?.versionCode || 1),
+    10
+  );
+
+  return {
+    ...config,
+    name: appName,
+    slug: "rn-expo-three",
+    version: resolvedVersion,
+    orientation: "portrait",
+    icon: "./assets/images/icon.png",
+    scheme: "rn-expo-three",
+    userInterfaceStyle: "automatic",
     splash: {
-      image: './assets/images/splash.png',
-      resizeMode: 'contain',
-      backgroundColor: '#ffffff',
+      resizeMode: "contain",
+      backgroundColor: "#FFFFFF",
     },
-
-    // App entry point
-    assetBundlePatterns: ['**/*'],
-
-    // iOS configuration
+    assetBundlePatterns: ["**/*"],
     ios: {
-      supportsTabletMode: true,
-      requireFullScreen: false,
-      bundleIdentifier: 'com.evca.admin',
-      usesAppleSignIn: false,
+      ...(config.ios || {}),
+      supportsTablet: true,
+      buildNumber: resolvedBuildNumber,
+      bundleIdentifier: appId,
     },
-
-    // Android configuration
     android: {
-      adaptiveIcon: {
-        foregroundImage: './assets/images/adaptive-icon.png',
-        backgroundColor: '#ffffff',
-      },
-      package: 'com.evca.admin',
-      permissions: [
-        'android.permission.INTERNET',
-        'android.permission.ACCESS_NETWORK_STATE',
-        'android.permission.ACCESS_FINE_LOCATION',
-        'android.permission.ACCESS_COARSE_LOCATION',
-        'android.permission.CAMERA',
-        'android.permission.READ_CONTACTS',
-      ],
+      ...(config.android || {}),
+      versionCode: Number.isFinite(resolvedVersionCode) ? resolvedVersionCode : 1,
+      icon: "./assets/images/adaptive-icon.png",
+      package: appId,
+      permissions: ["android.permission.ACCESS_NETWORK_STATE"],
     },
-
-    // Web configuration
     web: {
-      bundler: 'metro',
-      output: 'static',
-      favicon: './assets/images/favicon.png',
+      bundler: "metro",
+      output: "static",
+      favicon: "./assets/images/favicon.png",
+      ...(config.web || {}),
     },
-
-    // Plugin configuration
-    plugins: [
-      [
-        'expo-build-properties',
-        {
-          ios: {
-            useFrameworks: 'static',
-          },
-        },
-      ],
-    ],
-
-    // EAS configuration
+    plugins: ["expo-router"],
+    experiments: {
+      typedRoutes: true,
+    },
     extra: {
-      eas: {
-        projectId: process.env.EAS_PROJECT_ID,
+      ...(config.extra || {}),
+      apiUrl: process.env.API_BASE_URL,
+      userMgmtUrl: process.env.USER_MGMT_URL,
+      encryptionKey: process.env.TOKEN_ENCRYPTION_KEY,
+      hmacSecret: process.env.HMAC_SECRET,
+      environment: process.env.ENVIRONMENT,
+      debug: process.env.DEBUG === 'true',
+      httpLogLevel: process.env.HTTP_LOG_LEVEL,
+      maestro: {
+        appId,
+        appVariant,
       },
-      // App-specific config that can be accessed via Constants
-      apiUrl: process.env.API_BASE_URL || 'http://localhost:3000',
-      apiTimeout: parseInt(process.env.API_TIMEOUT || '30000'),
-      environment: process.env.ENVIRONMENT || 'development',
     },
-  },
+  };
 };

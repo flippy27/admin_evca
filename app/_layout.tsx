@@ -13,10 +13,11 @@ import "react-native-reanimated";
 import { LoadingOverlayComponent } from "@/components/ui/LoadingOverlay";
 import { OfflineIndicator } from "@/components/ui/OfflineIndicator";
 import { ToastContainer } from "@/components/ui/Toast";
+import { onRefreshFailed } from "@/lib/api/client";
 import i18n from "@/lib/i18n";
 import { useAppStore } from "@/lib/stores/app.store";
 import { useAuthStore } from "@/lib/stores/auth.store";
-import { onRefreshFailed } from "@/lib/api/client";
+import { usePermissions } from "@/lib/hooks/use-permissions";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -35,13 +36,17 @@ export default function RootLayout() {
 
   // Resolve theme: if 'system', use device preference, otherwise use user's selection
   const colorScheme = useMemo(() => {
-    if (appColorScheme === 'system') {
+    if (appColorScheme === "system") {
       return rnColorScheme;
     }
     return appColorScheme;
   }, [appColorScheme, rnColorScheme]);
 
-  console.log('[RootLayout] colorScheme:', { appColorScheme, rnColorScheme, resolved: colorScheme });
+  console.log("[RootLayout] colorScheme:", {
+    appColorScheme,
+    rnColorScheme,
+    resolved: colorScheme,
+  });
 
   // Auth state
   const sessionState = useAuthStore((state) => state.sessionState);
@@ -52,7 +57,7 @@ export default function RootLayout() {
   useEffect(() => {
     const logout = useAuthStore.getState().logout;
     onRefreshFailed(async () => {
-      console.log('[App] Token refresh failed - logging out');
+      console.log("[App] Token refresh failed - logging out");
       await logout();
       router.replace("/(auth)/login");
     });
@@ -69,6 +74,8 @@ export default function RootLayout() {
   }, []);
 
   // Redirect logic based on auth state
+  const { hasRole, hydrated: permissionsReady } = usePermissions();
+
   useEffect(() => {
     if (sessionState === "restoring" || sessionState === "idle") {
       return;
@@ -79,9 +86,9 @@ export default function RootLayout() {
     const inSidebarGroup = segments[0] === "(sidebar)";
 
     if (sessionState === "authenticated") {
-      // Authenticated → go to dashboard (main app entry point)
+      // Authenticated → go to depot view (role selection happens inside depot)
       if (!inAppGroup && !inSidebarGroup) {
-        router.replace("/(app)/dashboard");
+        router.replace("/(app)/depot");
       }
     } else {
       // Not authenticated → go to login
@@ -89,7 +96,7 @@ export default function RootLayout() {
         router.replace("/(auth)/login");
       }
     }
-  }, [sessionState, segments]);
+  }, [sessionState, segments, hasRole, permissionsReady]);
 
   return (
     <I18nextProvider i18n={i18n}>

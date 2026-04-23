@@ -1,0 +1,13 @@
+appId: ${APP_ID}
+name: Models toggle
+tags:
+  - regression
+  - models
+---
+- launchApp
+- tapOn: "Models"
+- assertVisible:
+    id: "models-screen"
+- assertVisible: "Cambiar a Isométrica"
+- tapOn: "Cambiar a Isométrica"
+- assertVisible: "Cambiar a Perspectiva"

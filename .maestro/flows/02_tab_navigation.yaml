@@ -1,0 +1,16 @@
+appId: ${APP_ID}
+name: Tab navigation
+tags:
+  - regression
+  - navigation
+---
+- launchApp
+- tapOn: "Explore"
+- assertVisible:
+    id: "explore-screen"
+- assertVisible:
+    id: "explore-title"
+- tapOn: "Home"
+- assertVisible:
+    id: "home-screen"
+- assertVisible: "Welcome!"

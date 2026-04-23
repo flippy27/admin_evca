@@ -1,0 +1,15 @@
+appId: ${APP_ID}
+name: Home smoke
+tags:
+  - smoke
+  - navigation
+---
+- launchApp:
+    clearState: true
+- assertVisible:
+    id: "home-screen"
+- assertVisible:
+    id: "home-title"
+- assertVisible: "Welcome!"
+- assertVisible:
+    id: "home-step-2-title"
