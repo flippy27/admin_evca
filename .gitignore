@@ -30,7 +30,9 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files
+# local env files (only ignore root .env and .env.local, keep .env.{env} in git)
+.env
+.env.local
 .env*.local
 
 # typescript
@@ -76,7 +78,9 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files
+# local env files (only ignore root .env and .env.local, keep .env.{env} in git)
+.env
+.env.local
 .env*.local
 
 # typescript
