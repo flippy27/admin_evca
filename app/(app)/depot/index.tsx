@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { TouchableOpacity, View, SafeAreaView } from "react-native";
+import { useState, useMemo, useEffect } from "react";
+import { TouchableOpacity, View, SafeAreaView, ScrollView } from "react-native";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { getThemeColors, spacing } from "@/theme";
 import { Text } from "@/components/ui/Text";
@@ -10,6 +10,7 @@ import SupervisorView from "@/components/depot/SupervisorView";
 import MantenedorView from "@/components/depot/MantenedorView";
 import { usePermissions } from "@/lib/hooks/use-permissions";
 import { useSidebar } from "@/components/layout/AppContainer";
+import { useLocations } from "@/lib/hooks/use-locations";
 
 type Role = "operator" | "supervisor" | "maintainer";
 
@@ -31,6 +32,24 @@ export default function DepotView() {
   // Init selectedRole to highest available role
   const [selectedRole, setSelectedRole] = useState<Role>(availableRoles[0] as Role || "operator");
   const [showRoleDropdown, setShowRoleDropdown] = useState(false);
+  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
+
+  // Locations
+  const { locations, loading: locationsLoading, fetchLocations } = useLocations();
+  const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchLocations();
+  }, [fetchLocations]);
+
+  // Set default location
+  useEffect(() => {
+    if (locations.length > 0 && !selectedLocationId) {
+      setSelectedLocationId(locations[0].location_id);
+    }
+  }, [locations, selectedLocationId]);
+
+  const selectedLocation = locations.find((l) => l.location_id === selectedLocationId);
 
   const roleConfig: Record<Role, { label: string; color: string }> = {
     operator: { label: "Operador de Patio", color: "#8b5cf6" },
@@ -149,6 +168,7 @@ export default function DepotView() {
         }}
       >
         <TouchableOpacity
+          onPress={() => setShowLocationDropdown(!showLocationDropdown)}
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -158,10 +178,65 @@ export default function DepotView() {
           }}
         >
           <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>
-            Terminal Maipú
+            {selectedLocation?.location_name || "Cargando..."}
           </Text>
-          <Ionicons name="chevron-down" size={18} color={colors.mutedForeground} />
+          <Ionicons
+            name={showLocationDropdown ? "chevron-up" : "chevron-down"}
+            size={18}
+            color={colors.mutedForeground}
+          />
         </TouchableOpacity>
+
+        {/* Location Dropdown Menu */}
+        {showLocationDropdown && (
+          <View
+            style={{
+              position: "absolute",
+              top: 60,
+              left: spacing.lg,
+              right: spacing.lg,
+              backgroundColor: colors.card,
+              borderWidth: 1,
+              borderColor: colors.border,
+              borderRadius: 8,
+              shadowColor: "#000",
+              shadowOpacity: 0.1,
+              shadowRadius: 4,
+              elevation: 5,
+              zIndex: 10,
+              maxHeight: 200,
+            }}
+          >
+            <ScrollView scrollEnabled={locations.length > 5}>
+              {locations.map((location) => (
+                <TouchableOpacity
+                  key={location.location_id}
+                  onPress={() => {
+                    setSelectedLocationId(location.location_id);
+                    setShowLocationDropdown(false);
+                  }}
+                  style={{
+                    paddingHorizontal: spacing.md,
+                    paddingVertical: spacing.sm,
+                    borderBottomWidth: location.location_id !== locations[locations.length - 1].location_id ? 1 : 0,
+                    borderBottomColor: colors.border,
+                    backgroundColor: selectedLocationId === location.location_id ? colors.primary + "10" : "transparent",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontWeight: selectedLocationId === location.location_id ? "600" : "400",
+                      color: selectedLocationId === location.location_id ? colors.primary : colors.foreground,
+                    }}
+                  >
+                    {location.location_name}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        )}
       </View>
 
       {/* Role Banner */}
