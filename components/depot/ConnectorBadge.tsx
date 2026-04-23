@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import { Text } from "@/components/ui/Text";
 import { Ionicons } from "@expo/vector-icons";
-import { spacing } from "@/theme";
+import { spacing, colors as themeColors } from "@/theme";
 
 interface ConnectorBadgeProps {
   connectorId: number;
@@ -12,21 +12,21 @@ interface ConnectorBadgeProps {
   showVehicle?: boolean;
 }
 
-const statusColors = {
-  Available: "#0ACDA9", // teal
-  Charging: "#1477FF", // blue
-  Finishing: "#a855f7", // purple
-  Faulted: "#ef4444", // red
-  Suspended: "#eab308", // yellow
-  Unavailable: "#d1d5db", // gray
+const statusColors: Record<string, string> = {
+  Available: themeColors.connectorStatus.available,
+  Charging: themeColors.connectorStatus.charging,
+  Finishing: themeColors.connectorStatus.finishing,
+  Faulted: themeColors.connectorStatus.faulted,
+  Suspended: themeColors.connectorStatus.suspended,
+  Unavailable: "#d1d5db",
 };
 
-const statusBorders = {
-  Available: "#0ACDA9",
-  Charging: "#1477FF",
-  Finishing: "#a855f7",
-  Faulted: "#ef4444",
-  Suspended: "#eab308",
+const statusBorders: Record<string, string> = {
+  Available: themeColors.connectorStatus.available,
+  Charging: themeColors.connectorStatus.charging,
+  Finishing: themeColors.connectorStatus.finishing,
+  Faulted: themeColors.connectorStatus.faulted,
+  Suspended: themeColors.connectorStatus.suspended,
   Unavailable: "#d1d5db",
 };
 

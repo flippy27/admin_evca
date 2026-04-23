@@ -1,6 +1,6 @@
 import { ScrollView, View, TouchableOpacity } from "react-native";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
-import { getThemeColors, spacing } from "@/theme";
+import { getThemeColors, spacing, colors as themeColors } from "@/theme";
 import { useChargersStore } from "@/lib/stores/chargers.store";
 import { useEffect, useMemo } from "react";
 import { Text } from "@/components/ui/Text";
