@@ -9,8 +9,8 @@ import { Card } from "@/components/ui/Card";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import ConnectorBadge from "./ConnectorBadge";
+import { mockChargers, mockSessions } from "@/lib/data/mockData";
 
-// Color palette - all colors unified in one place
 const COLORS = {
   charging: "#1477FF",
   available: "#0ACDA9",
@@ -19,75 +19,24 @@ const COLORS = {
   online: "#22c55e",
 };
 
-const SessionCard = ({
-  chargerName,
-  connectorId,
-  busId,
-  energy,
-  duration,
-  colors,
-}: {
-  chargerName: string;
-  connectorId?: number;
-  busId?: string;
-  energy: number;
-  duration?: number;
-  colors: ReturnType<typeof getThemeColors>;
-}) => {
-  const durationMin = duration ? Math.floor(duration / 60) : 0;
-
-  return (
-    <Card style={{ padding: spacing.md, marginBottom: spacing.sm }}>
-      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <View style={{ flex: 1 }}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs, marginBottom: spacing.xs }}>
-            <Ionicons name="battery-charging" size={14} color={COLORS.charging} />
-            <Text style={{ fontWeight: "600", color: colors.foreground, fontSize: 13 }}>
-              {chargerName}
-              {connectorId ? ` · C${connectorId}` : ""}
-            </Text>
-          </View>
-          {busId && (
-            <Text style={{ color: colors.mutedForeground, fontSize: 11 }}>
-              BUS {busId}
-            </Text>
-          )}
-        </View>
-        <View style={{ alignItems: "flex-end" }}>
-          <Text style={{ color: COLORS.charging, fontWeight: "bold", fontSize: 13 }}>
-            {energy.toFixed(1)} kWh
-          </Text>
-          {durationMin > 0 && (
-            <Text style={{ color: colors.mutedForeground, fontSize: 11 }}>
-              {durationMin} min
-            </Text>
-          )}
-        </View>
-      </View>
-    </Card>
-  );
-};
-
-interface OperadorViewProps {
-  selectedLocation?: { location_id: string; location_name: string } | null;
-}
-
-export default function OperadorView({ selectedLocation }: OperadorViewProps) {
+export default function OperadorView() {
   const scheme = useResolvedColorScheme();
   const colors = getThemeColors(scheme);
   const navigation = useNavigation();
 
-  const chargers = useChargersStore((state) => state.chargers || []);
-  const sessions = useChargingSessionsStore((state: any) => state.sessions || []);
+  const storeChargers = useChargersStore((state) => state.chargers || []);
+  const storeSessions = useChargingSessionsStore((state: any) => state.sessions || []);
 
-  // TODO: Filter chargers by selected location after verifying data loads
-  // For now, show all chargers to debug data loading
+  // Use store data or mock data as fallback
+  const chargers = storeChargers.length > 0 ? storeChargers : mockChargers;
+  const sessions = storeSessions.length > 0 ? storeSessions : mockSessions;
 
   useEffect(() => {
     useChargersStore.getState().fetchChargers();
     useChargingSessionsStore.getState().fetchSessions({});
   }, []);
 
+  // Stats from chargers
   const stats = useMemo(() => {
     return {
       charging: chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Charging").length || 0), 0),
@@ -114,13 +63,13 @@ export default function OperadorView({ selectedLocation }: OperadorViewProps) {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.background }}>
-      {/* Conectores del Patio Section */}
+      {/* Stats */}
       <View style={{ padding: spacing.lg }}>
         <Text style={{ fontSize: 12, fontWeight: "600", color: colors.mutedForeground, marginBottom: spacing.md, textTransform: "uppercase" }}>
           Conectores del Patio
         </Text>
         <Card style={{ padding: spacing.md }}>
-          <View style={{ flexDirection: "row", justifyContent: "space-around", gap: spacing.sm }}>
+          <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
             <View style={{ flex: 1, alignItems: "center" }}>
               <Text style={{ fontSize: 28, fontWeight: "bold", color: COLORS.charging }}>
                 {stats.charging}
@@ -157,10 +106,10 @@ export default function OperadorView({ selectedLocation }: OperadorViewProps) {
         </Card>
       </View>
 
-      {/* Active Sessions */}
+      {/* Sessions */}
       {activeSessions.length > 0 && (
         <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.md }}>
-          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: spacing.md }}>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: spacing.md }}>
             <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm }}>
               <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.available }} />
               <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>
@@ -174,32 +123,43 @@ export default function OperadorView({ selectedLocation }: OperadorViewProps) {
             </TouchableOpacity>
           </View>
           <View style={{ gap: spacing.sm, marginBottom: spacing.lg }}>
-            {activeSessions.map((item: any) => (
-              <SessionCard
-                key={item.id}
-                chargerName={item.charger?.name || "Charger"}
-                connectorId={item.connectorId}
-                busId={item.vehicleId}
-                energy={item.energy || 0}
-                duration={item.duration}
-                colors={colors}
-              />
+            {activeSessions.map((s: any) => (
+              <Card key={s.id} style={{ padding: spacing.md }}>
+                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                  <View>
+                    <Text style={{ fontWeight: "600", color: colors.foreground, fontSize: 13 }}>
+                      {s.charger?.name || s.chargerId} · C{s.connectorId}
+                    </Text>
+                    <Text style={{ color: colors.mutedForeground, fontSize: 11 }}>
+                      BUS {s.vehicleId}
+                    </Text>
+                  </View>
+                  <View style={{ alignItems: "flex-end" }}>
+                    <Text style={{ color: COLORS.charging, fontWeight: "bold", fontSize: 13 }}>
+                      {s.energy?.toFixed(1) || 0} kWh
+                    </Text>
+                    <Text style={{ color: colors.mutedForeground, fontSize: 11 }}>
+                      {s.duration ? Math.floor(s.duration / 60) : 0} min
+                    </Text>
+                  </View>
+                </View>
+              </Card>
             ))}
           </View>
         </View>
       )}
 
-      {/* Chargers by Location */}
+      {/* Chargers by location */}
       <View style={{ paddingHorizontal: spacing.lg, paddingBottom: spacing.xl }}>
-        {chargersByLocation.map(([location, locationChargers]) => (
+        {chargersByLocation.map(([location, locs]) => (
           <View key={location} style={{ marginBottom: spacing.lg }}>
             <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground, marginBottom: spacing.md }}>
               {location}
             </Text>
             <View style={{ gap: spacing.sm }}>
-              {(locationChargers as any[]).map((charger: any) => (
+              {(locs as any[]).map((charger: any) => (
                 <Card key={charger.id} style={{ padding: spacing.md }}>
-                  <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: spacing.sm }}>
+                  <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: spacing.sm }}>
                     <Text style={{ fontWeight: "600", color: colors.foreground, fontSize: 13 }}>
                       {charger.name}
                     </Text>
