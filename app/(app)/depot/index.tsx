@@ -45,7 +45,7 @@ export default function DepotView() {
   // Fetch locations from backend
   const { locations, fetchLocations } = useLocations();
   const { user } = useAuthStore();
-  const { fetchChargers, chargersLoading, selectedLocationId, setSelectedLocationId } = useChargersStore();
+  const { fetchChargers, chargersLoading, chargersError, clearError, selectedLocationId, setSelectedLocationId } = useChargersStore();
   const [selectedTerminal, setSelectedTerminal] = useState<string>("");
 
   // Restore selected location from AsyncStorage on mount
@@ -413,6 +413,39 @@ export default function DepotView() {
 
       {/* Role Banner */}
       <RoleBanner role={selectedRole} />
+
+      {/* Error Banner */}
+      {chargersError && (
+        <View
+          style={{
+            backgroundColor: colors.destructive + "20",
+            borderBottomWidth: 1,
+            borderBottomColor: colors.destructive,
+            paddingHorizontal: spacing.lg,
+            paddingVertical: spacing.md,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <View style={{ flex: 1, flexDirection: "row", alignItems: "center", gap: spacing.md }}>
+            <Ionicons name="alert-circle" size={20} color={colors.destructive} />
+            <Text
+              style={{
+                flex: 1,
+                fontSize: 12,
+                color: colors.destructive,
+                fontWeight: "500",
+              }}
+            >
+              {chargersError}
+            </Text>
+          </View>
+          <TouchableOpacity onPress={() => clearError("chargers")}>
+            <Ionicons name="close" size={20} color={colors.destructive} />
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Loading Skeletons */}
       {chargersLoading ? (

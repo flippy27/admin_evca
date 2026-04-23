@@ -4,7 +4,7 @@
  */
 
 import { useRouter, useSegments } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import {
   ScrollView,
   TouchableOpacity,
@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { Text } from "@/components/ui/Text";
 import { useAuthStore } from "@/lib/stores/auth.store";
+import { useAppStore } from "@/lib/stores/app.store";
 import { getThemeColors, spacing } from "@/theme";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { Ionicons } from "@expo/vector-icons";
@@ -35,6 +36,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const resolvedScheme = useResolvedColorScheme();
   const colors = getThemeColors(resolvedScheme);
   const logout = useAuthStore((state) => state.logout);
+  const { colorScheme, setColorScheme } = useAppStore();
+  const [showThemeMenu, setShowThemeMenu] = useState(false);
 
   const navItems: NavItem[] = [
     {
@@ -131,7 +134,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           })}
         </ScrollView>
 
-        {/* Footer - Logout */}
+        {/* Footer - Theme & Logout */}
         <View
           style={{
             borderTopWidth: 1,
@@ -140,6 +143,76 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             paddingVertical: spacing.md,
           }}
         >
+          {/* Theme Toggle */}
+          <TouchableOpacity
+            onPress={() => setShowThemeMenu(!showThemeMenu)}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingHorizontal: spacing.md,
+              paddingVertical: spacing.md,
+              marginBottom: spacing.md,
+              backgroundColor: colors.muted,
+              borderRadius: 8,
+            }}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.md }}>
+              <Ionicons
+                name={colorScheme === "dark" ? "moon" : colorScheme === "light" ? "sunny" : "settings"}
+                size={20}
+                color={colors.primary}
+              />
+              <Text style={{ fontSize: 14, fontWeight: "500", color: colors.foreground }}>
+                {colorScheme === "dark" ? "Oscuro" : colorScheme === "light" ? "Claro" : "Sistema"}
+              </Text>
+            </View>
+            <Ionicons
+              name={showThemeMenu ? "chevron-up" : "chevron-down"}
+              size={20}
+              color={colors.mutedForeground}
+            />
+          </TouchableOpacity>
+
+          {/* Theme Options */}
+          {showThemeMenu && (
+            <View style={{ gap: spacing.sm, marginBottom: spacing.md }}>
+              {(["light", "dark", "system"] as const).map((theme) => (
+                <TouchableOpacity
+                  key={theme}
+                  onPress={async () => {
+                    await setColorScheme(theme);
+                    setShowThemeMenu(false);
+                  }}
+                  style={{
+                    paddingHorizontal: spacing.md,
+                    paddingVertical: spacing.sm,
+                    borderRadius: 6,
+                    backgroundColor:
+                      colorScheme === theme ? colors.primary + "20" : "transparent",
+                    borderLeftWidth: colorScheme === theme ? 3 : 0,
+                    borderLeftColor: colors.primary,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontWeight: colorScheme === theme ? "600" : "400",
+                      color: colorScheme === theme ? colors.primary : colors.foreground,
+                    }}
+                  >
+                    {theme === "light"
+                      ? "🌞 Claro"
+                      : theme === "dark"
+                        ? "🌙 Oscuro"
+                        : "⚙️ Sistema"}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+
+          {/* Logout */}
           <TouchableOpacity
             onPress={handleLogout}
             style={{
