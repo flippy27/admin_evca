@@ -29,7 +29,7 @@ export function AlertsSection({ chargers }: AlertsSectionProps) {
 
   return (
     <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.lg }}>
-      <Text style={{ fontSize: 14, fontWeight: "600", color: themeColors.destructive, marginBottom: spacing.md }}>
+      <Text style={{ fontSize: 14, fontWeight: "600", color: themeColors.light.destructive, marginBottom: spacing.md }}>
         ⚠️ Alertas Activas
       </Text>
       <View style={{ gap: spacing.sm, marginBottom: spacing.lg }}>
@@ -41,9 +41,11 @@ export function AlertsSection({ chargers }: AlertsSectionProps) {
                 key={connector.id}
                 chargerName={charger.name}
                 connectorId={connector.connectorId}
-                onPress={() => router.push({ pathname: `/charger/${charger.id}`, params: { chargerName: charger.name, role: "supervisor" } })}
+                onPress={() =>
+                  router.push({ pathname: `/charger/${charger.id}`, params: { chargerName: charger.name, role: "supervisor" } })
+                }
               />
-            ))
+            )),
         )}
       </View>
     </View>

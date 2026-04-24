@@ -13,30 +13,62 @@ interface KPICardProps {
   backgroundColor?: string;
 }
 
-export function KPICard({
-  icon,
-  iconColor,
-  label,
-  value,
-  subtitle,
-  backgroundColor,
-}: KPICardProps) {
+export function KPICard({ icon, iconColor, label, value, subtitle, backgroundColor }: KPICardProps) {
   return (
     <Card
       style={{
         padding: spacing.md,
         backgroundColor,
+
+        overflow: "visible",
       }}
     >
-      <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm, marginBottom: spacing.sm }}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: spacing.sm,
+          marginBottom: spacing.sm,
+        }}
+      >
         <Ionicons name={icon as any} size={16} color={iconColor} />
-        <Text style={{ fontSize: 12, color: "#9ca3af" }}>{label}</Text>
+
+        <Text
+          style={{
+            fontSize: 12,
+            lineHeight: 18,
+            color: "#9ca3af",
+          }}
+        >
+          {label}
+        </Text>
       </View>
-      <Text style={{ fontSize: 28, fontWeight: "bold", color: iconColor, marginBottom: spacing.xs }}>
+
+      <Text
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.75}
+        style={{
+          fontSize: 28,
+          lineHeight: 38,
+          fontWeight: "bold",
+          color: iconColor,
+          marginBottom: spacing.xs,
+          includeFontPadding: false,
+          overflow: "visible",
+        }}
+      >
         {value}
       </Text>
+
       {subtitle && (
-        <Text style={{ fontSize: 12, color: "#9ca3af" }}>
+        <Text
+          style={{
+            fontSize: 12,
+            lineHeight: 18,
+            color: "#9ca3af",
+          }}
+        >
           {subtitle}
         </Text>
       )}

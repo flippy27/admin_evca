@@ -87,10 +87,10 @@ export default function SupervisorView() {
             flexDirection: "row",
             flexWrap: "wrap",
             justifyContent: "space-between",
-            rowGap: spacing.md,
+            rowGap: spacing.lg,
           }}
         >
-          <View style={{ width: "48%", minHeight: 140 }}>
+          <View style={{ width: "48%" }}>
             <KPICard
               icon="trending-up"
               iconColor={colors.secondary}
@@ -100,7 +100,7 @@ export default function SupervisorView() {
             />
           </View>
 
-          <View style={{ width: "48%", minHeight: 140 }}>
+          <View style={{ width: "48%" }}>
             <KPICard
               icon="flash"
               iconColor={colors.primary}
@@ -110,7 +110,7 @@ export default function SupervisorView() {
             />
           </View>
 
-          <View style={{ width: "48%", minHeight: 140 }}>
+          <View style={{ width: "48%" }}>
             <KPICard
               icon="pulse"
               iconColor={colors.primary}
@@ -120,7 +120,7 @@ export default function SupervisorView() {
             />
           </View>
 
-          <View style={{ width: "48%", minHeight: 140 }}>
+          <View style={{ width: "48%" }}>
             <KPICard
               icon="alert-circle"
               iconColor={stats.faulted > 0 ? colors.destructive : "#9ca3af"}
