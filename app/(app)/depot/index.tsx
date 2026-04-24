@@ -5,6 +5,8 @@ import SupervisorView from "@/components/depot/supervisor/SupervisorView";
 import { TecleButton } from "@/components/depot/TecleButton";
 import { TecleControl } from "@/components/depot/TecleControl";
 import { AppHeader } from "@/components/layout/AppHeader";
+import { useSidebar } from "@/components/layout/AppContainer";
+import { useGroupStore } from "@/lib/stores/group.store";
 import { SkeletonCard } from "@/components/ui/SkeletonLoader";
 import { Text } from "@/components/ui/Text";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
@@ -26,6 +28,7 @@ export default function DepotView() {
   const scheme = useResolvedColorScheme();
   const colors = getThemeColors(scheme);
   const { roles } = usePermissions();
+  const { activeRole: selectedRole, setActiveRole: setSelectedRole } = useSidebar();
 
   // Derive available roles
   const availableRoles = useMemo(() => {
@@ -36,7 +39,13 @@ export default function DepotView() {
     return available.length > 0 ? available : (["operator"] as Role[]);
   }, [roles]);
 
-  const [selectedRole, setSelectedRole] = useState<Role>((availableRoles[0] as Role) || "operator");
+  // Sync initial role from permissions
+  useEffect(() => {
+    if (availableRoles.length > 0) {
+      setSelectedRole(availableRoles[0] as Role);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [availableRoles[0]]);
   const [showTerminalDropdown, setShowTerminalDropdown] = useState(false);
   const [searchLocationQuery, setSearchLocationQuery] = useState<string>("");
   const [showTecleControl, setShowTecleControl] = useState(false);
@@ -77,7 +86,7 @@ export default function DepotView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locations]);
 
-  // When selected location changes, fetch chargers and persist
+  // When selected location changes, fetch chargers + group and persist
   useEffect(() => {
     if (selectedLocationId) {
       const selectedLoc = locations.find((loc) => loc.location_id === selectedLocationId);
@@ -89,6 +98,8 @@ export default function DepotView() {
         siteId: selectedLocationId,
         companyId: user?.companyExternalId,
       });
+      // Fetch group grid for this location
+      useGroupStore.getState().fetchGroup(selectedLocationId);
       // Save to AsyncStorage
       AsyncStorage.setItem("selectedLocationId", selectedLocationId).catch((err) =>
         logger.error("[DepotView] Failed to save location", err),

@@ -11,9 +11,13 @@ import { Sidebar } from "./Sidebar";
 import { getThemeColors } from "@/theme";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 
+export type ActiveRole = "operator" | "supervisor" | "maintainer";
+
 // Sidebar context
 const SidebarContext = createContext<{
   openSidebar: () => void;
+  activeRole: ActiveRole;
+  setActiveRole: (role: ActiveRole) => void;
 } | null>(null);
 
 export function useSidebar() {
@@ -30,6 +34,7 @@ interface AppContainerProps {
 
 export function AppContainer({ children }: AppContainerProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeRole, setActiveRole] = useState<ActiveRole>("operator");
   const resolvedScheme = useResolvedColorScheme();
   const colors = getThemeColors(resolvedScheme);
   const insets = useSafeAreaInsets();
@@ -42,7 +47,7 @@ export function AppContainer({ children }: AppContainerProps) {
   const isDetailScreen = pathname?.includes("[id]") || pathname?.includes("energy");
 
   return (
-    <SidebarContext.Provider value={{ openSidebar }}>
+    <SidebarContext.Provider value={{ openSidebar, activeRole, setActiveRole }}>
       <View style={{ flex: 1, backgroundColor: colors.background }}>
         {/* Sidebar */}
         <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />

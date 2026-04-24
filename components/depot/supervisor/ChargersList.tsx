@@ -17,16 +17,16 @@ interface Charger {
 }
 
 interface ChargersListProps {
-  chargersByLocation: Array<[string, Charger[]]>;
+  chargers: Charger[];
 }
 
-export function ChargersList({ chargersByLocation }: ChargersListProps) {
+export function ChargersList({ chargers }: ChargersListProps) {
   const router = useRouter();
 
   return (
     <View style={{ paddingHorizontal: spacing.lg, paddingBottom: spacing.xl }}>
       <View style={{ gap: spacing.sm }}>
-        {chargersByLocation.map((charger: any) => {
+        {chargers.map((charger: any) => {
           const chargingCount = charger.connectors?.filter((c: any) => c.status === "Charging").length || 0;
 
           const faultedCount = charger.connectors?.filter((c: any) => c.status === "Faulted").length || 0;

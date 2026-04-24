@@ -27,6 +27,8 @@ export const chargingSessionApi = {
    */
   list: async (request: SessionsRequest) => {
     const { user } = useAuthStore.getState()
+    console.log('eluser',user);
+    
     const companyId = user?.companyExternalId || 0
     if (companyId === 0) {
       logger.error(
