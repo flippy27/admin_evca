@@ -1,33 +1,23 @@
-import { View } from "react-native";
 import { Text } from "@/components/ui/Text";
 import { Ionicons } from "@expo/vector-icons";
-import { spacing, colors as themeColors } from "@/theme";
+import { View } from "react-native";
 
 interface ConnectorBadgeProps {
-  connectorId: number;
-  status: "Available" | "Charging" | "Finishing" | "Faulted" | "Suspended" | "Unavailable";
-  soc?: number;
+  connectorId?: number;
+  status: "available" | "charging" | "finishing" | "faulted" | "suspended" | "unavailable" | "offline";
+  soc?: number | string;
   vehicleId?: string;
-  power?: number;
   showVehicle?: boolean;
 }
 
-const statusColors: Record<string, string> = {
-  Available: themeColors.connectorStatus.available,
-  Charging: themeColors.connectorStatus.charging,
-  Finishing: themeColors.connectorStatus.finishing,
-  Faulted: themeColors.connectorStatus.faulted,
-  Suspended: themeColors.connectorStatus.suspended,
-  Unavailable: "#d1d5db",
-};
-
-const statusBorders: Record<string, string> = {
-  Available: themeColors.connectorStatus.available,
-  Charging: themeColors.connectorStatus.charging,
-  Finishing: themeColors.connectorStatus.finishing,
-  Faulted: themeColors.connectorStatus.faulted,
-  Suspended: themeColors.connectorStatus.suspended,
-  Unavailable: "#d1d5db",
+const statusConfig: Record<string, { bg: string; border: string; text: string }> = {
+  available: { bg: "#f9fafb", border: "#0ACDA9", text: "#0ACDA9" },
+  charging: { bg: "#eff6ff", border: "#1477FF", text: "#1477FF" },
+  finishing: { bg: "#faf5ff", border: "#a855f7", text: "#a855f7" },
+  faulted: { bg: "#fef2f2", border: "#ef4444", text: "#dc2626" },
+  suspended: { bg: "#fefce8", border: "#eab308", text: "#ca8a04" },
+  unavailable: { bg: "#f3f4f6", border: "#d1d5db", text: "#9ca3af" },
+  offline: { bg: "#f3f4f6", border: "#d1d5db", text: "#9ca3af" },
 };
 
 export default function ConnectorBadge({
@@ -35,47 +25,44 @@ export default function ConnectorBadge({
   status,
   soc,
   vehicleId,
-  power,
   showVehicle,
 }: ConnectorBadgeProps) {
-  const color = statusColors[status];
-  const borderColor = statusBorders[status];
+  const statusLower = status.toLowerCase();
+  const config = statusConfig[statusLower] || statusConfig.unavailable;
+  const socValue = soc ? Number(soc) : undefined;
 
   return (
     <View
       style={{
-        borderWidth: 1,
-        borderColor: borderColor,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingHorizontal: 8,
+        paddingVertical: 6,
         borderRadius: 8,
-        padding: spacing.sm,
-        marginVertical: spacing.xs,
-        backgroundColor: status === "Charging" || status === "Finishing" ? `${color}10` : undefined,
+        borderWidth: 1,
+        borderColor: config.border,
+        backgroundColor: config.bg,
       }}
     >
-      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
-          {(status === "Charging" || status === "Finishing") && soc !== undefined ? (
-            <>
-              <Ionicons name="battery-half" size={14} color={color} />
-              <Text style={{ color, fontWeight: "600", fontSize: 12 }}>
-                {soc}%
-              </Text>
-            </>
-          ) : (
-            <Text style={{ color, fontWeight: "600", fontSize: 12 }}>
-              C{connectorId}
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+        {socValue !== undefined ? (
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+            <Ionicons name="flash" size={12} color={config.text} />
+            <Text style={{ fontSize: 12, fontWeight: "600", color: config.text }}>
+              {socValue}%
             </Text>
-          )}
-        </View>
-        {showVehicle && vehicleId && (
-          <Text style={{ color, fontSize: 11, fontWeight: "500" }}>
-            {vehicleId}
+          </View>
+        ) : (
+          <Text style={{ fontSize: 12, fontWeight: "500", color: config.text }}>
+            C{connectorId}
           </Text>
         )}
       </View>
-      {(status === "Charging" || status === "Finishing") && power && (
-        <Text style={{ color, fontSize: 11, marginTop: spacing.xs }}>
-          {power} kW
+
+      {showVehicle && vehicleId && (
+        <Text style={{ fontSize: 12, color: "#6b7280", textTransform: "uppercase" }}>
+          {vehicleId}
         </Text>
       )}
     </View>

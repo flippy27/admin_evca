@@ -13,61 +13,63 @@ const roleConfig = {
     iconName: "flash",
     title: "Operador de Patio",
     description: "Gestión de conectores • Inicio/Parada de carga • Control en tiempo real",
-    bgColor: themeColors.roles.operador,
+    color1: "#a855f7", // purple-500
+    color2: "#4f46e5", // indigo-600
   },
   supervisor: {
     iconName: "eye",
     title: "Supervisor",
     description: "Estado general del patio • KPIs operacionales • Alertas y monitoreo",
-    bgColor: themeColors.roles.supervisor,
+    color1: "#22c55e", // green-500
+    color2: "#059669", // emerald-600
   },
   maintainer: {
-    iconName: "settings",
+    iconName: "hammer",
     title: "Mantenedor",
     description: "Variables energéticas • Diagnóstico técnico • Configuración OCPP",
-    bgColor: themeColors.roles.mantenedor,
+    color1: "#14b8a6", // teal-500
+    color2: "#0891b2", // cyan-600
   },
 };
 
 export default function RoleBanner({ role }: RoleBannerProps) {
   const config = roleConfig[role];
 
-  // Gradient: darker shade to lighter shade
-  const darkerColor = config.bgColor + "CC"; // 80% opacity for darker effect
-  const lighterColor = config.bgColor + "40"; // 25% opacity for lighter effect
-
   return (
     <LinearGradient
-      colors={[darkerColor, lighterColor]}
+      colors={[config.color1, config.color2]}
       start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
+      end={{ x: 1, y: 0 }}
       style={{
         paddingHorizontal: spacing.lg,
         paddingVertical: spacing.md,
         gap: spacing.sm,
       }}
     >
-      <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm }}>
-        <Ionicons name={config.iconName as any} size={16} color="white" />
-        <Text
-          style={{
-            color: "white",
-            fontSize: 16,
-            fontWeight: "600",
-          }}
-        >
-          {config.title}
-        </Text>
+      <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 8 }}>
+        <Ionicons name={config.iconName as any} size={16} color="white" style={{ marginTop: 2 }} />
+        <View style={{ flex: 1 }}>
+          <Text
+            style={{
+              color: "white",
+              fontSize: 14,
+              fontWeight: "600",
+            }}
+          >
+            {config.title}
+          </Text>
+          <Text
+            style={{
+              color: "rgba(255,255,255,0.9)",
+              fontSize: 14,
+              lineHeight: 18,
+              marginTop: 2,
+            }}
+          >
+            {config.description}
+          </Text>
+        </View>
       </View>
-      <Text
-        style={{
-          color: "rgba(255,255,255,0.85)",
-          fontSize: 12,
-          lineHeight: 18,
-        }}
-      >
-        {config.description}
-      </Text>
     </LinearGradient>
   );
 }

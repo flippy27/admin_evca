@@ -2,49 +2,24 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "types": ["react", "react-native"],
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@/lib/*": [
-        "./lib/*"
-      ],
-      "@/lib/hooks/*": [
-        "./lib/hooks/*"
-      ],
-      "@/lib/stores/*": [
-        "./lib/stores/*"
-      ],
-      "@/lib/api/*": [
-        "./lib/api/*"
-      ],
-      "@/lib/config/*": [
-        "./lib/config/*"
-      ],
-      "@/lib/types/*": [
-        "./lib/types/*"
-      ],
-      "@/lib/crypto/*": [
-        "./lib/crypto/*"
-      ],
-      "@/lib/i18n/*": [
-        "./lib/i18n/*"
-      ],
-      "@/components/*": [
-        "./components/*"
-      ],
-      "@/theme": [
-        "./theme"
-      ],
-      "@/shared-types/*": [
-        "../shared-types/*"
-      ]
+      "@/*": ["./*"],
+      "@/lib/*": ["./lib/*"],
+      "@/lib/hooks/*": ["./lib/hooks/*"],
+      "@/lib/stores/*": ["./lib/stores/*"],
+      "@/lib/api/*": ["./lib/api/*"],
+      "@/lib/config/*": ["./lib/config/*"],
+      "@/lib/types/*": ["./lib/types/*"],
+      "@/lib/crypto/*": ["./lib/crypto/*"],
+      "@/lib/i18n/*": ["./lib/i18n/*"],
+      "@/components/*": ["./components/*"],
+      "@/theme": ["./theme"],
+      "@/shared-types/*": ["../shared-types/*"]
     }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }

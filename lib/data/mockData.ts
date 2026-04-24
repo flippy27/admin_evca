@@ -14,6 +14,7 @@ export const mockChargers = [
         soc: 67,
         vehicleId: "12345678",
         power: 120,
+        energyDelivered: 45.3,
       },
       {
         id: "cb-01-c02",
@@ -22,6 +23,7 @@ export const mockChargers = [
         soc: 100,
         vehicleId: "87654321",
         power: 5,
+        energyDelivered: 78.2,
       },
     ],
   },
@@ -39,6 +41,7 @@ export const mockChargers = [
         soc: 85,
         vehicleId: "11223344",
         power: 110,
+        energyDelivered: 62.4,
       },
       {
         id: "cb-02-c02",
@@ -72,6 +75,7 @@ export const mockChargers = [
         soc: 45,
         vehicleId: "55667788",
         power: 130,
+        energyDelivered: 32.1,
       },
       {
         id: "cb-01-b-c02",
@@ -116,4 +120,19 @@ export const mockSessions = [
     energy: 32.1,
     status: "Active",
   },
+];
+
+export interface Tecle {
+  id: string;
+  name: string;
+  location: string;
+  status: "idle" | "moving_up" | "moving_down";
+}
+
+export const mockTecles: Tecle[] = [
+  { id: "tecle-01", name: "Tecle 1", location: "Marquesina A", status: "idle" },
+  { id: "tecle-02", name: "Tecle 2", location: "Marquesina A", status: "idle" },
+  { id: "tecle-03", name: "Tecle 3", location: "Marquesina B", status: "idle" },
+  { id: "tecle-04", name: "Tecle 4", location: "Marquesina B", status: "idle" },
+  { id: "tecle-05", name: "Tecle 5", location: "Marquesina J", status: "idle" },
 ];

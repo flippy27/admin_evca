@@ -149,6 +149,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({
         user: processedUser,
         sessionState: 'authenticated',
+        hydrated: true,
       });
 
       return true;

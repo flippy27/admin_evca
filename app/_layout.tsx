@@ -15,6 +15,7 @@ import { OfflineIndicator } from "@/components/ui/OfflineIndicator";
 import { ToastContainer } from "@/components/ui/Toast";
 import { onRefreshFailed } from "@/lib/api/client";
 import { usePermissions } from "@/lib/hooks/use-permissions";
+import { useTokenRefresh } from "@/lib/hooks/use-token-refresh";
 import i18n from "@/lib/i18n";
 import { useAppStore } from "@/lib/stores/app.store";
 import { useAuthStore } from "@/lib/stores/auth.store";
@@ -29,6 +30,9 @@ export const unstable_settings = {
 export default function RootLayout() {
   const router = useRouter();
   const segments = useSegments();
+
+  // Proactive token refresh (check every 10 seconds, refresh 1 min before expiry)
+  useTokenRefresh();
 
   // Get theme preference from app store
   const appColorScheme = useAppStore((state) => state.colorScheme);

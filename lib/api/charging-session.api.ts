@@ -2,6 +2,7 @@
  * Charging Sessions API endpoints
  */
 
+import moment from 'moment'
 import { logger } from '../services/logger'
 import { useAuthStore } from '../stores/auth.store'
 import {
@@ -10,16 +11,15 @@ import {
 } from '../types/charging-session.types'
 import { bffClient } from './client'
 
-// Helper: format date to ISO string at start of day
+// Helper: format date to start of day (00:00:00)
 const getStartOfDay = (date: Date): string => {
-  //2026-04-24T03:59:59
-  return date.toISOString().split('T')[0] + 'T00:00:00'
+  return moment(date).startOf('day').format('YYYY-MM-DDTHH:mm:ss')
 }
 
+// Helper: format date to end of day (23:59:59)
 const getEndOfDay = (date: Date): string => {
-  return date.toISOString().split('T')[0] + 'T23:59:59'
+  return moment(date).endOf('day').format('YYYY-MM-DDTHH:mm:ss')
 }
-// Helper: format date to ISO string at end of day
 
 export const chargingSessionApi = {
   /**
@@ -28,8 +28,11 @@ export const chargingSessionApi = {
   list: async (request: SessionsRequest) => {
     const { user } = useAuthStore.getState()
     const companyId = user?.companyExternalId || 0
-    if(companyId === 0) {
-      logger.error('User has no companyExternalId, defaulting to 0 FIX THIS, WONT WORK!!!', { userId: user?.userId })
+    if (companyId === 0) {
+      logger.error(
+        'User has no companyExternalId, defaulting to 0 FIX THIS, WONT WORK!!!',
+        { userId: user?.userId },
+      )
     }
 
     // Build full request with meta, payload, pagination
@@ -72,7 +75,6 @@ export const chargingSessionApi = {
         '/bff/charging-session/company',
         fullRequest,
       )
-
       logger.info('Charging sessions fetched', {
         count: response.data.payload?.length || 0,
         current_page: response.data.pagination?.current_page,
