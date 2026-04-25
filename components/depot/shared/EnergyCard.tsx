@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/Card";
 import { Text } from "@/components/ui/Text";
-import { spacing } from "@/theme";
+import { spacing, getThemeColors } from "@/theme";
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";
 
@@ -23,12 +24,14 @@ export function EnergyCard({
   warning,
   onPress,
 }: EnergyCardProps) {
+  const colors = getThemeColors(useResolvedColorScheme());
+
   return (
     <TouchableOpacity onPress={onPress} disabled={!onPress} style={{ flex: 1 }}>
     <Card style={{ flex: 1, padding: spacing.md }}>
       <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs, marginBottom: spacing.sm }}>
         <Ionicons name={icon as any} size={14} color={iconColor} />
-        <Text style={{ fontSize: 11, color: "#9ca3af" }}>{label}</Text>
+        <Text style={{ fontSize: 11, color: colors.mutedForeground }}>{label}</Text>
       </View>
       <Text style={{ fontSize: 18, fontWeight: "bold", color: iconColor }}>
         {value} {unit}

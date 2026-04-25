@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/Card";
 import { Text } from "@/components/ui/Text";
-import { spacing } from "@/theme";
+import { spacing, getThemeColors } from "@/theme";
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";
 import ConnectorBadge from "@/components/depot/ConnectorBadge";
@@ -31,6 +32,7 @@ interface ChargersGridProps {
 
 export function ChargersGrid({ chargers }: ChargersGridProps) {
   const router = useRouter();
+  const colors = getThemeColors(useResolvedColorScheme());
 
   return (
     <View style={{ paddingHorizontal: spacing.lg, paddingBottom: spacing.xl }}>
@@ -56,8 +58,8 @@ export function ChargersGrid({ chargers }: ChargersGridProps) {
                   padding: 12,
                   borderRadius: 8,
                   borderWidth: 1,
-                  borderColor: hasFinishing ? "#d8b4fe" : "#e5e7eb",
-                  backgroundColor: hasFinishing ? "#faf5ff" : "#ffffff",
+                  borderColor: hasFinishing ? "#d8b4fe" : colors.border,
+                  backgroundColor: hasFinishing ? "#faf5ff" : colors.card,
                 }}
               >
               <View
@@ -68,7 +70,7 @@ export function ChargersGrid({ chargers }: ChargersGridProps) {
                   marginBottom: 8,
                 }}
               >
-                <Text style={{ fontSize: 14, fontWeight: "500", color: "#111827" }}>
+                <Text style={{ fontSize: 14, fontWeight: "500", color: colors.foreground }}>
                   {charger.name}
                 </Text>
                 <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>

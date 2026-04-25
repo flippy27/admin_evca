@@ -8,6 +8,8 @@ import { AppHeader } from "@/components/layout/AppHeader";
 import { useChargersStore } from "@/lib/stores/chargers.store";
 import { chargerCommandsApi } from "@/lib/api/charger-commands.api";
 import { EnergyVariablesModal, EnergyVariable } from "@/components/charger/EnergyVariablesModal";
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
+import { getThemeColors } from "@/theme";
 
 const STATUS_CONFIG: Record<string, { label: string; bg: string; color: string }> = {
   available:   { label: "Disponible",    bg: "#f3f4f6",  color: "#0ACDA9" },
@@ -55,6 +57,7 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
   const { id } = useLocalSearchParams();
   const selectedLocationId = useChargersStore((s) => s.selectedLocationId) ?? "";
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const colors = getThemeColors(useResolvedColorScheme());
 
   // Modal state: which connector + which variable key
   const [modalConnectorId, setModalConnectorId] = useState<string | null>(null);
@@ -84,21 +87,21 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
   const location = charger.location || charger.site?.name || charger.siteName || "";
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f9fafb" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <AppHeader hideRoleSelector={true} />
 
       {/* Page header */}
-      <View style={{ backgroundColor: "#ffffff", borderBottomWidth: 1, borderBottomColor: "#e5e7eb", paddingHorizontal: 16, paddingVertical: 12 }}>
+      <View style={{ backgroundColor: colors.card, borderBottomWidth: 1, borderBottomColor: colors.border, paddingHorizontal: 16, paddingVertical: 12 }}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
           <TouchableOpacity onPress={() => (navigation as any).goBack()} style={{ padding: 4, marginLeft: -4 }}>
-            <Ionicons name="arrow-back" size={20} color="#111827" />
+            <Ionicons name="arrow-back" size={20} color={colors.foreground} />
           </TouchableOpacity>
           <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 22, fontWeight: "700", color: "#111827", lineHeight: 28 }}>
+            <Text style={{ fontSize: 22, fontWeight: "700", color: colors.foreground, lineHeight: 28 }}>
               {charger.name}
             </Text>
             {!!location && (
-              <Text style={{ fontSize: 12, color: "#6b7280", marginTop: 1 }}>{location}</Text>
+              <Text style={{ fontSize: 12, color: colors.mutedForeground, marginTop: 1 }}>{location}</Text>
             )}
           </View>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
@@ -127,11 +130,11 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
           return (
             <View
               key={connector.id}
-              style={{ backgroundColor: "#ffffff", borderRadius: 8, borderWidth: 1, borderColor: "#e5e7eb", padding: 16, marginBottom: 16 }}
+              style={{ backgroundColor: colors.card, borderRadius: 8, borderWidth: 1, borderColor: colors.border, padding: 16, marginBottom: 16 }}
             >
               {/* Connector header */}
               <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                <Text style={{ fontSize: 15, fontWeight: "600", color: "#111827" }}>
+                <Text style={{ fontSize: 15, fontWeight: "600", color: colors.foreground }}>
                   Conector {connector.connectorId}
                 </Text>
                 <View style={{ backgroundColor: sc.bg, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20 }}>
@@ -144,8 +147,8 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
                 <View style={{ gap: 10, marginBottom: 12 }}>
                   {connector.vehicleId && (
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                      <Text style={{ fontSize: 14, color: "#6b7280" }}>Vehículo</Text>
-                      <Text style={{ fontSize: 14, fontWeight: "600", color: "#111827" }}>
+                      <Text style={{ fontSize: 14, color: colors.mutedForeground }}>Vehículo</Text>
+                      <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>
                         {String(connector.vehicleId).toUpperCase()}
                       </Text>
                     </View>
@@ -154,16 +157,16 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
                   {soc != null && (
                     <View>
                       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                        <Text style={{ fontSize: 14, color: "#6b7280" }}>Estado de Carga</Text>
+                        <Text style={{ fontSize: 14, color: colors.mutedForeground }}>Estado de Carga</Text>
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
                           <Ionicons name="battery-half" size={16} color="#2563eb" />
                           <Text style={{ fontSize: 18, fontWeight: "700", color: "#2563eb" }}>{soc}%</Text>
                         </View>
                       </View>
-                      <View style={{ height: 8, backgroundColor: "#e5e7eb", borderRadius: 4, overflow: "hidden" }}>
+                      <View style={{ height: 8, backgroundColor: colors.muted, borderRadius: 4, overflow: "hidden" }}>
                         <View style={{ height: 8, width: `${soc}%`, backgroundColor: "#3b82f6", borderRadius: 4 }} />
                       </View>
-                      <Text style={{ fontSize: 12, color: "#9ca3af", fontStyle: "italic", marginTop: 4 }}>
+                      <Text style={{ fontSize: 12, color: colors.mutedForeground, fontStyle: "italic", marginTop: 4 }}>
                         SoC parcial — sin ETA (API no disponible)
                       </Text>
                     </View>
@@ -171,15 +174,15 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
 
                   {connector.power != null && (
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                      <Text style={{ fontSize: 14, color: "#6b7280" }}>Potencia</Text>
-                      <Text style={{ fontSize: 14, fontWeight: "600", color: "#111827" }}>{connector.power} kW</Text>
+                      <Text style={{ fontSize: 14, color: colors.mutedForeground }}>Potencia</Text>
+                      <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>{connector.power} kW</Text>
                     </View>
                   )}
 
                   {connEnergy != null && (
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                      <Text style={{ fontSize: 14, color: "#6b7280" }}>Energía Entregada</Text>
-                      <Text style={{ fontSize: 14, fontWeight: "600", color: "#111827" }}>
+                      <Text style={{ fontSize: 14, color: colors.mutedForeground }}>Energía Entregada</Text>
+                      <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>
                         {Number(connEnergy).toFixed(1)} kWh
                       </Text>
                     </View>
@@ -188,7 +191,7 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
               )}
 
               {/* VARIABLES ENERGÉTICAS */}
-              <View style={{ borderTopWidth: 1, borderTopColor: "#f3f4f6", paddingTop: 12 }}>
+              <View style={{ borderTopWidth: 1, borderTopColor: colors.border, paddingTop: 12 }}>
                 {hasEnergyData ? (
                   <View>
                     {/* Section header */}
@@ -267,9 +270,9 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
                     </View>
                   </View>
                 ) : (
-                  <View style={{ backgroundColor: "#f9fafb", borderRadius: 8, padding: 16, alignItems: "center" }}>
-                    <Ionicons name="pulse" size={20} color="#9ca3af" />
-                    <Text style={{ fontSize: 11, color: "#9ca3af", marginTop: 4 }}>Sin datos energéticos para este conector</Text>
+                  <View style={{ backgroundColor: colors.muted, borderRadius: 8, padding: 16, alignItems: "center" }}>
+                    <Ionicons name="pulse" size={20} color={colors.mutedForeground} />
+                    <Text style={{ fontSize: 11, color: colors.mutedForeground, marginTop: 4 }}>Sin datos energéticos para este conector</Text>
                   </View>
                 )}
               </View>
@@ -278,8 +281,8 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
         })}
 
         {/* Herramientas Técnicas */}
-        <View style={{ backgroundColor: "#ffffff", borderRadius: 8, borderWidth: 1, borderColor: "#e5e7eb", padding: 16, marginBottom: 16 }}>
-          <Text style={{ fontSize: 15, fontWeight: "600", color: "#111827", marginBottom: 12 }}>
+        <View style={{ backgroundColor: colors.card, borderRadius: 8, borderWidth: 1, borderColor: colors.border, padding: 16, marginBottom: 16 }}>
+          <Text style={{ fontSize: 15, fontWeight: "600", color: colors.foreground, marginBottom: 12 }}>
             Herramientas Técnicas
           </Text>
           <View style={{ gap: 8 }}>
@@ -294,10 +297,10 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
 
             <TouchableOpacity
               onPress={() => router.push(`/(app)/charger/${id}/ocpp` as any)}
-              style={{ backgroundColor: "#f3f4f6", paddingVertical: 12, borderRadius: 8, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 }}
+              style={{ backgroundColor: colors.muted, paddingVertical: 12, borderRadius: 8, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 }}
             >
-              <Ionicons name="chatbubble-ellipses" size={17} color="#374151" />
-              <Text style={{ fontSize: 14, fontWeight: "500", color: "#374151" }}>Ver Mensajes OCPP</Text>
+              <Ionicons name="chatbubble-ellipses" size={17} color={colors.foreground} />
+              <Text style={{ fontSize: 14, fontWeight: "500", color: colors.foreground }}>Ver Mensajes OCPP</Text>
             </TouchableOpacity>
 
             <TouchableOpacity

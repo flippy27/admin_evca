@@ -1,5 +1,6 @@
 import { Text } from "@/components/ui/Text";
-import { spacing, colors as themeColors } from "@/theme";
+import { spacing, colors as themeColors, getThemeColors } from "@/theme";
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { View } from "react-native";
 
 const COLORS = themeColors.connectorStatus;
@@ -14,6 +15,8 @@ interface DistributionBarProps {
 }
 
 export function DistributionBar({ charging, finishing, available, faulted, suspended, total }: DistributionBarProps) {
+  const scheme = useResolvedColorScheme();
+  const colors = getThemeColors(scheme);
   const hasData = total > 0 && charging + finishing + available + faulted + suspended > 0;
 
   return (
@@ -24,15 +27,15 @@ export function DistributionBar({ charging, finishing, available, faulted, suspe
         padding: spacing.lg,
         borderRadius: 16,
         borderWidth: 1,
-        borderColor: "#e5e7eb",
-        backgroundColor: "#ffffff",
+        borderColor: colors.border,
+        backgroundColor: colors.card,
       }}
     >
       <Text
         style={{
           fontSize: 14,
           fontWeight: "700",
-          color: "#6b7280",
+          color: colors.mutedForeground,
           marginBottom: spacing.md,
           textTransform: "uppercase",
         }}
@@ -43,7 +46,7 @@ export function DistributionBar({ charging, finishing, available, faulted, suspe
       <View
         style={{
           height: 16,
-          backgroundColor: "#e5e7eb",
+          backgroundColor: colors.muted,
           borderRadius: 999,
           overflow: "hidden",
           flexDirection: "row",
@@ -62,27 +65,21 @@ export function DistributionBar({ charging, finishing, available, faulted, suspe
       </View>
 
       <View style={{ flexDirection: "row", flexWrap: "wrap", columnGap: spacing.md, rowGap: spacing.sm }}>
-        <LegendDot color={hasData ? COLORS.charging : "#9ca3af"} label={`Cargando (${charging})`} />
-        <LegendDot color={hasData ? COLORS.finishing : "#9ca3af"} label={`Finalizando (${finishing})`} />
-        <LegendDot color={hasData ? COLORS.available : "#9ca3af"} label={`Disponible (${available})`} />
-        <LegendDot color={hasData ? themeColors.light.destructive : "#9ca3af"} label={`Falla (${faulted})`} />
-        <LegendDot color={hasData ? COLORS.suspended : "#9ca3af"} label={`Suspendido (${suspended})`} />
+        <LegendDot color={hasData ? COLORS.charging : colors.mutedForeground} label={`Cargando (${charging})`} textColor={colors.foreground} />
+        <LegendDot color={hasData ? COLORS.finishing : colors.mutedForeground} label={`Finalizando (${finishing})`} textColor={colors.foreground} />
+        <LegendDot color={hasData ? COLORS.available : colors.mutedForeground} label={`Disponible (${available})`} textColor={colors.foreground} />
+        <LegendDot color={hasData ? themeColors.light.destructive : colors.mutedForeground} label={`Falla (${faulted})`} textColor={colors.foreground} />
+        <LegendDot color={hasData ? COLORS.suspended : colors.mutedForeground} label={`Suspendido (${suspended})`} textColor={colors.foreground} />
       </View>
     </View>
   );
 }
-function LegendDot({ color, label }: { color: string; label: string }) {
+
+function LegendDot({ color, label, textColor }: { color: string; label: string; textColor: string }) {
   return (
     <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
-      <View
-        style={{
-          width: 10,
-          height: 10,
-          borderRadius: 6,
-          backgroundColor: color,
-        }}
-      />
-      <Text style={{ fontSize: 13, color: "#4b5563" }}>{label}</Text>
+      <View style={{ width: 10, height: 10, borderRadius: 6, backgroundColor: color }} />
+      <Text style={{ fontSize: 13, color: textColor }}>{label}</Text>
     </View>
   );
 }

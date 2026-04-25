@@ -1,5 +1,5 @@
-import { useState, useMemo, useCallback } from "react";
-import { ScrollView, TouchableOpacity, View, SafeAreaView, TextInput } from "react-native";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import { Animated, ScrollView, TouchableOpacity, View, SafeAreaView, TextInput } from "react-native";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { getThemeColors, spacing } from "@/theme";
 import { Text } from "@/components/ui/Text";
@@ -7,7 +7,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { useChargingSessionsStore } from "@/lib/stores/charging-session.store";
 import { useAuthStore } from "@/lib/stores/auth.store";
 import { useChargersStore } from "@/lib/stores/chargers.store";
+import { useGroupStore } from "@/lib/stores/group.store";
 import { SessionCard } from "@/components/sessions/SessionCard";
+import { ChargingSession } from "@/lib/types/charging-session.types";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AppHeader } from "@/components/layout/AppHeader";
 
@@ -19,11 +21,25 @@ export default function SessionHistory() {
   const { user } = useAuthStore();
   const { selectedLocationId } = useChargersStore();
   const { sessions, fetchSessions, sessionsLoading } = useChargingSessionsStore();
+  const groupData = useGroupStore((s) => s.groupData);
 
   const [tab, setTab] = useState<"active" | "completed">("active");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Fetch sessions on mount
+  // Pulse animation for active dot
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, { toValue: 1.8, duration: 700, useNativeDriver: true }),
+        Animated.timing(pulseAnim, { toValue: 1, duration: 700, useNativeDriver: true }),
+      ])
+    );
+    loop.start();
+    return () => loop.stop();
+  }, []);
+
+  // Fetch completed sessions on focus
   useFocusEffect(
     useCallback(() => {
       if (user?.companyExternalId) {
@@ -37,24 +53,52 @@ export default function SessionHistory() {
     }, [user?.companyExternalId, selectedLocationId, fetchSessions])
   );
 
-  const activeSessions = useMemo(
-    () =>
-      sessions.filter(
-        (s) =>
-          s.connector_status === "Charging" || s.connector_status === "Preparing"
-      ),
-    [sessions]
-  );
+  // Derive active sessions from groupData — connectors with is_charging === true
+  const activeSessions = useMemo((): ChargingSession[] => {
+    if (!groupData) return [];
 
-  const completedSessions = useMemo(
-    () =>
-      sessions.filter(
-        (s) =>
-          s.connector_status !== "Charging" &&
-          s.connector_status !== "Preparing"
-      ),
-    [sessions]
-  );
+    const result: ChargingSession[] = [];
+
+    const processCharger = (gc: typeof groupData.chargers[number]) => {
+      for (const conn of gc.connectors) {
+        if (!conn.is_charging) continue;
+        result.push({
+          transaction_id: conn.last_charging_record?.transaction_id,
+          charger_id: String(gc.charger_ID),
+          charger_name: gc.charger_name,
+          connector_id: conn.connector_id,
+          connector_number: conn.connector_number,
+          connector_status: conn.connector_status,
+          license_plate: conn.licence_plate ?? undefined,
+          // connector_status_timestamp = when status changed to Charging ≈ session start
+          session_start_datetime: conn.connector_status_timestamp,
+          delivered_energy: conn.last_charging_record?.energy != null
+            ? String(conn.last_charging_record.energy)
+            : undefined,
+          last_soc: conn.soc_pct ?? undefined,
+        });
+      }
+    };
+
+    if (groupData.areas.length > 0) {
+      for (const area of groupData.areas) {
+        for (const line of area.lines) {
+          for (const gc of line.chargers) {
+            processCharger(gc);
+          }
+        }
+      }
+    } else {
+      for (const gc of groupData.chargers) {
+        processCharger(gc);
+      }
+    }
+
+    return result;
+  }, [groupData]);
+
+  // All sessions from API are completed
+  const completedSessions = sessions;
 
   const filteredCompleted = useMemo(() => {
     if (!searchQuery.trim()) return completedSessions;
@@ -73,7 +117,7 @@ export default function SessionHistory() {
       {/* App Header */}
       <AppHeader />
 
-      {/* Page Header (Sesiones de Carga) */}
+      {/* Page Header */}
       <View
         style={{
           backgroundColor: colors.card,
@@ -100,12 +144,7 @@ export default function SessionHistory() {
           >
             Sesiones de Carga
           </Text>
-          <Text
-            style={{
-              fontSize: 12,
-              color: colors.mutedForeground,
-            }}
-          >
+          <Text style={{ fontSize: 12, color: colors.mutedForeground }}>
             Historial y sesiones activas
           </Text>
         </View>
@@ -139,14 +178,22 @@ export default function SessionHistory() {
             }}
           >
             {activeSessions.length > 0 && (
-              <View
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: 3,
-                  backgroundColor: "#22c55e",
-                }}
-              />
+              <View style={{ width: 10, height: 10, alignItems: "center", justifyContent: "center" }}>
+                {/* Pulse ring */}
+                <Animated.View
+                  style={{
+                    position: "absolute",
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    backgroundColor: "#22c55e",
+                    opacity: pulseAnim.interpolate({ inputRange: [1, 1.8], outputRange: [0.5, 0] }),
+                    transform: [{ scale: pulseAnim }],
+                  }}
+                />
+                {/* Core dot */}
+                <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: "#22c55e" }} />
+              </View>
             )}
             <Text
               style={{
@@ -166,18 +213,14 @@ export default function SessionHistory() {
             flex: 1,
             paddingVertical: spacing.md,
             borderBottomWidth: 2,
-            borderBottomColor:
-              tab === "completed" ? colors.foreground : "transparent",
+            borderBottomColor: tab === "completed" ? colors.foreground : "transparent",
           }}
         >
           <Text
             style={{
               fontSize: 14,
               fontWeight: tab === "completed" ? "600" : "400",
-              color:
-                tab === "completed"
-                  ? colors.foreground
-                  : colors.mutedForeground,
+              color: tab === "completed" ? colors.foreground : colors.mutedForeground,
               textAlign: "center",
             }}
           >
@@ -202,12 +245,7 @@ export default function SessionHistory() {
               name="search"
               size={16}
               color={colors.mutedForeground}
-              style={{
-                position: "absolute",
-                left: spacing.md,
-                top: "50%",
-                zIndex: 10,
-              }}
+              style={{ position: "absolute", left: spacing.md, top: "50%", zIndex: 10 }}
             />
             <TextInput
               style={{
@@ -229,18 +267,9 @@ export default function SessionHistory() {
             {searchQuery && (
               <TouchableOpacity
                 onPress={() => setSearchQuery("")}
-                style={{
-                  position: "absolute",
-                  right: spacing.md,
-                  top: "50%",
-                  zIndex: 10,
-                }}
+                style={{ position: "absolute", right: spacing.md, top: "50%", zIndex: 10 }}
               >
-                <Ionicons
-                  name="close"
-                  size={16}
-                  color={colors.mutedForeground}
-                />
+                <Ionicons name="close" size={16} color={colors.mutedForeground} />
               </TouchableOpacity>
             )}
           </View>
@@ -249,9 +278,9 @@ export default function SessionHistory() {
         {/* Sessions list */}
         {displaySessions.length > 0 ? (
           <View style={{ gap: spacing.sm }}>
-            {displaySessions.map((session) => (
+            {displaySessions.map((session, i) => (
               <SessionCard
-                key={session.id}
+                key={session.transaction_id ?? session.connector_id ?? session.id ?? String(i)}
                 session={session}
                 isActive={tab === "active"}
               />
@@ -266,11 +295,7 @@ export default function SessionHistory() {
               style={{ marginBottom: spacing.md, opacity: 0.3 }}
             />
             <Text
-              style={{
-                fontSize: 14,
-                color: colors.mutedForeground,
-                textAlign: "center",
-              }}
+              style={{ fontSize: 14, color: colors.mutedForeground, textAlign: "center" }}
             >
               {tab === "active"
                 ? "No hay sesiones activas"

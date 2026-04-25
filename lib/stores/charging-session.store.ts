@@ -52,9 +52,16 @@ export const useChargingSessionsStore = create<ChargingSessionsState>((set, get)
 
       const res = await chargingSessionApi.list(fullRequest);
 
-      // Append to existing sessions if not first page, otherwise replace
+      // Append to existing sessions if not first page, otherwise replace; deduplicate by transaction_id
       const currentPage = request.pagination?.page || 1;
-      const sessionsList = currentPage === 1 ? res.data.payload : [...get().sessions, ...res.data.payload];
+      const raw = currentPage === 1 ? res.data.payload : [...get().sessions, ...res.data.payload];
+      const seen = new Set<string>();
+      const sessionsList = raw.filter((s) => {
+        const key = s.transaction_id ?? s.id;
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
 
       set({
         sessions: sessionsList,

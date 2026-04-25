@@ -1,4 +1,4 @@
-// Theme system based on Figma design - EVCA Admin
+// Theme system based on Figma design - WorkFoce
 // Supports light & dark modes with comprehensive color, spacing, and typography tokens
 // All colors in hex format for React Native compatibility
 

@@ -19,17 +19,11 @@ import {
   Tabs,
   Text,
   ToastContainer,
-  useToast
+  useToast,
 } from "@/components/ui";
 import { getThemeColors, spacing } from "@/theme";
-import React, { useState } from "react";
-import {
-  Switch as RNSwitch,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { useState } from "react";
+import { Switch as RNSwitch, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
 
 export default function ComponentShowcase() {
   const [isDark, setIsDark] = useState(false);
@@ -119,11 +113,8 @@ export default function ComponentShowcase() {
           <Text variant="h2" weight="bold">
             Component Showcase
           </Text>
-          <Text
-            variant="caption"
-            style={{ color: colors.mutedForeground, marginTop: spacing.sm }}
-          >
-            EVCA Admin - React Native Components
+          <Text variant="caption" style={{ color: colors.mutedForeground, marginTop: spacing.sm }}>
+            WorkFoce - React Native Components
           </Text>
         </View>
 
@@ -145,11 +136,7 @@ export default function ComponentShowcase() {
         <LoadingOverlayComponent />
 
         {/* ScrollView */}
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={{ paddingBottom: spacing.xl }}
-          showsVerticalScrollIndicator={false}
-        >
+        <ScrollView style={styles.scrollView} contentContainerStyle={{ paddingBottom: spacing.xl }} showsVerticalScrollIndicator={false}>
           {/* Buttons */}
           <View style={styles.section}>
             <Text variant="h3" weight="bold" style={styles.sectionTitle}>
@@ -157,23 +144,10 @@ export default function ComponentShowcase() {
             </Text>
             <Card>
               <CardContent style={{ gap: spacing.md }}>
-                <Button
-                  label="Primary"
-                  variant="primary"
-                  onPress={() => showToast("Clicked!")}
-                />
-                <Button
-                  label="Secondary"
-                  variant="secondary"
-                  onPress={() => {}}
-                />
+                <Button label="Primary" variant="primary" onPress={() => showToast("Clicked!")} />
+                <Button label="Secondary" variant="secondary" onPress={() => {}} />
                 <Button label="Outline" variant="outline" onPress={() => {}} />
-                <Button
-                  label="Disabled"
-                  variant="outline"
-                  disabled
-                  onPress={() => {}}
-                />
+                <Button label="Disabled" variant="outline" disabled onPress={() => {}} />
               </CardContent>
             </Card>
           </View>
@@ -223,28 +197,10 @@ export default function ComponentShowcase() {
             </Text>
             <Card>
               <CardContent style={{ gap: spacing.md }}>
-                <Input
-                  placeholder="Enter text"
-                  value={inputValue}
-                  onChangeText={setInputValue}
-                  label="Text Input"
-                />
-                <Switch
-                  value={switchValue}
-                  onValueChange={setSwitchValue}
-                  label="Toggle Switch"
-                />
-                <Checkbox
-                  checked={checkboxValue}
-                  onChange={setCheckboxValue}
-                  label="Checkbox"
-                />
-                <Select
-                  label="Select Option"
-                  options={selectOptions}
-                  value={selectValue}
-                  onChange={setSelectValue}
-                />
+                <Input placeholder="Enter text" value={inputValue} onChangeText={setInputValue} label="Text Input" />
+                <Switch value={switchValue} onValueChange={setSwitchValue} label="Toggle Switch" />
+                <Checkbox checked={checkboxValue} onChange={setCheckboxValue} label="Checkbox" />
+                <Select label="Select Option" options={selectOptions} value={selectValue} onChange={setSelectValue} />
               </CardContent>
             </Card>
           </View>
@@ -256,15 +212,8 @@ export default function ComponentShowcase() {
             </Text>
             <Card>
               <CardContent>
-                <SearchBar
-                  onSearch={setSearchText}
-                  placeholder="Search chargers..."
-                />
-                {searchText && (
-                  <Text style={{ marginTop: spacing.md }}>
-                    Searching for: {searchText}
-                  </Text>
-                )}
+                <SearchBar onSearch={setSearchText} placeholder="Search chargers..." />
+                {searchText && <Text style={{ marginTop: spacing.md }}>Searching for: {searchText}</Text>}
               </CardContent>
             </Card>
           </View>
@@ -309,11 +258,7 @@ export default function ComponentShowcase() {
             </Text>
             <Card>
               <CardContent>
-                <Button
-                  label="Open Modal"
-                  variant="ghost"
-                  onPress={() => setModalVisible(true)}
-                />
+                <Button label="Open Modal" variant="ghost" onPress={() => setModalVisible(true)} />
                 <Modal
                   visible={modalVisible}
                   onClose={() => setModalVisible(false)}
@@ -331,9 +276,7 @@ export default function ComponentShowcase() {
                     },
                   ]}
                 >
-                  <Text>
-                    This is a modal dialog. You can place any content here.
-                  </Text>
+                  <Text>This is a modal dialog. You can place any content here.</Text>
                 </Modal>
               </CardContent>
             </Card>
@@ -346,15 +289,8 @@ export default function ComponentShowcase() {
             </Text>
             <Card>
               <CardContent>
-                <Button
-                  label="Open Drawer"
-                  variant="primary"
-                  onPress={() => setDrawerVisible(true)}
-                />
-                <Modal
-                  visible={drawerVisible}
-                  onClose={() => setDrawerVisible(false)}
-                >
+                <Button label="Open Drawer" variant="primary" onPress={() => setDrawerVisible(true)} />
+                <Modal visible={drawerVisible} onClose={() => setDrawerVisible(false)}>
                   <View style={{ padding: spacing.lg }}>
                     <Text variant="h3" weight="bold">
                       Drawer Menu
@@ -376,11 +312,7 @@ export default function ComponentShowcase() {
             </Text>
             <Card>
               <CardContent>
-                <Chart
-                  type="bar"
-                  data={chartData}
-                  title="Weekly Energy Usage"
-                />
+                <Chart type="bar" data={chartData} title="Weekly Energy Usage" />
               </CardContent>
             </Card>
           </View>
@@ -392,11 +324,7 @@ export default function ComponentShowcase() {
             </Text>
             <Card>
               <CardContent>
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={5}
-                  onPageChange={setCurrentPage}
-                />
+                <Pagination currentPage={currentPage} totalPages={5} onPageChange={setCurrentPage} />
               </CardContent>
             </Card>
           </View>
@@ -408,26 +336,10 @@ export default function ComponentShowcase() {
             </Text>
             <Card>
               <CardContent style={{ gap: spacing.md }}>
-                <Alert
-                  variant="info"
-                  title="Info"
-                  message="This is an info alert"
-                />
-                <Alert
-                  variant="destructive"
-                  title="Warning"
-                  message="This is a warning alert"
-                />
-                <Alert
-                  variant="destructive"
-                  title="Error"
-                  message="This is an error alert"
-                />
-                <Alert
-                  variant="success"
-                  title="Success"
-                  message="This is a success alert"
-                />
+                <Alert variant="info" title="Info" message="This is an info alert" />
+                <Alert variant="destructive" title="Warning" message="This is a warning alert" />
+                <Alert variant="destructive" title="Error" message="This is an error alert" />
+                <Alert variant="success" title="Success" message="This is a success alert" />
               </CardContent>
             </Card>
           </View>

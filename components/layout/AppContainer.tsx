@@ -3,8 +3,8 @@
  * Manages sidebar open/close state
  */
 
-import React, { ReactNode, useState, createContext, useContext } from "react";
-import { View, TouchableOpacity } from 'react-native';
+import React, { ReactNode, useState, createContext, useContext, useRef, useEffect } from "react";
+import { Animated, View, TouchableOpacity } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { usePathname } from "expo-router";
 import { Sidebar } from "./Sidebar";
@@ -39,8 +39,18 @@ export function AppContainer({ children }: AppContainerProps) {
   const colors = getThemeColors(resolvedScheme);
   const insets = useSafeAreaInsets();
 
+  const backdropAnim = useRef(new Animated.Value(0)).current;
+
   const closeSidebar = () => setSidebarOpen(false);
   const openSidebar = () => setSidebarOpen(true);
+
+  useEffect(() => {
+    Animated.timing(backdropAnim, {
+      toValue: sidebarOpen ? 1 : 0,
+      duration: 220,
+      useNativeDriver: true,
+    }).start();
+  }, [sidebarOpen]);
 
   // Hide menu button in detail screens (they have their own back button)
   const pathname = usePathname();
@@ -53,21 +63,25 @@ export function AppContainer({ children }: AppContainerProps) {
         <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
 
         {/* Backdrop */}
-        {sidebarOpen && (
+        <Animated.View
+          pointerEvents={sidebarOpen ? "auto" : "none"}
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            zIndex: 999,
+            opacity: backdropAnim,
+          }}
+        >
           <TouchableOpacity
-            activeOpacity={0.5}
+            style={{ flex: 1 }}
+            activeOpacity={1}
             onPress={closeSidebar}
-            style={{
-              position: "absolute",
-              left: 0,
-              top: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
-              zIndex: 999,
-            }}
           />
-        )}
+        </Animated.View>
 
         {/* Content with SafeAreaView for notch */}
         <SafeAreaView style={{ flex: 1, position: "relative" }}>

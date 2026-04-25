@@ -13,7 +13,8 @@ export const ocppApi = {
     bffClient.post(`/bff/chargers/${chargerId}/start-charge`, {
       payload: {
         connector_id: connectorId,
-        idTag: idTag || undefined,
+        //idTag: idTag || undefined,
+        idTag: idTag || "Zfv2w7T7s5LGzL5",
       },
     }),
 

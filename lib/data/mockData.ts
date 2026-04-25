@@ -127,12 +127,16 @@ export interface Tecle {
   name: string;
   location: string;
   status: "idle" | "moving_up" | "moving_down";
+  /** Real BFF IDs for the ramp endpoint */
+  siteId: string;
+  chargerId: string;
+  connectorId: string;
 }
 
 export const mockTecles: Tecle[] = [
-  { id: "tecle-01", name: "Tecle 1", location: "Marquesina A", status: "idle" },
-  { id: "tecle-02", name: "Tecle 2", location: "Marquesina A", status: "idle" },
-  { id: "tecle-03", name: "Tecle 3", location: "Marquesina B", status: "idle" },
-  { id: "tecle-04", name: "Tecle 4", location: "Marquesina B", status: "idle" },
-  { id: "tecle-05", name: "Tecle 5", location: "Marquesina J", status: "idle" },
+  { id: "tecle-01", name: "Tecle 1", location: "Marquesina A", status: "idle", siteId: "677", chargerId: "1420", connectorId: "1950" },
+  { id: "tecle-02", name: "Tecle 2", location: "Marquesina A", status: "idle", siteId: "677", chargerId: "1420", connectorId: "1951" },
+  { id: "tecle-03", name: "Tecle 3", location: "Marquesina B", status: "idle", siteId: "677", chargerId: "1421", connectorId: "1952" },
+  { id: "tecle-04", name: "Tecle 4", location: "Marquesina B", status: "idle", siteId: "677", chargerId: "1421", connectorId: "1953" },
+  { id: "tecle-05", name: "Tecle 5", location: "Marquesina J", status: "idle", siteId: "677", chargerId: "1422", connectorId: "1954" },
 ];

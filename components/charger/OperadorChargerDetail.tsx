@@ -81,21 +81,21 @@ export function OperadorChargerDetail({ charger }: { charger: any }) {
   const location = charger.location || charger.site?.name || charger.siteName || "";
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f9fafb" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <AppHeader hideRoleSelector={true} />
 
       {/* Page header */}
-      <View style={{ backgroundColor: "#ffffff", borderBottomWidth: 1, borderBottomColor: "#e5e7eb", paddingHorizontal: 16, paddingVertical: 12 }}>
+      <View style={{ backgroundColor: colors.card, borderBottomWidth: 1, borderBottomColor: colors.border, paddingHorizontal: 16, paddingVertical: 12 }}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
           <TouchableOpacity onPress={() => (navigation as any).goBack()} style={{ padding: 4, marginLeft: -4 }}>
-            <Ionicons name="arrow-back" size={20} color="#111827" />
+            <Ionicons name="arrow-back" size={20} color={colors.foreground} />
           </TouchableOpacity>
           <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 22, fontWeight: "700", color: "#111827", lineHeight: 28 }}>
+            <Text style={{ fontSize: 22, fontWeight: "700", color: colors.foreground, lineHeight: 28 }}>
               {charger.name}
             </Text>
             {!!location && (
-              <Text style={{ fontSize: 12, color: "#6b7280", marginTop: 1 }}>{location}</Text>
+              <Text style={{ fontSize: 12, color: colors.mutedForeground, marginTop: 1 }}>{location}</Text>
             )}
           </View>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
@@ -122,11 +122,11 @@ export function OperadorChargerDetail({ charger }: { charger: any }) {
           return (
             <View
               key={connector.id}
-              style={{ backgroundColor: "#ffffff", borderRadius: 8, borderWidth: 1, borderColor: "#e5e7eb", padding: 16, marginBottom: 16 }}
+              style={{ backgroundColor: colors.card, borderRadius: 8, borderWidth: 1, borderColor: colors.border, padding: 16, marginBottom: 16 }}
             >
               {/* Header */}
               <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                <Text style={{ fontSize: 15, fontWeight: "600", color: "#111827" }}>
+                <Text style={{ fontSize: 15, fontWeight: "600", color: colors.foreground }}>
                   Conector {connector.connectorId}
                 </Text>
                 <View style={{ backgroundColor: sc.bg, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20 }}>
@@ -139,8 +139,8 @@ export function OperadorChargerDetail({ charger }: { charger: any }) {
                 <View style={{ gap: 10, marginBottom: 12 }}>
                   {connector.vehicleId && (
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                      <Text style={{ fontSize: 14, color: "#6b7280" }}>Vehículo</Text>
-                      <Text style={{ fontSize: 14, fontWeight: "600", color: "#111827" }}>
+                      <Text style={{ fontSize: 14, color: colors.mutedForeground }}>Vehículo</Text>
+                      <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>
                         {String(connector.vehicleId).toUpperCase()}
                       </Text>
                     </View>
@@ -149,16 +149,16 @@ export function OperadorChargerDetail({ charger }: { charger: any }) {
                   {soc !== undefined && (
                     <View>
                       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                        <Text style={{ fontSize: 14, color: "#6b7280" }}>Estado de Carga</Text>
+                        <Text style={{ fontSize: 14, color: colors.mutedForeground }}>Estado de Carga</Text>
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
                           <Ionicons name="battery-half" size={16} color="#2563eb" />
                           <Text style={{ fontSize: 18, fontWeight: "700", color: "#2563eb" }}>{soc}%</Text>
                         </View>
                       </View>
-                      <View style={{ height: 8, backgroundColor: "#e5e7eb", borderRadius: 4, overflow: "hidden" }}>
+                      <View style={{ height: 8, backgroundColor: colors.muted, borderRadius: 4, overflow: "hidden" }}>
                         <View style={{ height: 8, width: `${soc}%`, backgroundColor: "#3b82f6", borderRadius: 4 }} />
                       </View>
-                      <Text style={{ fontSize: 12, color: "#9ca3af", fontStyle: "italic", marginTop: 4 }}>
+                      <Text style={{ fontSize: 12, color: colors.mutedForeground, fontStyle: "italic", marginTop: 4 }}>
                         SoC parcial — sin ETA (API no disponible)
                       </Text>
                     </View>
@@ -166,15 +166,15 @@ export function OperadorChargerDetail({ charger }: { charger: any }) {
 
                   {connector.power !== undefined && (
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                      <Text style={{ fontSize: 14, color: "#6b7280" }}>Potencia</Text>
-                      <Text style={{ fontSize: 14, fontWeight: "600", color: "#111827" }}>{connector.power} kW</Text>
+                      <Text style={{ fontSize: 14, color: colors.mutedForeground }}>Potencia</Text>
+                      <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>{connector.power} kW</Text>
                     </View>
                   )}
 
                   {energy !== undefined && (
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                      <Text style={{ fontSize: 14, color: "#6b7280" }}>Energía Entregada</Text>
-                      <Text style={{ fontSize: 14, fontWeight: "600", color: "#111827" }}>{Number(energy).toFixed(1)} kWh</Text>
+                      <Text style={{ fontSize: 14, color: colors.mutedForeground }}>Energía Entregada</Text>
+                      <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>{Number(energy).toFixed(1)} kWh</Text>
                     </View>
                   )}
                 </View>
@@ -235,8 +235,8 @@ export function OperadorChargerDetail({ charger }: { charger: any }) {
         })}
 
         {/* Acciones del Cargador */}
-        <View style={{ backgroundColor: "#ffffff", borderRadius: 8, borderWidth: 1, borderColor: "#e5e7eb", padding: 16, marginBottom: 16 }}>
-          <Text style={{ fontSize: 15, fontWeight: "600", color: "#111827", marginBottom: 12 }}>
+        <View style={{ backgroundColor: colors.card, borderRadius: 8, borderWidth: 1, borderColor: colors.border, padding: 16, marginBottom: 16 }}>
+          <Text style={{ fontSize: 15, fontWeight: "600", color: colors.foreground, marginBottom: 12 }}>
             Acciones del Cargador
           </Text>
           <TouchableOpacity

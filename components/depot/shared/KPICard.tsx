@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/Card";
 import { Text } from "@/components/ui/Text";
-import { spacing } from "@/theme";
+import { spacing, getThemeColors } from "@/theme";
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
 
@@ -14,34 +15,14 @@ interface KPICardProps {
 }
 
 export function KPICard({ icon, iconColor, label, value, subtitle, backgroundColor }: KPICardProps) {
+  const scheme = useResolvedColorScheme();
+  const colors = getThemeColors(scheme);
+
   return (
-    <Card
-      style={{
-        padding: spacing.md,
-        backgroundColor,
-
-        overflow: "visible",
-      }}
-    >
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          gap: spacing.sm,
-          marginBottom: spacing.sm,
-        }}
-      >
+    <Card style={{ padding: spacing.md, backgroundColor, overflow: "visible" }}>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm, marginBottom: spacing.sm }}>
         <Ionicons name={icon as any} size={16} color={iconColor} />
-
-        <Text
-          style={{
-            fontSize: 12,
-            lineHeight: 18,
-            color: "#9ca3af",
-          }}
-        >
-          {label}
-        </Text>
+        <Text style={{ fontSize: 12, lineHeight: 18, color: colors.mutedForeground }}>{label}</Text>
       </View>
 
       <Text
@@ -62,15 +43,7 @@ export function KPICard({ icon, iconColor, label, value, subtitle, backgroundCol
       </Text>
 
       {subtitle && (
-        <Text
-          style={{
-            fontSize: 12,
-            lineHeight: 18,
-            color: "#9ca3af",
-          }}
-        >
-          {subtitle}
-        </Text>
+        <Text style={{ fontSize: 12, lineHeight: 18, color: colors.mutedForeground }}>{subtitle}</Text>
       )}
     </Card>
   );

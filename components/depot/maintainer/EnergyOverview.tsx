@@ -1,5 +1,6 @@
 import { Text } from "@/components/ui/Text";
-import { spacing } from "@/theme";
+import { spacing, getThemeColors } from "@/theme";
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { View } from "react-native";
 import { EnergyCard } from "../shared/EnergyCard";
 
@@ -18,9 +19,12 @@ export function EnergyOverview({
   totalEnergy,
   onPressVariable,
 }: EnergyOverviewProps) {
+  const scheme = useResolvedColorScheme();
+  const colors = getThemeColors(scheme);
+
   return (
     <View style={{ padding: spacing.lg, gap: spacing.md }}>
-      <Text style={{ fontSize: 14, fontWeight: "600", color: "#1f2937" }}>
+      <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>
         Resumen Energético del Patio
       </Text>
       <View style={{ gap: spacing.sm }}>

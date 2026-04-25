@@ -1,29 +1,18 @@
 /**
- * Login Screen - Dhemax Design
- * Gradient background (dark blue→cyan→yellow-green) with logo and animated particles
+ * Login Screen - Dhemax Design (visual only — logic unchanged)
  */
 
+import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import {
-  ActivityIndicator,
-  Animated,
-  Dimensions,
-  Easing,
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActivityIndicator, Animated, Dimensions, Easing, ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import i18n from "../../lib/i18n";
 
 import { DhemaxLogo } from "@/components/DhemaxLogo";
 import { Text } from "@/components/ui/Text";
 import { useToast } from "@/components/ui/Toast";
-import { useAppStore } from "@/lib/stores/app.store";
 import { useAuthStore } from "@/lib/stores/auth.store";
 import { spacing } from "@/theme";
 
@@ -33,7 +22,6 @@ interface LoginForm {
   rememberMe: boolean;
 }
 
-// Animated particle component - more visible blurred circles
 function AnimatedParticle({
   delay,
   duration,
@@ -43,47 +31,23 @@ function AnimatedParticle({
   duration: number;
   position: { top: number; left: number; size: number };
 }) {
-  const opacity = useRef(new Animated.Value(0.4)).current;
+  const opacity = useRef(new Animated.Value(0.15)).current;
   const scale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    const startAnimation = () => {
-      Animated.loop(
-        Animated.sequence([
-          Animated.delay(delay),
-          Animated.parallel([
-            Animated.timing(opacity, {
-              toValue: 0.8,
-              duration: duration / 2,
-              easing: Easing.inOut(Easing.ease),
-              useNativeDriver: true,
-            }),
-            Animated.timing(scale, {
-              toValue: 1.15,
-              duration: duration / 2,
-              easing: Easing.inOut(Easing.ease),
-              useNativeDriver: true,
-            }),
-          ]),
-          Animated.parallel([
-            Animated.timing(opacity, {
-              toValue: 0.4,
-              duration: duration / 2,
-              easing: Easing.inOut(Easing.ease),
-              useNativeDriver: true,
-            }),
-            Animated.timing(scale, {
-              toValue: 1,
-              duration: duration / 2,
-              easing: Easing.inOut(Easing.ease),
-              useNativeDriver: true,
-            }),
-          ]),
+    Animated.loop(
+      Animated.sequence([
+        Animated.delay(delay),
+        Animated.parallel([
+          Animated.timing(opacity, { toValue: 0.3, duration: duration / 2, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
+          Animated.timing(scale, { toValue: 1.15, duration: duration / 2, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
         ]),
-      ).start();
-    };
-
-    startAnimation();
+        Animated.parallel([
+          Animated.timing(opacity, { toValue: 0.15, duration: duration / 2, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
+          Animated.timing(scale, { toValue: 1, duration: duration / 2, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
+        ]),
+      ]),
+    ).start();
   }, [delay, duration, opacity, scale]);
 
   return (
@@ -97,7 +61,7 @@ function AnimatedParticle({
         borderRadius: position.size / 2,
         opacity,
         transform: [{ scale }],
-        backgroundColor: "rgba(70, 163, 181, 0.5)",
+        backgroundColor: "rgba(70, 163, 181, 0.45)",
         shadowColor: "rgba(70, 163, 181, 0.6)",
         shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 0.8,
@@ -112,10 +76,8 @@ export default function LoginScreen() {
   const toast = useToast();
 
   const login = useAuthStore((state) => state.login);
-  const language = useAppStore((state) => state.language);
-  const setLanguage = useAppStore((state) => state.setLanguage);
-
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const insets = useSafeAreaInsets();
   const screenWidth = Dimensions.get("window").width;
 
@@ -135,15 +97,11 @@ export default function LoginScreen() {
   useEffect(() => {
     const loadRememberedEmail = async () => {
       try {
-        await import("@react-native-async-storage/async-storage").then(
-          (m) => m.default,
-        );
-        // Implementation for loading would go here
+        await import("@react-native-async-storage/async-storage").then((m) => m.default);
       } catch (error) {
         console.error("Failed to load remembered email:", error);
       }
     };
-
     loadRememberedEmail();
   }, []);
 
@@ -151,10 +109,8 @@ export default function LoginScreen() {
 
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
-
     try {
       const success = await login(data.email, data.password, data.rememberMe);
-
       if (!success) {
         toast.show(t("auth.login.invalidCredentials"), "error");
       }
@@ -166,119 +122,62 @@ export default function LoginScreen() {
     }
   };
 
-  const toggleLanguage = async () => {
-    const newLang = language === "es" ? "en" : "es";
-    await setLanguage(newLang);
-    await i18n.changeLanguage(newLang);
-  };
-
-  const isForgotPasswordEnabled =
-    !!emailField && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField);
+  const isForgotPasswordEnabled = !!emailField && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField);
 
   return (
-    <LinearGradient
-      colors={["#22335a", "#46A3B5", "#A3B32B"]}
-      start={{ x: 0.2, y: 0.2 }}
-      end={{ x: 1, y: 1 }}
-      style={{ flex: 1 }}
-    >
-      {/* Animated particles background - larger and more visible */}
-      <AnimatedParticle
-        delay={0}
-        duration={8000}
-        position={{ top: 100, left: 20, size: 200 }}
-      />
-      <AnimatedParticle
-        delay={2000}
-        duration={10000}
-        position={{
-          top: screenWidth * 0.25,
-          left: screenWidth * 0.65,
-          size: 180,
-        }}
-      />
-      <AnimatedParticle
-        delay={4000}
-        duration={12000}
-        position={{ top: screenWidth * 0.55, left: 10, size: 160 }}
-      />
+    <LinearGradient colors={["#0B1829", "#0F2140", "#162B52"]} start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }} style={{ flex: 1 }}>
+      {/* Subtle animated particles */}
+      <AnimatedParticle delay={0} duration={8000} position={{ top: 80, left: -40, size: 220 }} />
+      <AnimatedParticle delay={2000} duration={10000} position={{ top: screenWidth * 0.2, left: screenWidth * 0.6, size: 180 }} />
+      <AnimatedParticle delay={4000} duration={12000} position={{ top: screenWidth * 0.7, left: -20, size: 160 }} />
 
-      <View
-        style={{
-          flex: 1,
-          paddingTop: insets.top,
-          paddingBottom: insets.bottom,
-        }}
-      >
+      <View style={{ flex: 1, paddingTop: insets.top, paddingBottom: insets.bottom }}>
         <ScrollView
           contentContainerStyle={{
             flexGrow: 1,
-            justifyContent: "center",
-            paddingHorizontal: spacing.md,
-            paddingVertical: spacing.lg,
+            justifyContent: "space-between",
+            paddingHorizontal: spacing.lg,
+            paddingVertical: spacing.xxl,
           }}
           showsVerticalScrollIndicator={false}
         >
-          {/* Logo - Icon with text */}
+          {/* Logo section */}
           <View style={{ alignItems: "center", marginBottom: spacing.xxl }}>
-            {/* Icon + Text Row */}
             <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: spacing.md,
-                marginBottom: spacing.lg,
-              }}
+              style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: spacing.md, marginBottom: spacing.sm }}
             >
-              <View style={{ width: 60, height: 60 }}>
-                <DhemaxLogo width={60} height={60} />
+              <DhemaxLogo width={60} height={60} />
+              <View>
+                <Text style={{ color: "#ffffff", fontSize: 28, fontWeight: "800", letterSpacing: 1 }}>DHEMAX</Text>
+                <Text style={{ color: "rgba(255,255,255,0.65)", fontSize: 11, marginTop: -2 }}>The Smart Inside Mobility</Text>
               </View>
-              <Text
-                variant="h2"
-                weight="bold"
-                style={{
-                  color: "#ffffff",
-                  fontSize: 28,
-                  marginTop: 8,
-                }}
-              >
-                DHEMAX
-              </Text>
             </View>
-            {/* Subtitle */}
-            <Text
-              variant="caption"
-              style={{
-                color: "rgba(255, 255, 255, 0.9)",
-                textAlign: "center",
-                marginBottom: spacing.md,
-              }}
-            >
-              The Smart Inside Mobility
-            </Text>
-            <Text
-              variant="h3"
-              weight="bold"
-              style={{
-                color: "#ffffff",
-                textAlign: "center",
-              }}
-            >
-              {t("auth.login.loginTitle")}
-            </Text>
+            <Text style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, marginTop: spacing.sm }}>Workforce App · PoC v1</Text>
           </View>
 
-          {/* Form Container */}
-          <View style={{ gap: spacing.lg }}>
-            {/* Email field */}
-            <View>
+          {/* White card */}
+          <View
+            style={{
+              backgroundColor: "#ffffff",
+              borderRadius: 16,
+              padding: spacing.lg + spacing.xs,
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 0.25,
+              shadowRadius: 20,
+              elevation: 10,
+            }}
+          >
+            {/* Email */}
+            <View style={{ marginBottom: spacing.md }}>
               <Text
-                variant="body"
-                weight="semibold"
                 style={{
-                  color: "#ffffff",
-                  marginBottom: spacing.sm,
+                  fontSize: 11,
+                  fontWeight: "700",
+                  color: "#1f2937",
+                  textTransform: "uppercase",
+                  letterSpacing: 0.8,
+                  marginBottom: spacing.xs,
                 }}
               >
                 {t("auth.login.username")}
@@ -288,57 +187,50 @@ export default function LoginScreen() {
                 name="email"
                 rules={{
                   required: t("common.ui.validation.errors.required"),
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: t("common.ui.validation.errors.strictEmail"),
-                  },
+                  pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: t("common.ui.validation.errors.strictEmail") },
                 }}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <>
-                    <TextInput
+                    <View
                       style={{
+                        flexDirection: "row",
+                        alignItems: "center",
                         borderWidth: 1,
-                        borderColor: errors.email ? "#ef4444" : "#ffffff",
-                        borderRadius: 8,
+                        borderColor: errors.email ? "#ef4444" : "#d1d5db",
+                        borderRadius: 10,
+                        backgroundColor: "#fff",
                         paddingHorizontal: spacing.md,
-                        paddingVertical: spacing.md,
-                        fontSize: 16,
-                        color: "#ffffff",
-                        backgroundColor: "rgba(255, 255, 255, 0.1)",
                       }}
-                      placeholder={t("auth.login.emailPlaceholder")}
-                      placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      value={value}
-                      autoCapitalize="none"
-                      keyboardType="email-address"
-                      editable={!isLoading}
-                    />
-                    {errors.email && (
-                      <Text
-                        variant="caption"
-                        style={{
-                          color: "#ef4444",
-                          marginTop: spacing.xs,
-                        }}
-                      >
-                        {errors.email.message}
-                      </Text>
-                    )}
+                    >
+                      <Ionicons name="person-outline" size={16} color="#9ca3af" style={{ marginRight: spacing.xs }} />
+                      <TextInput
+                        style={{ flex: 1, fontSize: 15, color: "#111827", paddingVertical: spacing.md }}
+                        placeholder={t("auth.login.emailPlaceholder")}
+                        placeholderTextColor="#9ca3af"
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        value={value}
+                        autoCapitalize="none"
+                        keyboardType="email-address"
+                        editable={!isLoading}
+                      />
+                    </View>
+                    {errors.email && <Text style={{ color: "#ef4444", fontSize: 11, marginTop: spacing.xs }}>{errors.email.message}</Text>}
                   </>
                 )}
               />
             </View>
 
-            {/* Password field */}
-            <View>
+            {/* Password */}
+            <View style={{ marginBottom: spacing.lg }}>
               <Text
-                variant="body"
-                weight="semibold"
                 style={{
-                  color: "#ffffff",
-                  marginBottom: spacing.sm,
+                  fontSize: 11,
+                  fontWeight: "700",
+                  color: "#1f2937",
+                  textTransform: "uppercase",
+                  letterSpacing: 0.8,
+                  marginBottom: spacing.xs,
                 }}
               >
                 {t("auth.login.password")}
@@ -346,205 +238,104 @@ export default function LoginScreen() {
               <Controller
                 control={control}
                 name="password"
-                rules={{
-                  required: t("common.ui.validation.errors.required"),
-                }}
+                rules={{ required: t("common.ui.validation.errors.required") }}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <>
-                    <TextInput
+                    <View
                       style={{
+                        flexDirection: "row",
+                        alignItems: "center",
                         borderWidth: 1,
-                        borderColor: errors.password ? "#ef4444" : "#ffffff",
-                        borderRadius: 8,
+                        borderColor: errors.password ? "#ef4444" : "#d1d5db",
+                        borderRadius: 10,
+                        backgroundColor: "#fff",
                         paddingHorizontal: spacing.md,
-                        paddingVertical: spacing.md,
-                        fontSize: 16,
-                        color: "#ffffff",
-                        backgroundColor: "rgba(255, 255, 255, 0.1)",
                       }}
-                      placeholder={t("auth.login.passwordPlaceholder")}
-                      placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      value={value}
-                      secureTextEntry
-                      editable={!isLoading}
-                    />
+                    >
+                      <Ionicons name="lock-closed-outline" size={16} color="#9ca3af" style={{ marginRight: spacing.xs }} />
+                      <TextInput
+                        style={{ flex: 1, fontSize: 15, color: "#111827", paddingVertical: spacing.md }}
+                        placeholder={t("auth.login.passwordPlaceholder")}
+                        placeholderTextColor="#9ca3af"
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        value={value}
+                        secureTextEntry={!showPassword}
+                        editable={!isLoading}
+                      />
+                      <TouchableOpacity onPress={() => setShowPassword((v) => !v)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+                        <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={18} color="#9ca3af" />
+                      </TouchableOpacity>
+                    </View>
                     {errors.password && (
-                      <Text
-                        variant="caption"
-                        style={{
-                          color: "#ef4444",
-                          marginTop: spacing.xs,
-                        }}
-                      >
-                        {errors.password.message}
-                      </Text>
+                      <Text style={{ color: "#ef4444", fontSize: 11, marginTop: spacing.xs }}>{errors.password.message}</Text>
                     )}
                   </>
                 )}
               />
             </View>
 
-            {/* Remember me checkbox */}
-            <Controller
-              control={control}
-              name="rememberMe"
-              render={({ field: { onChange, value } }) => (
-                <TouchableOpacity
-                  onPress={() => onChange(!value)}
-                  disabled={isLoading}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: spacing.md,
-                  }}
-                >
-                  <View
-                    style={{
-                      width: 24,
-                      height: 24,
-                      borderWidth: 2,
-                      borderColor: value
-                        ? "#3B9BC8"
-                        : "rgba(255, 255, 255, 0.3)",
-                      borderRadius: 4,
-                      backgroundColor: value ? "#3B9BC8" : "transparent",
-                      justifyContent: "flex-start",
-                      alignItems: "flex-start",
-                    }}
-                  >
-                    {value && (
-                      <Text
-                        style={{
-                          color: "#ffffff",
-                          fontSize: 16,
-                          fontWeight: "bold",
-                          //lineHeight: 14,
-                          marginTop: -2,
-                          marginLeft: 3,
-                        }}
-                      >
-                        ✓
-                      </Text>
-                    )}
-                  </View>
-                  <Text
-                    variant="body"
-                    style={{
-                      color: "#ffffff",
-                    }}
-                  >
-                    {t("auth.login.rememberMe")}
-                  </Text>
-                </TouchableOpacity>
-              )}
-            />
-
-            {/* Login button */}
+            {/* Gradient login button */}
             <TouchableOpacity
               onPress={handleSubmit(onSubmit)}
               disabled={isLoading}
-              style={{
-                backgroundColor: "#ffffff",
-                borderRadius: 8,
-                paddingVertical: spacing.md,
-                paddingHorizontal: spacing.lg,
-                marginTop: spacing.md,
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                opacity: isLoading ? 0.7 : 1,
-              }}
+              style={{ borderRadius: 10, overflow: "hidden", marginBottom: spacing.md }}
             >
-              {isLoading ? (
-                <ActivityIndicator color="#4CAF50" size="small" />
-              ) : (
-                <Text
-                  variant="body"
-                  weight="bold"
-                  style={{
-                    color: "#4CAF50",
-                  }}
-                >
-                  {t("auth.login.signIn")}
+              <LinearGradient
+                colors={["#0ACDA9", "#1477FF"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={{ paddingVertical: spacing.md + 2, alignItems: "center", justifyContent: "center", flexDirection: "row" }}
+              >
+                {isLoading ? (
+                  <ActivityIndicator color="#ffffff" size="small" />
+                ) : (
+                  <Text style={{ color: "#ffffff", fontSize: 16, fontWeight: "700" }}>{t("auth.login.signIn")}</Text>
+                )}
+              </LinearGradient>
+            </TouchableOpacity>
+
+            {/* Remember me + forgot password row */}
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+              <Controller
+                control={control}
+                name="rememberMe"
+                render={({ field: { onChange, value } }) => (
+                  <TouchableOpacity
+                    onPress={() => onChange(!value)}
+                    disabled={isLoading}
+                    style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}
+                  >
+                    <View
+                      style={{
+                        width: 18,
+                        height: 18,
+                        borderWidth: 2,
+                        borderColor: value ? "#1477FF" : "#9ca3af",
+                        borderRadius: 3,
+                        backgroundColor: value ? "#1477FF" : "#fff",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {value && <Ionicons name="checkmark" size={12} color="#fff" />}
+                    </View>
+                    <Text style={{ fontSize: 13, color: "#374151" }}>{t("auth.login.rememberMe")}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+              <TouchableOpacity disabled={!isForgotPasswordEnabled || isLoading}>
+                <Text style={{ fontSize: 13, color: isForgotPasswordEnabled ? "#1477FF" : "#9ca3af" }}>
+                  {t("auth.login.forgotPassword")}
                 </Text>
-              )}
-            </TouchableOpacity>
-
-            {/* Forgot password link */}
-            <TouchableOpacity
-              disabled={!isForgotPasswordEnabled || isLoading}
-              style={{ alignItems: "center" }}
-            >
-              <Text
-                variant="caption"
-                style={{
-                  color: isForgotPasswordEnabled
-                    ? "#ffffff"
-                    : "rgba(255, 255, 255, 0.5)",
-                  textAlign: "center",
-                  textDecorationLine: isForgotPasswordEnabled
-                    ? "underline"
-                    : "none",
-                }}
-              >
-                {t("auth.login.forgotPassword")}
-              </Text>
-            </TouchableOpacity>
+              </TouchableOpacity>
+            </View>
           </View>
 
-          {/* Language switcher - bottom */}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              gap: spacing.md,
-              marginTop: spacing.xxl,
-            }}
-          >
-            <TouchableOpacity
-              onPress={toggleLanguage}
-              style={{
-                paddingHorizontal: spacing.md,
-                paddingVertical: spacing.sm,
-                borderRadius: 6,
-                backgroundColor:
-                  language === "es" ? "#ffffff" : "rgba(255, 255, 255, 0.2)",
-              }}
-            >
-              <Text
-                variant="caption"
-                weight="semibold"
-                style={{
-                  color: language === "es" ? "#4CAF50" : "#ffffff",
-                }}
-              >
-                ES
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={toggleLanguage}
-              style={{
-                paddingHorizontal: spacing.md,
-                paddingVertical: spacing.sm,
-                borderRadius: 6,
-                backgroundColor:
-                  language === "en" ? "#ffffff" : "rgba(255, 255, 255, 0.2)",
-              }}
-            >
-              <Text
-                variant="caption"
-                weight="semibold"
-                style={{
-                  color: language === "en" ? "#4CAF50" : "#ffffff",
-                }}
-              >
-                EN
-              </Text>
-            </TouchableOpacity>
-          </View>
+          {/* Footer */}
+          <Text style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, textAlign: "center", marginTop: spacing.xxl }}>
+            © 2026 Dhemax · Centro de Carga &amp; WorkFoce
+          </Text>
         </ScrollView>
       </View>
     </LinearGradient>

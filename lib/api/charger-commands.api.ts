@@ -18,6 +18,12 @@ export interface CommandResponse {
 
 type ConnectorCommand = 'start' | 'stop' | 'unlock' | 'enable' | 'disable' | 'availability';
 
+export interface RampBody {
+  direction: 'up' | 'down';
+  step_kw?: number;
+  preset_seconds?: number;
+}
+
 function cmdMeta() {
   return {
     meta: {
@@ -49,5 +55,22 @@ export const chargerCommandsApi = {
     bffClient.post<CommandResponse>(
       `/bff/operations/sites/${siteId}/chargers/${chargerId}/reboot`,
       cmdMeta(),
+    ),
+
+  /**
+   * POST /bff/operations/sites/:siteId/chargers/:chargerId/connectors/:connectorId/ramp
+   * direction: "up" increases power, "down" decreases power
+   * step_kw: power step in kW (optional, backend default)
+   * preset_seconds: tecle duration in seconds 1–120 (optional)
+   */
+  ramp: (
+    siteId: string,
+    chargerId: string,
+    connectorId: string,
+    body: RampBody,
+  ) =>
+    bffClient.post<CommandResponse>(
+      `/bff/operations/sites/${siteId}/chargers/${chargerId}/connectors/${connectorId}/ramp`,
+      { ...cmdMeta(), ...body },
     ),
 };

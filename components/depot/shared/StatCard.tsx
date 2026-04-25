@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/Card";
 import { Text } from "@/components/ui/Text";
-import { spacing } from "@/theme";
+import { spacing, getThemeColors } from "@/theme";
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { ReactNode } from "react";
 import { View } from "react-native";
 
@@ -12,6 +13,8 @@ interface StatCardProps {
 }
 
 export function StatCard({ value, label, color, minHeight = 80 }: StatCardProps) {
+  const colors = getThemeColors(useResolvedColorScheme());
+
   return (
     <View style={{ flex: 1, alignItems: "center", paddingVertical: spacing.md }}>
       <Text
@@ -26,7 +29,7 @@ export function StatCard({ value, label, color, minHeight = 80 }: StatCardProps)
       </Text>
       <Text
         style={{
-          color: "#9ca3af",
+          color: colors.mutedForeground,
           fontSize: 12,
           marginTop: spacing.xs,
         }}

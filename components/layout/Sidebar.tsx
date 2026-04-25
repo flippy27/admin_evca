@@ -4,8 +4,9 @@
  */
 
 import { useRouter, useSegments } from "expo-router";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
+  Animated,
   ScrollView,
   TouchableOpacity,
   View,
@@ -15,7 +16,8 @@ import {
 import { Text } from "@/components/ui/Text";
 import { useAuthStore } from "@/lib/stores/auth.store";
 import { getThemeColors, spacing } from "@/theme";
-import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
+import { useColorScheme, useResolvedColorScheme } from "@/hooks/use-color-scheme";
+import { useAppStore } from "@/lib/stores/app.store";
 import { Ionicons } from "@expo/vector-icons";
 import { useSidebar } from "./AppContainer";
 
@@ -71,6 +73,8 @@ const ROLE_FOCUS_MAP: Record<string, RoleFocusConfig> = {
   },
 };
 
+const SIDEBAR_WIDTH = Math.min(280, Dimensions.get("window").width * 0.8);
+
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const router = useRouter();
   const segments = useSegments();
@@ -79,6 +83,23 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const logout = useAuthStore((state) => state.logout);
   const user = useAuthStore((state) => state.user);
   const { activeRole } = useSidebar();
+  const colorScheme = useColorScheme();
+  const setColorScheme = useAppStore((s) => s.setColorScheme);
+  const isDark = resolvedScheme === "dark";
+
+  const slideAnim = useRef(new Animated.Value(-SIDEBAR_WIDTH)).current;
+
+  useEffect(() => {
+    Animated.spring(slideAnim, {
+      toValue: isOpen ? 0 : -SIDEBAR_WIDTH,
+      useNativeDriver: true,
+      damping: 22,
+      stiffness: 220,
+      mass: 0.9,
+    }).start();
+  }, [isOpen]);
+
+  const toggleTheme = () => setColorScheme(isDark ? "light" : "dark");
 
   const navItems: NavItem[] = [
     {
@@ -109,18 +130,23 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const roleFocus = ROLE_FOCUS_MAP[activeRole] ?? null;
 
   return (
-    <View
+    <Animated.View
       style={{
         position: "absolute",
         left: 0,
         top: 0,
         bottom: 0,
-        width: Math.min(280, Dimensions.get("window").width * 0.8),
+        width: SIDEBAR_WIDTH,
         backgroundColor: colors.card,
         borderRightWidth: 1,
         borderRightColor: colors.border,
         zIndex: 1000,
-        display: isOpen ? "flex" : "none",
+        transform: [{ translateX: slideAnim }],
+        shadowColor: "#000",
+        shadowOpacity: 0.18,
+        shadowRadius: 16,
+        shadowOffset: { width: 4, height: 0 },
+        elevation: 12,
       }}
     >
       <SafeAreaView style={{ flex: 1 }}>
@@ -250,6 +276,43 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             paddingVertical: spacing.md,
           }}
         >
+          {/* Dark / Light mode toggle */}
+          <TouchableOpacity
+            onPress={toggleTheme}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingVertical: spacing.sm,
+              paddingHorizontal: spacing.xs,
+              marginBottom: spacing.sm,
+              borderRadius: 8,
+              backgroundColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)",
+            }}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm }}>
+              <Ionicons name={isDark ? "moon" : "sunny"} size={18} color={isDark ? "#a78bfa" : "#f59e0b"} />
+              <Text style={{ fontSize: 14, color: colors.foreground }}>
+                {isDark ? "Modo oscuro" : "Modo claro"}
+              </Text>
+            </View>
+            {/* Toggle pill */}
+            <View style={{
+              width: 44, height: 24, borderRadius: 12,
+              backgroundColor: isDark ? "#6d28d9" : "#d1d5db",
+              justifyContent: "center",
+              paddingHorizontal: 2,
+            }}>
+              <View style={{
+                width: 20, height: 20, borderRadius: 10,
+                backgroundColor: "#fff",
+                alignSelf: isDark ? "flex-end" : "flex-start",
+                shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 2,
+                elevation: 2,
+              }} />
+            </View>
+          </TouchableOpacity>
+
           {/* Logout */}
           <TouchableOpacity
             onPress={handleLogout}
@@ -299,6 +362,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           )}
         </View>
       </SafeAreaView>
-    </View>
+    </Animated.View>
   );
 }

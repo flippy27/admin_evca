@@ -4,7 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { LineChart } from 'react-native-chart-kit';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text } from '@/components/ui/Text';
-import { spacing } from '@/theme';
+import { spacing, getThemeColors } from '@/theme';
+import { useResolvedColorScheme } from '@/hooks/use-color-scheme';
 
 export interface EnergyVariable {
   key: string;
@@ -57,6 +58,7 @@ export function EnergyVariablesModal({
   frequency,
 }: Props) {
   const insets = useSafeAreaInsets();
+  const colors = getThemeColors(useResolvedColorScheme());
   const [selectedKey, setSelectedKey] = useState(initialKey ?? variables[0]?.key ?? '');
 
   // Sync selected key when modal re-opens with a different initialKey
@@ -97,7 +99,7 @@ export function EnergyVariablesModal({
 
         <View
           style={{
-            backgroundColor: '#fff',
+            backgroundColor: colors.card,
             borderTopLeftRadius: 24,
             borderTopRightRadius: 24,
             maxHeight: '88%',
@@ -110,7 +112,7 @@ export function EnergyVariablesModal({
               width: 36,
               height: 4,
               borderRadius: 2,
-              backgroundColor: '#e5e7eb',
+              backgroundColor: colors.border,
               alignSelf: 'center',
               marginTop: 10,
               marginBottom: 4,
@@ -128,14 +130,14 @@ export function EnergyVariablesModal({
             }}
           >
             <View style={{ flex: 1 }}>
-              <Text style={{ fontSize: 18, fontWeight: '700', color: '#111827' }}>{title}</Text>
-              <Text style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>{subtitle}</Text>
+              <Text style={{ fontSize: 18, fontWeight: '700', color: colors.foreground }}>{title}</Text>
+              <Text style={{ fontSize: 12, color: colors.mutedForeground, marginTop: 2 }}>{subtitle}</Text>
             </View>
             <TouchableOpacity
               onPress={onClose}
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             >
-              <Ionicons name="close" size={22} color="#374151" />
+              <Ionicons name="close" size={22} color={colors.foreground} />
             </TouchableOpacity>
           </View>
 
@@ -159,8 +161,8 @@ export function EnergyVariablesModal({
                       flex: 1,
                       borderRadius: 12,
                       borderWidth: isSel ? 2 : 1,
-                      borderColor: isSel ? v.color : '#e5e7eb',
-                      backgroundColor: isSel ? v.bg : '#fff',
+                      borderColor: isSel ? v.color : colors.border,
+                      backgroundColor: isSel ? v.bg : colors.muted,
                       alignItems: 'center',
                       paddingVertical: 10,
                       paddingHorizontal: 4,
@@ -177,7 +179,7 @@ export function EnergyVariablesModal({
                     >
                       {v.value.toFixed(1)}
                     </Text>
-                    <Text style={{ fontSize: 10, color: '#9ca3af', marginTop: 1 }}>
+                    <Text style={{ fontSize: 10, color: colors.mutedForeground, marginTop: 1 }}>
                       {v.unit}
                     </Text>
                   </TouchableOpacity>
@@ -205,18 +207,18 @@ export function EnergyVariablesModal({
                 width={SCREEN_WIDTH - spacing.lg * 2 + 10}
                 height={180}
                 chartConfig={{
-                  backgroundColor: '#fff',
-                  backgroundGradientFrom: '#fff',
-                  backgroundGradientTo: '#fff',
+                  backgroundColor: colors.card,
+                  backgroundGradientFrom: colors.card,
+                  backgroundGradientTo: colors.card,
                   decimalPlaces: 1,
                   color: (opacity = 1) =>
                     `${currentVar.color}${Math.round(opacity * 255)
                       .toString(16)
                       .padStart(2, '0')}`,
-                  labelColor: () => '#9ca3af',
+                  labelColor: () => colors.mutedForeground,
                   propsForDots: { r: '0' },
                   propsForBackgroundLines: {
-                    stroke: '#f3f4f6',
+                    stroke: colors.border,
                     strokeDasharray: '',
                   },
                 }}
@@ -232,7 +234,7 @@ export function EnergyVariablesModal({
             <View
               style={{
                 marginHorizontal: spacing.lg,
-                backgroundColor: '#f9fafb',
+                backgroundColor: colors.muted,
                 borderRadius: 12,
                 padding: spacing.md,
                 marginBottom: spacing.sm,
@@ -242,7 +244,7 @@ export function EnergyVariablesModal({
                 style={{
                   fontSize: 10,
                   fontWeight: '700',
-                  color: '#9ca3af',
+                  color: colors.mutedForeground,
                   textTransform: 'uppercase',
                   letterSpacing: 0.8,
                   marginBottom: spacing.sm,
@@ -252,22 +254,22 @@ export function EnergyVariablesModal({
               </Text>
               <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
                 <View style={{ alignItems: 'center' }}>
-                  <Text style={{ fontSize: 20, fontWeight: '700', color: '#111827' }}>
+                  <Text style={{ fontSize: 20, fontWeight: '700', color: colors.foreground }}>
                     {min.toFixed(1)}
                   </Text>
-                  <Text style={{ fontSize: 12, color: '#9ca3af', marginTop: 2 }}>Mínimo</Text>
+                  <Text style={{ fontSize: 12, color: colors.mutedForeground, marginTop: 2 }}>Mínimo</Text>
                 </View>
                 <View style={{ alignItems: 'center' }}>
                   <Text style={{ fontSize: 20, fontWeight: '700', color: currentVar.color }}>
                     {avg.toFixed(1)}
                   </Text>
-                  <Text style={{ fontSize: 12, color: '#9ca3af', marginTop: 2 }}>Promedio</Text>
+                  <Text style={{ fontSize: 12, color: colors.mutedForeground, marginTop: 2 }}>Promedio</Text>
                 </View>
                 <View style={{ alignItems: 'center' }}>
-                  <Text style={{ fontSize: 20, fontWeight: '700', color: '#111827' }}>
+                  <Text style={{ fontSize: 20, fontWeight: '700', color: colors.foreground }}>
                     {max.toFixed(1)}
                   </Text>
-                  <Text style={{ fontSize: 12, color: '#9ca3af', marginTop: 2 }}>Máximo</Text>
+                  <Text style={{ fontSize: 12, color: colors.mutedForeground, marginTop: 2 }}>Máximo</Text>
                 </View>
               </View>
             </View>
