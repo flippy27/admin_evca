@@ -4,18 +4,14 @@ import { spacing, colors as themeColors } from "@/theme";
 import { TouchableOpacity, View } from "react-native";
 import { ConnectorEnergyRow } from "./ConnectorEnergyRow";
 
-interface EnergyData {
-  voltage: number;
-  current: number;
-  power: number;
-  temperature: number;
-  frequency: number;
-}
-
 interface Connector {
   id: string;
   connectorId: number;
   status: string;
+  voltage?: number;
+  current?: number;
+  power?: number;
+  energy?: number;
 }
 
 interface ChargerEnergyPanelProps {
@@ -25,13 +21,12 @@ interface ChargerEnergyPanelProps {
     online: boolean;
     connectors?: Connector[];
   };
-  energyDataMap: Record<string, EnergyData>;
   statusConfigMap: Record<string, { label: string; color: string }>;
   onPress?: () => void;
 }
 
-export function ChargerEnergyPanel({ charger, energyDataMap, statusConfigMap, onPress }: ChargerEnergyPanelProps) {
-  const faultedCount = charger.connectors?.filter((c) => c.status === "Faulted").length || 0;
+export function ChargerEnergyPanel({ charger, statusConfigMap, onPress }: ChargerEnergyPanelProps) {
+  const faultedCount = charger.connectors?.filter((c) => c.status?.toLowerCase() === "faulted").length || 0;
 
   return (
     <TouchableOpacity onPress={onPress}>
@@ -55,14 +50,7 @@ export function ChargerEnergyPanel({ charger, energyDataMap, statusConfigMap, on
               <Text style={{ fontSize: 10, color: "white", fontWeight: "500" }}>{charger.online ? "Online" : "Offline"}</Text>
             </View>
             {faultedCount > 0 && (
-              <View
-                style={{
-                  backgroundColor: themeColors.destructive,
-                  paddingHorizontal: spacing.xs,
-                  paddingVertical: spacing.xs / 2,
-                  borderRadius: 4,
-                }}
-              >
+              <View style={{ backgroundColor: themeColors.light.destructive, paddingHorizontal: spacing.xs, paddingVertical: spacing.xs / 2, borderRadius: 4 }}>
                 <Text style={{ fontSize: 10, color: "white", fontWeight: "600" }}>{faultedCount}</Text>
               </View>
             )}
@@ -71,25 +59,20 @@ export function ChargerEnergyPanel({ charger, energyDataMap, statusConfigMap, on
 
         <View style={{ gap: spacing.sm }}>
           {charger.connectors?.map((connector) => {
-            const energy = energyDataMap[`${charger.id}-c0${connector.connectorId}`];
-            const statusLabel = statusConfigMap[connector.status];
-
+            const statusLabel = statusConfigMap[connector.status] ?? statusConfigMap[connector.status?.toLowerCase()];
             return (
               <ConnectorEnergyRow
                 key={connector.id}
                 connectorId={connector.connectorId}
                 status={connector.status}
-                statusLabel={statusLabel?.label || "Desconocido"}
+                statusLabel={statusLabel?.label || connector.status}
                 statusColor={statusLabel?.color || "#9ca3af"}
-                energyData={
-                  energy || {
-                    voltage: 230,
-                    current: 0,
-                    power: 0,
-                    temperature: 25,
-                    frequency: 50,
-                  }
-                }
+                energyData={{
+                  voltage: connector.voltage ?? 0,
+                  current: connector.current ?? 0,
+                  power: connector.power ?? 0,
+                  energy: connector.energy ?? 0,
+                }}
               />
             );
           })}

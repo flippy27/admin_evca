@@ -7,16 +7,18 @@ interface ConnectorDotProps {
 }
 
 const statusColors: Record<string, string> = {
-  Available: themeColors.connectorStatus.available,
-  Charging: themeColors.connectorStatus.charging,
-  Finishing: themeColors.connectorStatus.finishing,
-  Faulted: themeColors.connectorStatus.faulted,
-  Suspended: themeColors.connectorStatus.suspended,
-  Unavailable: "#e5e7eb",
+  available: themeColors.connectorStatus.available,
+  charging: themeColors.connectorStatus.charging,
+  finishing: themeColors.connectorStatus.finishing,
+  faulted: themeColors.connectorStatus.faulted,
+  suspended: themeColors.connectorStatus.suspended,
+  preparing: themeColors.connectorStatus.available,
+  unavailable: "#e5e7eb",
+  offline: "#e5e7eb",
 };
 
 export default function ConnectorDot({ status, size = 12 }: ConnectorDotProps) {
-  const color = statusColors[status];
+  const color = statusColors[status?.toLowerCase()] ?? "#e5e7eb";
 
   return (
     <View

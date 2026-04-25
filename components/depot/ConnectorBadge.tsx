@@ -19,7 +19,7 @@ const statusConfig: Record<string, { bg: string; border: string; text: string }>
   finishing:   { bg: "#faf5ff", border: "#a855f7", text: "#a855f7" },
   faulted:     { bg: "#fef2f2", border: "#ef4444", text: "#dc2626" },
   suspended:   { bg: "#fefce8", border: "#eab308", text: "#ca8a04" },
-  preparing:   { bg: "#fefce8", border: "#eab308", text: "#ca8a04" },
+  preparing:   { bg: "#f9fafb", border: "#0ACDA9", text: "#0ACDA9" },
   unavailable: { bg: "#f3f4f6", border: "#d1d5db", text: "#9ca3af" },
   offline:     { bg: "#f3f4f6", border: "#d1d5db", text: "#9ca3af" },
 };

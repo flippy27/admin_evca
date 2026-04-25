@@ -1,5 +1,5 @@
-import { ActivityIndicator, ScrollView, View } from "react-native";
-import { useEffect, useMemo } from "react";
+import { ActivityIndicator, RefreshControl, ScrollView, View } from "react-native";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useChargersStore } from "@/lib/stores/chargers.store";
 import { useChargingSessionsStore } from "@/lib/stores/charging-session.store";
 import { useGroupStore } from "@/lib/stores/group.store";
@@ -78,20 +78,41 @@ export default function OperadorView() {
   const storeSessions = useChargingSessionsStore((state: any) => state.sessions || []);
   const selectedLocationId = useChargersStore((state) => state.selectedLocationId);
   const { groupData, groupLoading, groupError } = useGroupStore();
+  const [refreshing, setRefreshing] = useState(false);
 
-  // 3-second polling for group data + sessions
+  // Silent background fetch (no loading state)
+  const silentFetch = useCallback(() => {
+    if (!selectedLocationId) return;
+    useGroupStore.getState().fetchGroup(selectedLocationId);
+    useChargingSessionsStore.getState().fetchSessions({
+      payload: { location_ids: [selectedLocationId] },
+      pagination: { page: 1, per_page: 20 },
+    });
+  }, [selectedLocationId]);
+
+  // 3-second polling — silent, keeps content visible
   useEffect(() => {
     if (!selectedLocationId) return;
-    const poll = () => {
-      useGroupStore.getState().fetchGroup(selectedLocationId);
-      useChargingSessionsStore.getState().fetchSessions({
-        payload: { location_ids: [selectedLocationId] },
-        pagination: { page: 1, per_page: 20 },
-      });
-    };
-    poll(); // immediate first call
-    const interval = setInterval(poll, 3000);
+    silentFetch(); // immediate first call
+    const interval = setInterval(silentFetch, 3000);
     return () => clearInterval(interval);
+  }, [selectedLocationId, silentFetch]);
+
+  // Pull-to-refresh — shows RefreshControl spinner
+  const handleRefresh = useCallback(async () => {
+    if (!selectedLocationId) return;
+    setRefreshing(true);
+    try {
+      await Promise.all([
+        useGroupStore.getState().fetchGroup(selectedLocationId),
+        useChargingSessionsStore.getState().fetchSessions({
+          payload: { location_ids: [selectedLocationId] },
+          pagination: { page: 1, per_page: 20 },
+        }),
+      ]);
+    } finally {
+      setRefreshing(false);
+    }
   }, [selectedLocationId]);
 
   const groups = useMemo(
@@ -145,7 +166,16 @@ export default function OperadorView() {
   }, [storeSessions]);
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: colors.background }}>
+    <ScrollView
+      style={{ flex: 1, backgroundColor: colors.background }}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+          tintColor={colors.primary}
+        />
+      }
+    >
       <StatsGrid
         charging={stats.charging}
         available={stats.available}
@@ -154,22 +184,22 @@ export default function OperadorView() {
       />
       <ActiveSessionsList sessions={activeSessions} />
 
-      {/* Loading */}
-      {groupLoading && (
+      {/* Initial load spinner — only when no data yet */}
+      {!groupData && groupLoading && (
         <View style={{ padding: spacing.xl, alignItems: "center" }}>
           <ActivityIndicator color={colors.primary} />
         </View>
       )}
 
-      {/* Error */}
-      {groupError && !groupLoading && (
+      {/* Error — only when no data to show */}
+      {groupError && !groupData && (
         <View style={{ padding: spacing.lg }}>
           <Text style={{ color: colors.destructive, fontSize: 13 }}>{groupError}</Text>
         </View>
       )}
 
-      {/* Areas → Lines → Chargers */}
-      {!groupLoading && !groupError && (
+      {/* Areas → Lines → Chargers — always visible once data loaded */}
+      {groups.length > 0 && (
         <View style={{ paddingBottom: spacing.xl }}>
           {groups.map((area) => (
             <View key={area.areaName}>

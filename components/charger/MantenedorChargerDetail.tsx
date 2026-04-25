@@ -5,51 +5,80 @@ import { Text } from "@/components/ui/Text";
 import { Ionicons } from "@expo/vector-icons";
 import { useToastStore } from "@/components/ui/Toast";
 import { AppHeader } from "@/components/layout/AppHeader";
+import { useChargersStore } from "@/lib/stores/chargers.store";
+import { chargerCommandsApi } from "@/lib/api/charger-commands.api";
+import { EnergyVariablesModal, EnergyVariable } from "@/components/charger/EnergyVariablesModal";
 
-const mockEnergyData: Record<string, { voltage: number; current: number; power: number; temperature: number; frequency: number }> = {
-  "cb-01-c01":   { voltage: 230.5, current: 16.2, power: 3.734, temperature: 42.5, frequency: 50.01 },
-  "cb-01-c02":   { voltage: 228.1, current: 20.1, power: 4.6,   temperature: 35.2, frequency: 50.0  },
-  "cb-02-c01":   { voltage: 231.0, current: 18.5, power: 4.27,  temperature: 28.0, frequency: 50.0  },
-  "cb-02-c02":   { voltage: 229.3, current: 0,    power: 0,     temperature: 38.1, frequency: 50.0  },
-  "cb-01-b-c01": { voltage: 226.2, current: 25.0, power: 5.65,  temperature: 42.0, frequency: 50.0  },
-  "cb-01-b-c02": { voltage: 230.0, current: 0,    power: 0,     temperature: 31.0, frequency: 50.0  },
-  "cb-03-c01":   { voltage: 229.8, current: 0,    power: 0,     temperature: 25.0, frequency: 50.0  },
-  "cb-03-c02":   { voltage: 230.1, current: 0,    power: 0,     temperature: 24.5, frequency: 50.0  },
-};
-
-// Handles both lowercase (API) and PascalCase (mock)
 const STATUS_CONFIG: Record<string, { label: string; bg: string; color: string }> = {
   available:   { label: "Disponible",    bg: "#f3f4f6",  color: "#0ACDA9" },
-  Available:   { label: "Disponible",    bg: "#f3f4f6",  color: "#0ACDA9" },
+  preparing:   { label: "Preparando",    bg: "#f3f4f6",  color: "#0ACDA9" },
   charging:    { label: "Cargando",      bg: "#dbeafe",  color: "#1477FF" },
-  Charging:    { label: "Cargando",      bg: "#dbeafe",  color: "#1477FF" },
   occupied:    { label: "Cargando",      bg: "#dbeafe",  color: "#1477FF" },
   finishing:   { label: "Finalizando",   bg: "#f3e8ff",  color: "#a855f7" },
-  Finishing:   { label: "Finalizando",   bg: "#f3e8ff",  color: "#a855f7" },
   faulted:     { label: "Falla",         bg: "#fee2e2",  color: "#ef4444" },
-  Faulted:     { label: "Falla",         bg: "#fee2e2",  color: "#ef4444" },
   suspended:   { label: "Suspendido",    bg: "#fef3c7",  color: "#f59e0b" },
-  Suspended:   { label: "Suspendido",    bg: "#fef3c7",  color: "#f59e0b" },
   unavailable: { label: "No disponible", bg: "#f3f4f6",  color: "#9ca3af" },
-  Unavailable: { label: "No disponible", bg: "#f3f4f6",  color: "#9ca3af" },
   offline:     { label: "Offline",       bg: "#f3f4f6",  color: "#9ca3af" },
 };
 
 function getStatus(status: string) {
-  return STATUS_CONFIG[status] || { label: status, bg: "#f3f4f6", color: "#9ca3af" };
+  return STATUS_CONFIG[status?.toLowerCase()] || { label: status, bg: "#f3f4f6", color: "#9ca3af" };
+}
+
+function buildConnectorVariables(connector: any): EnergyVariable[] {
+  const vars: EnergyVariable[] = [];
+  if (connector.voltage != null) {
+    vars.push({ key: "voltage", label: "Voltaje",   unit: "V",  icon: "speedometer", color: "#0ACDA9", bg: "#f0fdfa", value: connector.voltage });
+  }
+  if (connector.current != null) {
+    vars.push({ key: "current", label: "Corriente", unit: "A",  icon: "flash",       color: "#2563eb", bg: "#eff6ff", value: connector.current });
+  }
+  if (connector.livePower != null) {
+    vars.push({ key: "power",   label: "Potencia",  unit: "kW", icon: "pulse",       color: "#9333ea", bg: "#faf5ff", value: connector.livePower });
+  }
+  // Always show temperature card; use real value when available, 0 as placeholder otherwise
+  vars.push({
+    key: "temperature",
+    label: "Temperatura",
+    unit: "°C",
+    icon: "thermometer",
+    color: connector.temperature != null && connector.temperature > 45 ? "#dc2626" : "#ea580c",
+    bg: connector.temperature != null && connector.temperature > 45 ? "#fef2f2" : "#fff7ed",
+    value: connector.temperature ?? 0,
+  });
+  return vars;
 }
 
 export function MantenedorChargerDetail({ charger }: { charger: any }) {
   const router = useRouter();
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
+  const selectedLocationId = useChargersStore((s) => s.selectedLocationId) ?? "";
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
-  const executeCommand = async (command: string) => {
-    setActionLoading(command);
-    await new Promise((r) => setTimeout(r, 1500));
-    setActionLoading(null);
-    useToastStore.getState().show(`${command} ejecutado`, "success", "Comando OK");
+  // Modal state: which connector + which variable key
+  const [modalConnectorId, setModalConnectorId] = useState<string | null>(null);
+  const [modalInitialKey, setModalInitialKey] = useState<string>("voltage");
+
+  const openModal = (connectorId: string, key: string) => {
+    setModalConnectorId(connectorId);
+    setModalInitialKey(key);
+  };
+  const closeModal = () => setModalConnectorId(null);
+
+  const modalConnector = charger.connectors?.find((c: any) => String(c.id) === modalConnectorId) ?? null;
+  const modalVars = modalConnector ? buildConnectorVariables(modalConnector) : [];
+
+  const runReboot = async () => {
+    setActionLoading("reboot");
+    try {
+      await chargerCommandsApi.reboot(selectedLocationId, charger.id);
+      useToastStore.getState().show("Cargador reiniciado", "success", "Reiniciar Cargador");
+    } catch {
+      useToastStore.getState().show("Error al reiniciar", "error", "Reiniciar Cargador");
+    } finally {
+      setActionLoading(null);
+    }
   };
 
   const location = charger.location || charger.site?.name || charger.siteName || "";
@@ -89,11 +118,11 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, gap: 16 }}>
         {charger.connectors?.map((connector: any) => {
           const sc = getStatus(connector.status);
-          const connectorKey = `${charger.id}-c0${connector.connectorId}`;
-          const energy = mockEnergyData[connectorKey];
           const soc = connector.soc !== undefined ? Number(connector.soc) : undefined;
           const connEnergy = connector.energyDelivered ?? connector.energy;
-          const tempHigh = energy && energy.temperature > 45;
+          const connVars = buildConnectorVariables(connector);
+          const hasEnergyData = connVars.length > 0;
+          const tempHigh = connector.temperature != null && connector.temperature > 45;
 
           return (
             <View
@@ -111,16 +140,18 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
               </View>
 
               {/* Vehicle & charging info */}
-              {connector.vehicleId && (
+              {(connector.vehicleId || soc != null || connector.power != null || connEnergy != null) && (
                 <View style={{ gap: 10, marginBottom: 12 }}>
-                  <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                    <Text style={{ fontSize: 14, color: "#6b7280" }}>Vehículo</Text>
-                    <Text style={{ fontSize: 14, fontWeight: "600", color: "#111827" }}>
-                      {String(connector.vehicleId).toUpperCase()}
-                    </Text>
-                  </View>
+                  {connector.vehicleId && (
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                      <Text style={{ fontSize: 14, color: "#6b7280" }}>Vehículo</Text>
+                      <Text style={{ fontSize: 14, fontWeight: "600", color: "#111827" }}>
+                        {String(connector.vehicleId).toUpperCase()}
+                      </Text>
+                    </View>
+                  )}
 
-                  {soc !== undefined && (
+                  {soc != null && (
                     <View>
                       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
                         <Text style={{ fontSize: 14, color: "#6b7280" }}>Estado de Carga</Text>
@@ -138,27 +169,29 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
                     </View>
                   )}
 
-                  {connector.power !== undefined && (
+                  {connector.power != null && (
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                       <Text style={{ fontSize: 14, color: "#6b7280" }}>Potencia</Text>
                       <Text style={{ fontSize: 14, fontWeight: "600", color: "#111827" }}>{connector.power} kW</Text>
                     </View>
                   )}
 
-                  {connEnergy !== undefined && (
+                  {connEnergy != null && (
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                       <Text style={{ fontSize: 14, color: "#6b7280" }}>Energía Entregada</Text>
-                      <Text style={{ fontSize: 14, fontWeight: "600", color: "#111827" }}>{connEnergy} kWh</Text>
+                      <Text style={{ fontSize: 14, fontWeight: "600", color: "#111827" }}>
+                        {Number(connEnergy).toFixed(1)} kWh
+                      </Text>
                     </View>
                   )}
                 </View>
               )}
 
-              {/* VARIABLES ENERGÉTICAS — separator + grid */}
-              <View style={{ borderTopWidth: connector.vehicleId ? 1 : 0, borderTopColor: "#f3f4f6", paddingTop: connector.vehicleId ? 12 : 0 }}>
-                {energy ? (
+              {/* VARIABLES ENERGÉTICAS */}
+              <View style={{ borderTopWidth: 1, borderTopColor: "#f3f4f6", paddingTop: 12 }}>
+                {hasEnergyData ? (
                   <View>
-                    {/* Section header with "Ver curvas" */}
+                    {/* Section header */}
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
                       <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
                         <Ionicons name="pulse" size={13} color="#0d9488" />
@@ -166,75 +199,69 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
                           Variables Energéticas
                         </Text>
                       </View>
-                      <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", gap: 4, backgroundColor: "#ccfbf1", paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 }}>
+                      <TouchableOpacity
+                        onPress={() => openModal(String(connector.id), connVars[0]?.key ?? "voltage")}
+                        style={{ flexDirection: "row", alignItems: "center", gap: 4, backgroundColor: "#ccfbf1", paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 }}
+                      >
                         <Ionicons name="bar-chart" size={11} color="#0d9488" />
                         <Text style={{ fontSize: 11, fontWeight: "500", color: "#0d9488" }}>Ver curvas</Text>
                       </TouchableOpacity>
                     </View>
 
-                    {/* 2x2 energy grid */}
+                    {/* 2×2 energy grid — each card opens modal on that variable */}
                     <View style={{ gap: 8 }}>
                       <View style={{ flexDirection: "row", gap: 8 }}>
-                        {/* Voltaje */}
-                        <TouchableOpacity style={{ flex: 1, backgroundColor: "#f0fdfa", borderRadius: 8, padding: 10 }}>
-                          <View style={{ flexDirection: "row", alignItems: "center", gap: 4, marginBottom: 4 }}>
-                            <Ionicons name="speedometer" size={12} color="#0d9488" />
-                            <Text style={{ fontSize: 11, color: "#0d9488" }}>Voltaje</Text>
-                          </View>
-                          <Text style={{ fontSize: 17, fontWeight: "700", color: "#0f766e" }}>
-                            {energy.voltage} V
-                          </Text>
-                        </TouchableOpacity>
-                        {/* Corriente */}
-                        <TouchableOpacity style={{ flex: 1, backgroundColor: "#eff6ff", borderRadius: 8, padding: 10 }}>
-                          <View style={{ flexDirection: "row", alignItems: "center", gap: 4, marginBottom: 4 }}>
-                            <Ionicons name="flash" size={12} color="#2563eb" />
-                            <Text style={{ fontSize: 11, color: "#2563eb" }}>Corriente</Text>
-                          </View>
-                          <Text style={{ fontSize: 17, fontWeight: "700", color: "#1d4ed8" }}>
-                            {energy.current} A
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-
-                      <View style={{ flexDirection: "row", gap: 8 }}>
-                        {/* Potencia */}
-                        <TouchableOpacity style={{ flex: 1, backgroundColor: "#faf5ff", borderRadius: 8, padding: 10 }}>
-                          <View style={{ flexDirection: "row", alignItems: "center", gap: 4, marginBottom: 4 }}>
-                            <Ionicons name="pulse" size={12} color="#9333ea" />
-                            <Text style={{ fontSize: 11, color: "#9333ea" }}>Potencia</Text>
-                          </View>
-                          <Text style={{ fontSize: 17, fontWeight: "700", color: "#7e22ce" }}>
-                            {energy.power} kW
-                          </Text>
-                        </TouchableOpacity>
-                        {/* Temperatura */}
-                        <TouchableOpacity style={{ flex: 1, backgroundColor: tempHigh ? "#fef2f2" : "#fff7ed", borderRadius: 8, padding: 10 }}>
-                          <View style={{ flexDirection: "row", alignItems: "center", gap: 4, marginBottom: 4 }}>
-                            <Ionicons name="thermometer" size={12} color={tempHigh ? "#dc2626" : "#ea580c"} />
-                            <Text style={{ fontSize: 11, color: tempHigh ? "#dc2626" : "#ea580c" }}>Temperatura</Text>
-                          </View>
-                          <Text style={{ fontSize: 17, fontWeight: "700", color: tempHigh ? "#b91c1c" : "#c2410c" }}>
-                            {energy.temperature} °C
-                          </Text>
-                          {tempHigh && (
-                            <View style={{ flexDirection: "row", alignItems: "center", gap: 3, marginTop: 3 }}>
-                              <Ionicons name="alert-circle" size={10} color="#dc2626" />
-                              <Text style={{ fontSize: 9, color: "#dc2626", fontWeight: "600" }}>Temperatura alta</Text>
+                        {connVars.slice(0, 2).map((v) => (
+                          <TouchableOpacity
+                            key={v.key}
+                            onPress={() => openModal(String(connector.id), v.key)}
+                            style={{ flex: 1, backgroundColor: v.bg, borderRadius: 8, padding: 10 }}
+                          >
+                            <View style={{ flexDirection: "row", alignItems: "center", gap: 4, marginBottom: 4 }}>
+                              <Ionicons name={v.icon as any} size={12} color={v.color} />
+                              <Text style={{ fontSize: 11, color: v.color }}>{v.label}</Text>
                             </View>
-                          )}
-                        </TouchableOpacity>
+                            <Text style={{ fontSize: 17, fontWeight: "700", color: v.color }}>
+                              {v.value.toFixed(1)} {v.unit}
+                            </Text>
+                            {v.key === "temperature" && tempHigh && (
+                              <View style={{ flexDirection: "row", alignItems: "center", gap: 3, marginTop: 3 }}>
+                                <Ionicons name="alert-circle" size={10} color="#dc2626" />
+                                <Text style={{ fontSize: 9, color: "#dc2626", fontWeight: "600" }}>Temperatura alta</Text>
+                              </View>
+                            )}
+                          </TouchableOpacity>
+                        ))}
                       </View>
-                    </View>
-
-                    {/* Frecuencia row */}
-                    <View style={{ backgroundColor: "#f9fafb", borderRadius: 8, padding: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
-                      <Text style={{ fontSize: 12, color: "#6b7280" }}>Frecuencia</Text>
-                      <Text style={{ fontSize: 13, fontWeight: "600", color: "#111827" }}>{energy.frequency} Hz</Text>
+                      {connVars.length > 2 && (
+                        <View style={{ flexDirection: "row", gap: 8 }}>
+                          {connVars.slice(2, 4).map((v) => (
+                            <TouchableOpacity
+                              key={v.key}
+                              onPress={() => openModal(String(connector.id), v.key)}
+                              style={{ flex: 1, backgroundColor: v.bg, borderRadius: 8, padding: 10 }}
+                            >
+                              <View style={{ flexDirection: "row", alignItems: "center", gap: 4, marginBottom: 4 }}>
+                                <Ionicons name={v.icon as any} size={12} color={v.color} />
+                                <Text style={{ fontSize: 11, color: v.color }}>{v.label}</Text>
+                              </View>
+                              <Text style={{ fontSize: 17, fontWeight: "700", color: v.color }}>
+                                {v.value.toFixed(1)} {v.unit}
+                              </Text>
+                              {v.key === "temperature" && tempHigh && (
+                                <View style={{ flexDirection: "row", alignItems: "center", gap: 3, marginTop: 3 }}>
+                                  <Ionicons name="alert-circle" size={10} color="#dc2626" />
+                                  <Text style={{ fontSize: 9, color: "#dc2626", fontWeight: "600" }}>Temperatura alta</Text>
+                                </View>
+                              )}
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+                      )}
                     </View>
 
                     {/* Hint */}
-                    <View style={{ flexDirection: "row", alignItems: "center", gap: 4, marginTop: 6 }}>
+                    <View style={{ flexDirection: "row", alignItems: "center", gap: 4, marginTop: 8 }}>
                       <Ionicons name="bar-chart" size={10} color="#0d9488" />
                       <Text style={{ fontSize: 11, color: "#0d9488" }}>Toca las variables para ver gráfico de curvas</Text>
                     </View>
@@ -257,7 +284,7 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
           </Text>
           <View style={{ gap: 8 }}>
             <TouchableOpacity
-              onPress={() => executeCommand("reboot")}
+              onPress={runReboot}
               disabled={actionLoading === "reboot"}
               style={{ backgroundColor: "#f97316", paddingVertical: 14, borderRadius: 8, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, opacity: actionLoading === "reboot" ? 0.5 : 1 }}
             >
@@ -283,6 +310,16 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
           </View>
         </View>
       </ScrollView>
+
+      {/* Energy variables modal (per connector) */}
+      <EnergyVariablesModal
+        visible={!!modalConnectorId}
+        onClose={closeModal}
+        title="Variables Energéticas"
+        subtitle={`${charger.name} · C${modalConnector?.connectorId ?? ""} — Últimos 30 min`}
+        variables={modalVars}
+        initialKey={modalInitialKey}
+      />
     </SafeAreaView>
   );
 }

@@ -23,7 +23,7 @@ interface AlertsSectionProps {
 export function AlertsSection({ chargers }: AlertsSectionProps) {
   const router = useRouter();
 
-  const faultedChargers = chargers.filter((c) => c.connectors?.some((cn) => cn.status === "Faulted"));
+  const faultedChargers = chargers.filter((c) => c.connectors?.some((cn) => cn.status?.toLowerCase() === "faulted"));
 
   if (faultedChargers.length === 0) return null;
 
@@ -35,14 +35,14 @@ export function AlertsSection({ chargers }: AlertsSectionProps) {
       <View style={{ gap: spacing.sm, marginBottom: spacing.lg }}>
         {faultedChargers.map((charger) =>
           charger.connectors
-            ?.filter((c) => c.status === "Faulted")
+            ?.filter((c) => c.status?.toLowerCase() === "faulted")
             .map((connector) => (
               <FaultedAlert
                 key={connector.id}
                 chargerName={charger.name}
                 connectorId={connector.connectorId}
                 onPress={() =>
-                  router.push({ pathname: `/charger/${charger.id}`, params: { chargerName: charger.name, role: "supervisor" } })
+                  router.push({ pathname: `/charger/${charger.id}` as any, params: { chargerName: charger.name, role: "supervisor" } })
                 }
               />
             )),

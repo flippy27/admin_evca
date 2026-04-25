@@ -1,35 +1,28 @@
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { useGroupStore } from "@/lib/stores/group.store";
+import { useChargersStore } from "@/lib/stores/chargers.store";
 import { GroupCharger, GroupData } from "@/lib/types/group.types";
 import { getThemeColors, spacing } from "@/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useMemo } from "react";
-import { ActivityIndicator, ScrollView, View } from "react-native";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ActivityIndicator, RefreshControl, ScrollView, View } from "react-native";
 import { Text } from "@/components/ui/Text";
+import { EnergyVariablesModal, EnergyVariable } from "@/components/charger/EnergyVariablesModal";
 
 import { ChargerEnergyPanel } from "./ChargerEnergyPanel";
 import { EnergyOverview } from "./EnergyOverview";
 import { HealthStatusGrid } from "./HealthStatusGrid";
 
-const mockEnergyData: Record<string, { voltage: number; current: number; power: number; temperature: number; frequency: number }> = {
-  "charger-1-c01": { voltage: 230, current: 16, power: 3.7, temperature: 32, frequency: 50 },
-  "charger-1-c02": { voltage: 228, current: 20, power: 4.6, temperature: 35, frequency: 50 },
-  "charger-2-c01": { voltage: 231, current: 0, power: 0, temperature: 28, frequency: 50 },
-  "charger-2-c02": { voltage: 229, current: 18, power: 4.1, temperature: 38, frequency: 50 },
-  "charger-3-c01": { voltage: 226, current: 25, power: 5.7, temperature: 42, frequency: 50 },
-  "charger-3-c02": { voltage: 230, current: 24, power: 5.5, temperature: 41, frequency: 50 },
-};
-
 const statusConfigMap: Record<string, { label: string; color: string }> = {
-  available:   { label: "Disponible",    color: "#1f2937" },
-  preparing:   { label: "Preparando",   color: "#3b82f6" },
-  charging:    { label: "Cargando",     color: "#8b5cf6" },
-  finishing:   { label: "Finalizando",  color: "#a855f7" },
-  faulted:     { label: "Falla",        color: "#ef4444" },
-  suspended:   { label: "Suspendido",   color: "#eab308" },
-  unavailable: { label: "No disponible",color: "#9ca3af" },
-  offline:     { label: "Offline",      color: "#9ca3af" },
+  available:   { label: "Disponible",    color: "#0ACDA9" },
+  preparing:   { label: "Preparando",    color: "#0ACDA9" },
+  charging:    { label: "Cargando",      color: "#8b5cf6" },
+  finishing:   { label: "Finalizando",   color: "#a855f7" },
+  faulted:     { label: "Falla",         color: "#ef4444" },
+  suspended:   { label: "Suspendido",    color: "#eab308" },
+  unavailable: { label: "No disponible", color: "#9ca3af" },
+  offline:     { label: "Offline",       color: "#9ca3af" },
 };
 
 function mapCharger(gc: GroupCharger) {
@@ -41,13 +34,17 @@ function mapCharger(gc: GroupCharger) {
       id: c.connector_id,
       connectorId: c.connector_number,
       status: c.connector_status.toLowerCase(),
+      // Energy from last recorded values
+      voltage: +(c.last_charging_record?.voltage ?? (c.connector_max_voltage ?? 0)).toFixed(1),
+      current: +(c.last_charging_record?.current ?? 0).toFixed(1),
+      power:   +(c.last_charging_record?.power   ?? 0).toFixed(1),
+      energy:  +(c.last_charging_record?.energy  ?? 0).toFixed(1),
     })),
   };
 }
 
 function buildGroups(data: GroupData) {
   if (data.areas.length > 0) {
-    // Merge duplicate areas by area_name, then lines by line_name
     const areaMap = new Map<string, Map<string, GroupCharger[]>>();
     for (const area of data.areas) {
       if (!areaMap.has(area.area_name)) areaMap.set(area.area_name, new Map());
@@ -67,7 +64,6 @@ function buildGroups(data: GroupData) {
       })),
     }));
   }
-  // No areas — flat list under site name
   return [{
     areaName: data.site.site_name,
     lines: [{
@@ -84,8 +80,32 @@ export default function MantenedorView() {
   const scheme = useResolvedColorScheme();
   const colors = getThemeColors(scheme);
   const router = useRouter();
-
+  const selectedLocationId = useChargersStore((s) => s.selectedLocationId);
   const { groupData, groupLoading, groupError } = useGroupStore();
+  const [refreshing, setRefreshing] = useState(false);
+  const [siteModalKey, setSiteModalKey] = useState<string | null>(null);
+
+  const silentFetch = useCallback(() => {
+    if (!selectedLocationId) return;
+    useGroupStore.getState().fetchGroup(selectedLocationId);
+  }, [selectedLocationId]);
+
+  useEffect(() => {
+    if (!selectedLocationId) return;
+    silentFetch();
+    const interval = setInterval(silentFetch, 3000);
+    return () => clearInterval(interval);
+  }, [selectedLocationId, silentFetch]);
+
+  const handleRefresh = useCallback(async () => {
+    if (!selectedLocationId) return;
+    setRefreshing(true);
+    try {
+      await useGroupStore.getState().fetchGroup(selectedLocationId);
+    } finally {
+      setRefreshing(false);
+    }
+  }, [selectedLocationId]);
 
   const groups = useMemo(() => (groupData ? buildGroups(groupData) : []), [groupData]);
 
@@ -102,47 +122,59 @@ export default function MantenedorView() {
   }, [allChargers]);
 
   const energyStats = useMemo(() => {
-    const entries = Object.values(mockEnergyData);
-    const avg = (fn: (d: typeof entries[0]) => number) =>
-      entries.length ? entries.reduce((s, d) => s + fn(d), 0) / entries.length : 0;
-    return {
-      avgVoltage: avg((d) => d.voltage).toFixed(1),
-      avgTemp: avg((d) => d.temperature).toFixed(1),
-      totalPower: entries.reduce((s, d) => s + d.power, 0).toFixed(2),
-      maxTemp: entries.length ? Math.max(...entries.map((d) => d.temperature)).toFixed(1) : "0",
-    };
-  }, []);
+    const allConnectors = allChargers.flatMap((c) => c.connectors ?? []);
+    const active = allConnectors.filter((c) => c.status !== "offline" && c.status !== "unavailable");
+    const n = active.length || 1;
+    const avgVoltage = (active.reduce((s, c) => s + (c.voltage ?? 0), 0) / n).toFixed(1);
+    const avgCurrent = (active.reduce((s, c) => s + (c.current ?? 0), 0) / n).toFixed(1);
+    const totalPower = allConnectors.reduce((s, c) => s + (c.power ?? 0), 0).toFixed(1);
+    const totalEnergy = allConnectors.reduce((s, c) => s + (c.energy ?? 0), 0).toFixed(1);
+    return { avgVoltage, avgCurrent, totalPower, totalEnergy };
+  }, [allChargers]);
+
+  const siteModalVars = useMemo((): EnergyVariable[] => [
+    { key: "voltage", label: "Voltaje Prom.",   unit: "V",   icon: "speedometer",     color: "#8b5cf6", bg: "#faf5ff", value: parseFloat(energyStats.avgVoltage)  || 0 },
+    { key: "current", label: "Corriente Prom.", unit: "A",   icon: "flash",           color: "#2563eb", bg: "#eff6ff", value: parseFloat(energyStats.avgCurrent)  || 0 },
+    { key: "power",   label: "Potencia Total",  unit: "kW",  icon: "pulse",           color: "#8b5cf6", bg: "#faf5ff", value: parseFloat(energyStats.totalPower)  || 0 },
+    { key: "energy",  label: "Energía Total",   unit: "kWh", icon: "battery-charging",color: "#06b6d4", bg: "#ecfeff", value: parseFloat(energyStats.totalEnergy) || 0 },
+  ], [energyStats]);
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: colors.background }}>
+    <View style={{ flex: 1 }}>
+    <ScrollView
+      style={{ flex: 1, backgroundColor: colors.background }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor={colors.primary} />
+      }
+    >
       <EnergyOverview
         avgVoltage={energyStats.avgVoltage}
-        maxTemp={energyStats.maxTemp}
+        avgCurrent={energyStats.avgCurrent}
         totalPower={energyStats.totalPower}
-        avgTemp={energyStats.avgTemp}
+        totalEnergy={energyStats.totalEnergy}
+        onPressVariable={(key) => setSiteModalKey(key)}
       />
       <HealthStatusGrid healthy={stats.healthy} faulted={stats.faulted} suspended={stats.suspended} />
 
-      {/* Loading */}
-      {groupLoading && (
+      {/* Initial load spinner */}
+      {!groupData && groupLoading && (
         <View style={{ padding: spacing.xl, alignItems: "center" }}>
           <ActivityIndicator color={colors.primary} />
         </View>
       )}
 
-      {/* Error */}
-      {groupError && !groupLoading && (
+      {/* Error — only when no data */}
+      {groupError && !groupData && (
         <View style={{ padding: spacing.lg }}>
           <Text style={{ color: colors.destructive, fontSize: 13 }}>{groupError}</Text>
         </View>
       )}
 
       {/* Areas → Lines → Chargers */}
-      {!groupLoading && !groupError && (
+      {groups.length > 0 && (
         <View style={{ paddingBottom: spacing.xl }}>
           {groups.map((area) => (
             <View key={area.areaName}>
-              {/* Area header */}
               <View
                 style={{
                   flexDirection: "row",
@@ -169,7 +201,6 @@ export default function MantenedorView() {
 
               {area.lines.map((line) => (
                 <View key={line.lineName || "__flat__"}>
-                  {/* Line sub-header */}
                   {line.lineName ? (
                     <View
                       style={{
@@ -188,13 +219,11 @@ export default function MantenedorView() {
                     </View>
                   ) : null}
 
-                  {/* Chargers */}
                   <View style={{ paddingHorizontal: spacing.lg, gap: spacing.sm, paddingBottom: spacing.sm }}>
                     {line.chargers.map((charger) => (
                       <ChargerEnergyPanel
                         key={charger.id}
                         charger={charger}
-                        energyDataMap={mockEnergyData}
                         statusConfigMap={statusConfigMap}
                         onPress={() =>
                           router.push({
@@ -212,5 +241,15 @@ export default function MantenedorView() {
         </View>
       )}
     </ScrollView>
+
+    <EnergyVariablesModal
+      visible={!!siteModalKey}
+      onClose={() => setSiteModalKey(null)}
+      title="Resumen Energético del Patio"
+      subtitle="Todos los conectores activos — Últimos 30 min"
+      variables={siteModalVars}
+      initialKey={siteModalKey ?? undefined}
+    />
+    </View>
   );
 }

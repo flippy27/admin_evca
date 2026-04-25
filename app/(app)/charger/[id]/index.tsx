@@ -84,6 +84,12 @@ export default function ChargerDetail() {
               (c.last_charging_record?.energy != null
                 ? c.last_charging_record.energy
                 : undefined),
+            // Live energy variables from last meter record
+            voltage: c.last_charging_record?.voltage ?? undefined,
+            current: c.last_charging_record?.current ?? undefined,
+            livePower: c.last_charging_record?.power != null
+              ? +(c.last_charging_record.power).toFixed(1)
+              : undefined,
           };
         }),
       };

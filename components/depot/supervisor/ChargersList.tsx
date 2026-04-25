@@ -27,9 +27,9 @@ export function ChargersList({ chargers }: ChargersListProps) {
     <View style={{ paddingHorizontal: spacing.lg, paddingBottom: spacing.xl }}>
       <View style={{ gap: spacing.sm }}>
         {chargers.map((charger: any) => {
-          const chargingCount = charger.connectors?.filter((c: any) => c.status === "Charging").length || 0;
+          const chargingCount = charger.connectors?.filter((c: any) => c.status?.toLowerCase() === "charging").length || 0;
 
-          const faultedCount = charger.connectors?.filter((c: any) => c.status === "Faulted").length || 0;
+          const faultedCount = charger.connectors?.filter((c: any) => c.status?.toLowerCase() === "faulted").length || 0;
 
           const totalPower = charger.connectors?.reduce((sum: number, c: any) => sum + (c.power || 0), 0) || 0;
 
@@ -42,7 +42,7 @@ export function ChargersList({ chargers }: ChargersListProps) {
               key={charger.id}
               onPress={() =>
                 router.push({
-                  pathname: `/charger/${charger.id}`,
+                  pathname: `/charger/${charger.id}` as any,
                   params: {
                     chargerName: charger.name,
                     role: "supervisor",

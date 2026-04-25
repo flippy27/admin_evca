@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/Card";
 import { Text } from "@/components/ui/Text";
 import { spacing } from "@/theme";
 import { Ionicons } from "@expo/vector-icons";
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
 interface EnergyCardProps {
   icon: string;
@@ -11,6 +11,7 @@ interface EnergyCardProps {
   value: string | number;
   unit?: string;
   warning?: boolean;
+  onPress?: () => void;
 }
 
 export function EnergyCard({
@@ -20,8 +21,10 @@ export function EnergyCard({
   value,
   unit,
   warning,
+  onPress,
 }: EnergyCardProps) {
   return (
+    <TouchableOpacity onPress={onPress} disabled={!onPress} style={{ flex: 1 }}>
     <Card style={{ flex: 1, padding: spacing.md }}>
       <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs, marginBottom: spacing.sm }}>
         <Ionicons name={icon as any} size={14} color={iconColor} />
@@ -36,5 +39,6 @@ export function EnergyCard({
         </Text>
       )}
     </Card>
+    </TouchableOpacity>
   );
 }

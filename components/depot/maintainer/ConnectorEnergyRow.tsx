@@ -6,8 +6,7 @@ interface EnergyData {
   voltage: number;
   current: number;
   power: number;
-  temperature: number;
-  frequency: number;
+  energy: number;
 }
 
 interface ConnectorEnergyRowProps {
@@ -19,77 +18,41 @@ interface ConnectorEnergyRowProps {
 }
 
 export function ConnectorEnergyRow({ connectorId, status, statusLabel, statusColor, energyData }: ConnectorEnergyRowProps) {
-  const isHighTemp = energyData.temperature > 45;
+  const statusLower = status?.toLowerCase();
 
   return (
     <View
       style={{
         borderWidth: 1,
-        borderColor: status === "faulted" ? themeColors.connectorStatus.faulted : "#e5e7eb",
+        borderColor: statusLower === "faulted" ? themeColors.connectorStatus.faulted : "#e5e7eb",
         borderRadius: 6,
         padding: spacing.sm,
-        backgroundColor: status === "faulted" ? `${themeColors.connectorStatus.faulted}10` : `#f3f4f6}20`,
+        backgroundColor: statusLower === "faulted" ? `${themeColors.connectorStatus.faulted}10` : "#f9fafb",
       }}
     >
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: spacing.xs,
-        }}
-      >
+      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: spacing.xs }}>
         <Text style={{ fontSize: 12, fontWeight: "600", color: "#1f2937" }}>C{connectorId}</Text>
-        <View
-          style={{
-            backgroundColor: statusColor + "20",
-            paddingHorizontal: spacing.xs,
-            paddingVertical: spacing.xs / 3,
-            borderRadius: 10,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 10,
-              fontWeight: "500",
-              color: statusColor,
-            }}
-          >
-            {statusLabel}
-          </Text>
+        <View style={{ backgroundColor: statusColor + "20", paddingHorizontal: spacing.xs, paddingVertical: spacing.xs / 3, borderRadius: 10 }}>
+          <Text style={{ fontSize: 10, fontWeight: "500", color: statusColor }}>{statusLabel}</Text>
         </View>
       </View>
 
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          gap: spacing.xs,
-        }}
-      >
+      <View style={{ flexDirection: "row", justifyContent: "space-between", gap: spacing.xs }}>
         <View style={{ flex: 1, flexDirection: "row", gap: spacing.xs }}>
           <Text style={{ fontSize: 9, color: "#9ca3af" }}>V</Text>
-          <Text style={{ fontSize: 11, fontWeight: "600", color: "#1f2937" }}>{energyData.voltage}</Text>
+          <Text style={{ fontSize: 11, fontWeight: "600", color: "#1f2937" }}>{Number(energyData.voltage).toFixed(1)}</Text>
         </View>
         <View style={{ flex: 1, flexDirection: "row", gap: spacing.xs }}>
           <Text style={{ fontSize: 9, color: "#9ca3af" }}>A</Text>
-          <Text style={{ fontSize: 11, fontWeight: "600", color: "#1f2937" }}>{energyData.current}</Text>
+          <Text style={{ fontSize: 11, fontWeight: "600", color: "#1f2937" }}>{Number(energyData.current).toFixed(1)}</Text>
         </View>
         <View style={{ flex: 1, flexDirection: "row", gap: spacing.xs }}>
           <Text style={{ fontSize: 9, color: "#9ca3af" }}>kW</Text>
-          <Text style={{ fontSize: 11, fontWeight: "600", color: "#1f2937" }}>{energyData.power}</Text>
+          <Text style={{ fontSize: 11, fontWeight: "600", color: "#1f2937" }}>{Number(energyData.power).toFixed(1)}</Text>
         </View>
         <View style={{ flex: 1, flexDirection: "row", gap: spacing.xs }}>
-          <Text style={{ fontSize: 9, color: "#9ca3af" }}>°C</Text>
-          <Text
-            style={{
-              fontSize: 11,
-              fontWeight: "600",
-              color: isHighTemp ? themeColors.connectorStatus.faulted : "#1f2937",
-            }}
-          >
-            {energyData.temperature}
-          </Text>
+          <Text style={{ fontSize: 9, color: "#9ca3af" }}>kWh</Text>
+          <Text style={{ fontSize: 11, fontWeight: "600", color: "#1f2937" }}>{Number(energyData.energy).toFixed(1)}</Text>
         </View>
       </View>
     </View>

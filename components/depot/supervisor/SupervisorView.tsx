@@ -5,8 +5,8 @@ import { useGroupStore } from "@/lib/stores/group.store";
 import { GroupCharger } from "@/lib/types/group.types";
 import { getThemeColors, spacing } from "@/theme";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useMemo } from "react";
-import { ActivityIndicator, ScrollView, View } from "react-native";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ActivityIndicator, RefreshControl, ScrollView, View } from "react-native";
 import { Text } from "@/components/ui/Text";
 
 import { KPICard } from "../shared/KPICard";
@@ -66,13 +66,37 @@ export default function SupervisorView() {
   const sessions = useChargingSessionsStore((state: any) => state.sessions || []);
   const selectedLocationId = useChargersStore((state) => state.selectedLocationId);
   const { groupData, groupLoading, groupError } = useGroupStore();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const silentFetch = useCallback(() => {
+    if (!selectedLocationId) return;
+    useGroupStore.getState().fetchGroup(selectedLocationId);
+    useChargingSessionsStore.getState().fetchSessions({
+      payload: { location_ids: [selectedLocationId] },
+      pagination: { page: 1, per_page: 20 },
+    });
+  }, [selectedLocationId]);
 
   useEffect(() => {
-    if (selectedLocationId) {
-      useChargingSessionsStore.getState().fetchSessions({
-        payload: { location_ids: [selectedLocationId] },
-        pagination: { page: 1, per_page: 20 },
-      });
+    if (!selectedLocationId) return;
+    silentFetch();
+    const interval = setInterval(silentFetch, 3000);
+    return () => clearInterval(interval);
+  }, [selectedLocationId, silentFetch]);
+
+  const handleRefresh = useCallback(async () => {
+    if (!selectedLocationId) return;
+    setRefreshing(true);
+    try {
+      await Promise.all([
+        useGroupStore.getState().fetchGroup(selectedLocationId),
+        useChargingSessionsStore.getState().fetchSessions({
+          payload: { location_ids: [selectedLocationId] },
+          pagination: { page: 1, per_page: 20 },
+        }),
+      ]);
+    } finally {
+      setRefreshing(false);
     }
   }, [selectedLocationId]);
 
@@ -90,7 +114,7 @@ export default function SupervisorView() {
     const charging = allChargers.reduce((sum, c) => sum + (c.connectors?.filter((cn) => cn.status === "charging").length || 0), 0);
     const faulted = allChargers.reduce((sum, c) => sum + (c.connectors?.filter((cn) => cn.status === "faulted").length || 0), 0);
     const finishing = allChargers.reduce((sum, c) => sum + (c.connectors?.filter((cn) => cn.status === "finishing").length || 0), 0);
-    const available = allChargers.reduce((sum, c) => sum + (c.connectors?.filter((cn) => cn.status === "available").length || 0), 0);
+    const available = allChargers.reduce((sum, c) => sum + (c.connectors?.filter((cn) => cn.status === "available" || cn.status === "preparing").length || 0), 0);
     const suspended = allChargers.reduce((sum, c) => sum + (c.connectors?.filter((cn) => cn.status === "suspended").length || 0), 0);
     const online = allChargers.filter((c) => c.online).length;
     const totalEnergy = sessions
@@ -120,7 +144,12 @@ export default function SupervisorView() {
   }, [allChargers, sessions]);
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: colors.background }}>
+    <ScrollView
+      style={{ flex: 1, backgroundColor: colors.background }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor={colors.primary} />
+      }
+    >
       {/* KPI Cards */}
       <View style={{ padding: spacing.lg }}>
         <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: spacing.lg }}>
@@ -178,22 +207,22 @@ export default function SupervisorView() {
 
       <AlertsSection chargers={allChargers} />
 
-      {/* Loading */}
-      {groupLoading && (
+      {/* Initial load spinner */}
+      {!groupData && groupLoading && (
         <View style={{ padding: spacing.xl, alignItems: "center" }}>
           <ActivityIndicator color={colors.primary} />
         </View>
       )}
 
-      {/* Error */}
-      {groupError && !groupLoading && (
+      {/* Error — only when no data */}
+      {groupError && !groupData && (
         <View style={{ padding: spacing.lg }}>
           <Text style={{ color: colors.destructive, fontSize: 13 }}>{groupError}</Text>
         </View>
       )}
 
       {/* Areas → Lines → Chargers */}
-      {!groupLoading && !groupError && (
+      {groups.length > 0 && (
         <View style={{ paddingBottom: spacing.xl }}>
           {groups.map((area) => (
             <View key={area.areaName}>

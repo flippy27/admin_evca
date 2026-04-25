@@ -5,20 +5,19 @@ import { EnergyCard } from "../shared/EnergyCard";
 
 interface EnergyOverviewProps {
   avgVoltage: string;
-  maxTemp: string;
+  avgCurrent: string;
   totalPower: string;
-  avgTemp: string;
+  totalEnergy: string;
+  onPressVariable?: (key: "voltage" | "current" | "power" | "energy") => void;
 }
 
 export function EnergyOverview({
   avgVoltage,
-  maxTemp,
+  avgCurrent,
   totalPower,
-  avgTemp,
+  totalEnergy,
+  onPressVariable,
 }: EnergyOverviewProps) {
-  const maxTempNum = parseInt(maxTemp);
-  const isHighTemp = maxTempNum > 45;
-
   return (
     <View style={{ padding: spacing.lg, gap: spacing.md }}>
       <Text style={{ fontSize: 14, fontWeight: "600", color: "#1f2937" }}>
@@ -32,30 +31,33 @@ export function EnergyOverview({
             label="Voltaje Prom."
             value={avgVoltage}
             unit="V"
+            onPress={onPressVariable ? () => onPressVariable("voltage") : undefined}
           />
           <EnergyCard
-            icon="thermometer"
-            iconColor={isHighTemp ? "#ef4444" : "#ea580c"}
-            label="Temp. Máx."
-            value={maxTemp}
-            unit="°C"
-            warning={isHighTemp}
+            icon="flash"
+            iconColor="#2563eb"
+            label="Corriente Prom."
+            value={avgCurrent}
+            unit="A"
+            onPress={onPressVariable ? () => onPressVariable("current") : undefined}
           />
         </View>
         <View style={{ flexDirection: "row", gap: spacing.sm }}>
           <EnergyCard
-            icon="flash"
+            icon="pulse"
             iconColor="#8b5cf6"
             label="Potencia Total"
             value={totalPower}
             unit="kW"
+            onPress={onPressVariable ? () => onPressVariable("power") : undefined}
           />
           <EnergyCard
-            icon="pulse"
+            icon="battery-charging"
             iconColor="#06b6d4"
-            label="Temp. Prom."
-            value={avgTemp}
-            unit="°C"
+            label="Energía Total"
+            value={totalEnergy}
+            unit="kWh"
+            onPress={onPressVariable ? () => onPressVariable("energy") : undefined}
           />
         </View>
       </View>
