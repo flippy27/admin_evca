@@ -1,7 +1,6 @@
-import { useState } from "react";
 import { ScrollView, TouchableOpacity, View, SafeAreaView, ActivityIndicator } from "react-native";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
-import { getThemeColors, spacing } from "@/theme";
+import { getThemeColors } from "@/theme";
 import { useNavigation } from "expo-router";
 import { Text } from "@/components/ui/Text";
 import { Ionicons } from "@expo/vector-icons";
@@ -10,6 +9,8 @@ import { AppHeader } from "@/components/layout/AppHeader";
 import { useChargersStore } from "@/lib/stores/chargers.store";
 import { chargerCommandsApi } from "@/lib/api/charger-commands.api";
 import { chargingSessionApi } from "@/lib/api/charging-session.api";
+import { useChargerCommandsStore } from "@/lib/stores/charger-commands.store";
+import { useTranslation } from "react-i18next";
 
 const STATUS_CONFIG: Record<string, { label: string; bg: string; color: string }> = {
   available:   { label: "Disponible",    bg: "#f3f4f6",  color: "#0ACDA9" },
@@ -36,21 +37,33 @@ function isCharging(status: string) {
   return ["charging", "Charging", "occupied"].includes(status);
 }
 
+function isOfflineError(err: unknown): boolean {
+  const status = (err as any)?.response?.status;
+  const code = (err as any)?.code;
+  return status === 502 || status === 503 || status === 504 || code === "ECONNABORTED" || code === "ERR_NETWORK";
+}
+
 export function OperadorChargerDetail({ charger }: { charger: any }) {
+  const { t } = useTranslation();
   const colors = getThemeColors(useResolvedColorScheme());
   const navigation = useNavigation();
   const selectedLocationId = useChargersStore((s) => s.selectedLocationId) ?? "";
-  const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const { isPending, setPending, clearPending } = useChargerCommandsStore();
+
+  const cmdKey = (command: string, connectorNumber?: number) =>
+    connectorNumber !== undefined
+      ? `${charger.id}-${command}-${connectorNumber}`
+      : `${charger.id}-${command}`;
 
   const runConnectorCmd = async (
     command: "start" | "stop" | "unlock",
     connectorUUID: string,
     connectorNumber: number,
   ) => {
-    const key = `${command}-${connectorNumber}`;
-    setActionLoading(key);
+    const key = cmdKey(command, connectorNumber);
+    if (isPending(key)) return;
+    setPending(key, command);
     try {
-      // Create session registry before start — response id_tag goes into the start body
       if (command === "start") {
         const idTag = await chargingSessionApi.createRegistry(connectorUUID);
         await chargerCommandsApi.connectorCommand(selectedLocationId, charger.id, connectorUUID, command, idTag);
@@ -58,30 +71,34 @@ export function OperadorChargerDetail({ charger }: { charger: any }) {
         await chargerCommandsApi.connectorCommand(selectedLocationId, charger.id, connectorUUID, command);
       }
       useToastStore.getState().show(
-        `Conector ${connectorNumber}`,
+        `${t("mobile.chargerDetail.connector")} ${connectorNumber}`,
         "success",
-        `Comando ${command} ejecutado exitosamente`,
+        t(`mobile.chargerDetail.${command === "start" ? "chargeStarted" : command === "stop" ? "chargeStopped" : "connectorUnlocked"}`),
       );
-    } catch {
-      useToastStore.getState().show(
-        `Conector ${connectorNumber}`,
-        "error",
-        `Error al ejecutar ${command}`,
-      );
+    } catch (err) {
+      const msg = isOfflineError(err)
+        ? t("mobile.chargerDetail.offlineWarning")
+        : t(`mobile.chargerDetail.${command === "start" ? "errorStart" : command === "stop" ? "errorStop" : "errorUnlock"}`);
+      useToastStore.getState().show(`${t("mobile.chargerDetail.connector")} ${connectorNumber}`, "error", msg);
     } finally {
-      setActionLoading(null);
+      clearPending(key);
     }
   };
 
   const runReboot = async () => {
-    setActionLoading("reboot");
+    const key = cmdKey("reboot");
+    if (isPending(key)) return;
+    setPending(key, "reboot");
     try {
       await chargerCommandsApi.reboot(selectedLocationId, charger.id);
-      useToastStore.getState().show("Cargador reiniciado", "success", "Reiniciar Cargador");
-    } catch {
-      useToastStore.getState().show("Error al reiniciar", "error", "Reiniciar Cargador");
+      useToastStore.getState().show(t("mobile.chargerDetail.chargerReset"), "success", t("mobile.chargerDetail.resetCharger"));
+    } catch (err) {
+      const msg = isOfflineError(err)
+        ? t("mobile.chargerDetail.offlineWarning")
+        : t("mobile.chargerDetail.errorReset");
+      useToastStore.getState().show(msg, "error", t("mobile.chargerDetail.resetCharger"));
     } finally {
-      setActionLoading(null);
+      clearPending(key);
     }
   };
 
@@ -108,7 +125,7 @@ export function OperadorChargerDetail({ charger }: { charger: any }) {
           <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
             <View style={{ flexDirection: "row", alignItems: "center", gap: 4, backgroundColor: "#ede9fe", paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20 }}>
               <Ionicons name="flash" size={11} color="#7c3aed" />
-              <Text style={{ fontSize: 10, fontWeight: "600", color: "#7c3aed" }}>Vista Operador</Text>
+              <Text style={{ fontSize: 10, fontWeight: "600", color: "#7c3aed" }}>{t("mobile.chargerDetail.operatorView")}</Text>
             </View>
             <View style={{ backgroundColor: charger.online ? "#dcfce7" : "#fee2e2", paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20 }}>
               <Text style={{ fontSize: 10, fontWeight: "600", color: charger.online ? "#15803d" : "#dc2626" }}>
@@ -134,10 +151,10 @@ export function OperadorChargerDetail({ charger }: { charger: any }) {
               {/* Header */}
               <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
                 <Text style={{ fontSize: 15, fontWeight: "600", color: colors.foreground }}>
-                  Conector {connector.connectorId}
+                  {t("mobile.chargerDetail.connector")} {connector.connectorId}
                 </Text>
                 <View style={{ backgroundColor: sc.bg, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20 }}>
-                  <Text style={{ fontSize: 12, fontWeight: "600", color: sc.color }}>{sc.label}</Text>
+                  <Text style={{ fontSize: 12, fontWeight: "600", color: sc.color }}>{t(`mobile.status.${connector.status?.toLowerCase()}`, { defaultValue: sc.label })}</Text>
                 </View>
               </View>
 
@@ -146,7 +163,7 @@ export function OperadorChargerDetail({ charger }: { charger: any }) {
                 <View style={{ gap: 10, marginBottom: 12 }}>
                   {connector.vehicleId && (
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                      <Text style={{ fontSize: 14, color: colors.mutedForeground }}>Vehículo</Text>
+                      <Text style={{ fontSize: 14, color: colors.mutedForeground }}>{t("mobile.chargerDetail.vehicle")}</Text>
                       <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>
                         {String(connector.vehicleId).toUpperCase()}
                       </Text>
@@ -156,7 +173,7 @@ export function OperadorChargerDetail({ charger }: { charger: any }) {
                   {soc !== undefined && (
                     <View>
                       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                        <Text style={{ fontSize: 14, color: colors.mutedForeground }}>Estado de Carga</Text>
+                        <Text style={{ fontSize: 14, color: colors.mutedForeground }}>{t("mobile.chargerDetail.stateOfCharge")}</Text>
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
                           <Ionicons name="battery-half" size={16} color="#2563eb" />
                           <Text style={{ fontSize: 18, fontWeight: "700", color: "#2563eb" }}>{soc}%</Text>
@@ -166,21 +183,21 @@ export function OperadorChargerDetail({ charger }: { charger: any }) {
                         <View style={{ height: 8, width: `${soc}%`, backgroundColor: "#3b82f6", borderRadius: 4 }} />
                       </View>
                       <Text style={{ fontSize: 12, color: colors.mutedForeground, fontStyle: "italic", marginTop: 4 }}>
-                        SoC parcial — sin ETA (API no disponible)
+                        {t("mobile.chargerDetail.socPartialNote")}
                       </Text>
                     </View>
                   )}
 
                   {connector.power !== undefined && (
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                      <Text style={{ fontSize: 14, color: colors.mutedForeground }}>Potencia</Text>
+                      <Text style={{ fontSize: 14, color: colors.mutedForeground }}>{t("mobile.chargerDetail.power")}</Text>
                       <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>{connector.power} kW</Text>
                     </View>
                   )}
 
                   {energy !== undefined && (
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                      <Text style={{ fontSize: 14, color: colors.mutedForeground }}>Energía Entregada</Text>
+                      <Text style={{ fontSize: 14, color: colors.mutedForeground }}>{t("mobile.chargerDetail.energyDelivered")}</Text>
                       <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>{Number(energy).toFixed(1)} kWh</Text>
                     </View>
                   )}
@@ -190,50 +207,59 @@ export function OperadorChargerDetail({ charger }: { charger: any }) {
               {/* CONTROLES REMOTOS */}
               <View style={{ gap: 8 }}>
                 <Text style={{ fontSize: 11, fontWeight: "700", color: "#9333ea", textTransform: "uppercase", letterSpacing: 0.8 }}>
-                  Controles Remotos
+                  {t("mobile.chargerDetail.remoteControls")}
                 </Text>
+
+                {/* Offline warning */}
+                {!charger.online && (
+                  <View style={{ flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: "#fef2f2", borderRadius: 8, paddingHorizontal: 10, paddingVertical: 6 }}>
+                    <Ionicons name="warning-outline" size={14} color="#dc2626" />
+                    <Text style={{ fontSize: 12, color: "#dc2626" }}>{t("mobile.chargerDetail.offlineWarning")}</Text>
+                  </View>
+                )}
+
                 <View style={{ flexDirection: "row", gap: 8 }}>
                   {/* Start / Stop */}
                   {!charging ? (
                     <TouchableOpacity
                       onPress={() => runConnectorCmd("start", connector.id, connector.connectorId)}
-                      disabled={actionLoading === `start-${connector.connectorId}`}
-                      style={{ flex: 1, backgroundColor: "#22c55e", paddingVertical: 10, borderRadius: 8, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, opacity: actionLoading === `start-${connector.connectorId}` ? 0.5 : 1 }}
+                      disabled={!charger.online || isPending(cmdKey("start", connector.connectorId))}
+                      style={{ flex: 1, backgroundColor: "#22c55e", paddingVertical: 10, borderRadius: 8, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, opacity: (!charger.online || isPending(cmdKey("start", connector.connectorId))) ? 0.4 : 1 }}
                     >
-                      {actionLoading === `start-${connector.connectorId}` ? (
+                      {isPending(cmdKey("start", connector.connectorId)) ? (
                         <ActivityIndicator size="small" color="white" />
                       ) : (
                         <Ionicons name="play" size={15} color="white" />
                       )}
-                      <Text style={{ fontSize: 13, fontWeight: "600", color: "white" }}>Iniciar Carga</Text>
+                      <Text style={{ fontSize: 13, fontWeight: "600", color: "white" }}>{t("mobile.chargerDetail.startCharge")}</Text>
                     </TouchableOpacity>
                   ) : (
                     <TouchableOpacity
                       onPress={() => runConnectorCmd("stop", connector.id, connector.connectorId)}
-                      disabled={actionLoading === `stop-${connector.connectorId}`}
-                      style={{ flex: 1, backgroundColor: "#3b82f6", paddingVertical: 10, borderRadius: 8, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, opacity: actionLoading === `stop-${connector.connectorId}` ? 0.5 : 1 }}
+                      disabled={!charger.online || isPending(cmdKey("stop", connector.connectorId))}
+                      style={{ flex: 1, backgroundColor: "#3b82f6", paddingVertical: 10, borderRadius: 8, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, opacity: (!charger.online || isPending(cmdKey("stop", connector.connectorId))) ? 0.4 : 1 }}
                     >
-                      {actionLoading === `stop-${connector.connectorId}` ? (
+                      {isPending(cmdKey("stop", connector.connectorId)) ? (
                         <ActivityIndicator size="small" color="white" />
                       ) : (
                         <Ionicons name="stop" size={15} color="white" />
                       )}
-                      <Text style={{ fontSize: 13, fontWeight: "600", color: "white" }}>Detener Carga</Text>
+                      <Text style={{ fontSize: 13, fontWeight: "600", color: "white" }}>{t("mobile.chargerDetail.stopCharge")}</Text>
                     </TouchableOpacity>
                   )}
 
                   {/* Unlock */}
                   <TouchableOpacity
                     onPress={() => runConnectorCmd("unlock", connector.id, connector.connectorId)}
-                    disabled={actionLoading === `unlock-${connector.connectorId}`}
-                    style={{ flex: 1, backgroundColor: "#4b5563", paddingVertical: 10, borderRadius: 8, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, opacity: actionLoading === `unlock-${connector.connectorId}` ? 0.5 : 1 }}
+                    disabled={!charger.online || isPending(cmdKey("unlock", connector.connectorId))}
+                    style={{ flex: 1, backgroundColor: "#4b5563", paddingVertical: 10, borderRadius: 8, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, opacity: (!charger.online || isPending(cmdKey("unlock", connector.connectorId))) ? 0.4 : 1 }}
                   >
-                    {actionLoading === `unlock-${connector.connectorId}` ? (
+                    {isPending(cmdKey("unlock", connector.connectorId)) ? (
                       <ActivityIndicator size="small" color="white" />
                     ) : (
                       <Ionicons name="lock-open" size={15} color="white" />
                     )}
-                    <Text style={{ fontSize: 13, fontWeight: "600", color: "white" }}>Desbloquear</Text>
+                    <Text style={{ fontSize: 13, fontWeight: "600", color: "white" }}>{t("mobile.chargerDetail.unlock")}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -244,19 +270,19 @@ export function OperadorChargerDetail({ charger }: { charger: any }) {
         {/* Acciones del Cargador */}
         <View style={{ backgroundColor: colors.card, borderRadius: 8, borderWidth: 1, borderColor: colors.border, padding: 16, marginBottom: 16 }}>
           <Text style={{ fontSize: 15, fontWeight: "600", color: colors.foreground, marginBottom: 12 }}>
-            Acciones del Cargador
+            {t("mobile.chargerDetail.chargerActions")}
           </Text>
           <TouchableOpacity
             onPress={runReboot}
-            disabled={actionLoading === "reboot"}
-            style={{ backgroundColor: "#f97316", paddingVertical: 14, borderRadius: 8, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, opacity: actionLoading === "reboot" ? 0.5 : 1 }}
+            disabled={isPending(cmdKey("reboot"))}
+            style={{ backgroundColor: "#f97316", paddingVertical: 14, borderRadius: 8, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, opacity: isPending(cmdKey("reboot")) ? 0.5 : 1 }}
           >
-            {actionLoading === "reboot" ? (
+            {isPending(cmdKey("reboot")) ? (
               <ActivityIndicator size="small" color="white" />
             ) : (
               <Ionicons name="reload" size={17} color="white" />
             )}
-            <Text style={{ fontSize: 14, fontWeight: "600", color: "white" }}>Reiniciar Cargador</Text>
+            <Text style={{ fontSize: 14, fontWeight: "600", color: "white" }}>{t("mobile.chargerDetail.resetCharger")}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

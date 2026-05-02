@@ -2200,9 +2200,14 @@
         "allConnectorsSubtitle": "All active connectors — Last 30 min"
       },
       "health": {
-        "healthy": "Healthy",
+        "title": "Connector Health",
+        "healthy": "Operational",
         "faulted": "Faulted",
         "suspended": "Suspended"
+      },
+      "connectors": {
+        "title": "Yard Connectors",
+        "distributionTitle": "Connector Distribution"
       },
       "activeSessions": {
         "title": "Active Sessions",
@@ -2210,7 +2215,21 @@
         "viewAll": "View all"
       },
       "loading": "Loading data...",
-      "error": "Error loading data"
+      "error": "Error loading data",
+      "roleBanner": {
+        "operator": {
+          "title": "Yard Operator",
+          "description": "Connector management • Start/Stop charging • Real-time control"
+        },
+        "supervisor": {
+          "title": "Supervisor",
+          "description": "General yard status • Operational KPIs • Alerts and monitoring"
+        },
+        "maintainer": {
+          "title": "Maintainer",
+          "description": "Energy variables • Technical diagnostics • OCPP configuration"
+        }
+      }
     },
     "energyModal": {
       "title": "Energy Variables",
@@ -2282,10 +2301,11 @@
       "temperature": "Temperature",
       "soc": "SoC",
       "maxPower": "Max power",
-      "startCharge": "Start charging",
-      "stopCharge": "Stop charging",
+      "startCharge": "Start Charging",
+      "stopCharge": "Stop Charging",
+      "unlock": "Unlock",
       "unlockConnector": "Unlock connector",
-      "resetCharger": "Reset charger",
+      "resetCharger": "Reset Charger",
       "confirmStart": "Start charging?",
       "confirmStop": "Stop charging?",
       "confirmUnlock": "Unlock connector?",
@@ -2302,7 +2322,27 @@
       "idTagPlaceholder": "Scan or enter ID Tag",
       "activeSince": "Active since",
       "duration": "Duration",
-      "kwhDelivered": "kWh delivered"
+      "kwhDelivered": "kWh delivered",
+      "vehicle": "Vehicle",
+      "stateOfCharge": "State of Charge",
+      "socPartialNote": "Partial SoC — no ETA (API unavailable)",
+      "energyDelivered": "Energy Delivered",
+      "viewCurves": "View curves",
+      "temperatureHigh": "High temperature",
+      "tapVariablesHint": "Tap variables to view curve graph",
+      "noEnergyDataConnector": "No energy data for this connector",
+      "technicalTools": "Technical Tools",
+      "chargerInfo": "Charger Information",
+      "chargerActions": "Charger Actions",
+      "remoteControls": "Remote Controls",
+      "offlineWarning": "Charger offline — commands disabled",
+      "activeSession": "Active session",
+      "delivered": "Delivered",
+      "viewSessionHistory": "View Session History",
+      "maintainerView": "Maintainer View",
+      "operatorView": "Operator View",
+      "supervisorView": "Supervisor View",
+      "readyToDisconnect": "Ready to disconnect"
     },
     "sessions": {
       "title": "Charging Sessions",
@@ -2313,7 +2353,34 @@
       "start": "Start",
       "end": "End",
       "active": "Active",
-      "completed": "Completed"
+      "inProgress": "In progress",
+      "completed": "Completed",
+      "vehicle": "Vehicle",
+      "socInitial": "Initial SoC: {{value}}%",
+      "socFinal": "Final SoC: {{value}}%"
+    },
+    "supervisor": {
+      "kpi": {
+        "utilization": "Utilization",
+        "utilizationSubtitle": "{{charging}} of {{total}} connectors",
+        "totalEnergy": "Total Energy",
+        "energySubtitle": "delivered today",
+        "chargers": "Chargers",
+        "chargersSubtitle": "online",
+        "alerts": "Alerts",
+        "alertsActiveFault": "with active fault",
+        "noAlerts": "no alerts"
+      },
+      "alerts": {
+        "title": "Active Alerts"
+      },
+      "chargersList": {
+        "activeOf": "{{charging}}/{{total}} active"
+      },
+      "faultedAlert": {
+        "connectorFault": "Connector fault",
+        "view": "View"
+      }
     }
   }
 }

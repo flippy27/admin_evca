@@ -3,6 +3,7 @@ import { Text } from "@/components/ui/Text";
 import { spacing, colors as themeColors, getThemeColors } from "@/theme";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { TouchableOpacity, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 interface FaultedAlertProps {
   chargerName: string;
@@ -11,6 +12,7 @@ interface FaultedAlertProps {
 }
 
 export function FaultedAlert({ chargerName, connectorId, onPress }: FaultedAlertProps) {
+  const { t } = useTranslation();
   const scheme = useResolvedColorScheme();
   const colors = getThemeColors(scheme);
 
@@ -30,10 +32,10 @@ export function FaultedAlert({ chargerName, connectorId, onPress }: FaultedAlert
               {chargerName} · C{connectorId}
             </Text>
             <Text style={{ fontSize: 11, color: colors.mutedForeground, marginTop: spacing.xs }}>
-              Conector con falla
+              {t("mobile.supervisor.faultedAlert.connectorFault")}
             </Text>
           </View>
-          <Text style={{ color: "#8b5cf6", fontSize: 12 }}>Ver →</Text>
+          <Text style={{ color: "#8b5cf6", fontSize: 12 }}>{t("mobile.supervisor.faultedAlert.view")} →</Text>
         </View>
       </Card>
     </TouchableOpacity>

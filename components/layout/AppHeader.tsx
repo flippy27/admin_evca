@@ -6,6 +6,7 @@ import { getThemeColors, spacing, colors as themeColors } from "@/theme";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { useSidebar } from "./AppContainer";
 import { usePermissions } from "@/lib/hooks/use-permissions";
+import { useTranslation } from "react-i18next";
 
 type Role = "operator" | "supervisor" | "maintainer";
 
@@ -20,6 +21,7 @@ export function AppHeader({
   selectedRole: controlledRole,
   onRoleChange,
 }: AppHeaderProps) {
+  const { t } = useTranslation();
   const scheme = useResolvedColorScheme();
   const colors = getThemeColors(scheme);
   const { openSidebar } = useSidebar();
@@ -39,9 +41,9 @@ export function AppHeader({
   }, [roles]);
 
   const roleConfig: Record<Role, { label: string; color: string }> = {
-    operator: { label: "Operador", color: themeColors.roles.operador },
-    supervisor: { label: "Supervisor", color: themeColors.roles.supervisor },
-    maintainer: { label: "Mantenedor", color: themeColors.roles.mantenedor },
+    operator: { label: t("mobile.sidebar.roleFocus.roles.operator"), color: themeColors.roles.operador },
+    supervisor: { label: t("mobile.sidebar.roleFocus.roles.supervisor"), color: themeColors.roles.supervisor },
+    maintainer: { label: t("mobile.sidebar.roleFocus.roles.maintainer"), color: themeColors.roles.mantenedor },
   };
 
   const handleRoleChange = (role: Role) => {

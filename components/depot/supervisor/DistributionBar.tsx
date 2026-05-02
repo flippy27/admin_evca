@@ -2,6 +2,7 @@ import { Text } from "@/components/ui/Text";
 import { spacing, colors as themeColors, getThemeColors } from "@/theme";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 const COLORS = themeColors.connectorStatus;
 
@@ -15,6 +16,7 @@ interface DistributionBarProps {
 }
 
 export function DistributionBar({ charging, finishing, available, faulted, suspended, total }: DistributionBarProps) {
+  const { t } = useTranslation();
   const scheme = useResolvedColorScheme();
   const colors = getThemeColors(scheme);
   const hasData = total > 0 && charging + finishing + available + faulted + suspended > 0;
@@ -40,7 +42,7 @@ export function DistributionBar({ charging, finishing, available, faulted, suspe
           textTransform: "uppercase",
         }}
       >
-        Distribución de Conectores
+        {t("mobile.depot.connectors.distributionTitle")}
       </Text>
 
       <View
@@ -65,11 +67,11 @@ export function DistributionBar({ charging, finishing, available, faulted, suspe
       </View>
 
       <View style={{ flexDirection: "row", flexWrap: "wrap", columnGap: spacing.md, rowGap: spacing.sm }}>
-        <LegendDot color={hasData ? COLORS.charging : colors.mutedForeground} label={`Cargando (${charging})`} textColor={colors.foreground} />
-        <LegendDot color={hasData ? COLORS.finishing : colors.mutedForeground} label={`Finalizando (${finishing})`} textColor={colors.foreground} />
-        <LegendDot color={hasData ? COLORS.available : colors.mutedForeground} label={`Disponible (${available})`} textColor={colors.foreground} />
-        <LegendDot color={hasData ? themeColors.light.destructive : colors.mutedForeground} label={`Falla (${faulted})`} textColor={colors.foreground} />
-        <LegendDot color={hasData ? COLORS.suspended : colors.mutedForeground} label={`Suspendido (${suspended})`} textColor={colors.foreground} />
+        <LegendDot color={hasData ? COLORS.charging : colors.mutedForeground} label={`${t("mobile.status.charging")} (${charging})`} textColor={colors.foreground} />
+        <LegendDot color={hasData ? COLORS.finishing : colors.mutedForeground} label={`${t("mobile.status.finishing")} (${finishing})`} textColor={colors.foreground} />
+        <LegendDot color={hasData ? COLORS.available : colors.mutedForeground} label={`${t("mobile.status.available")} (${available})`} textColor={colors.foreground} />
+        <LegendDot color={hasData ? themeColors.light.destructive : colors.mutedForeground} label={`${t("mobile.status.faulted")} (${faulted})`} textColor={colors.foreground} />
+        <LegendDot color={hasData ? COLORS.suspended : colors.mutedForeground} label={`${t("mobile.status.suspended")} (${suspended})`} textColor={colors.foreground} />
       </View>
     </View>
   );

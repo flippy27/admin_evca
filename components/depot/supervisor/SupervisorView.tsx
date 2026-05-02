@@ -10,6 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, AppState, AppStateStatus, RefreshControl, ScrollView, View } from "react-native";
 import { Text } from "@/components/ui/Text";
+import { useTranslation } from "react-i18next";
 
 import { KPICard } from "../shared/KPICard";
 import { AlertsSection } from "./AlertsSection";
@@ -73,6 +74,7 @@ function buildGroups(
 }
 
 export default function SupervisorView() {
+  const { t } = useTranslation();
   const scheme = useResolvedColorScheme();
   const colors = getThemeColors(scheme);
 
@@ -208,9 +210,9 @@ export default function SupervisorView() {
             <KPICard
               icon="trending-up"
               iconColor={colors.secondary}
-              label="Utilizacion"
+              label={t("mobile.supervisor.kpi.utilization")}
               value={`${stats.utilization}%`}
-              subtitle={`${stats.charging} de ${stats.total} conectores`}
+              subtitle={t("mobile.supervisor.kpi.utilizationSubtitle", { charging: stats.charging, total: stats.total })}
             />
           </View>
 
@@ -218,9 +220,9 @@ export default function SupervisorView() {
             <KPICard
               icon="flash"
               iconColor={colors.primary}
-              label="Energia Total"
+              label={t("mobile.supervisor.kpi.totalEnergy")}
               value={`${stats.totalEnergy} kWh`}
-              subtitle="entregados hoy"
+              subtitle={t("mobile.supervisor.kpi.energySubtitle")}
             />
           </View>
 
@@ -228,9 +230,9 @@ export default function SupervisorView() {
             <KPICard
               icon="pulse"
               iconColor={colors.primary}
-              label="Cargadores"
+              label={t("mobile.supervisor.kpi.chargers")}
               value={`${stats.online}/${stats.totalChargers}`}
-              subtitle="online"
+              subtitle={t("mobile.supervisor.kpi.chargersSubtitle")}
             />
           </View>
 
@@ -238,9 +240,9 @@ export default function SupervisorView() {
             <KPICard
               icon="alert-circle"
               iconColor={stats.faulted > 0 ? colors.destructive : "#9ca3af"}
-              label="Alertas"
+              label={t("mobile.supervisor.kpi.alerts")}
               value={stats.faulted}
-              subtitle={stats.faulted > 0 ? "con falla activa" : "sin alertas"}
+              subtitle={stats.faulted > 0 ? t("mobile.supervisor.kpi.alertsActiveFault") : t("mobile.supervisor.kpi.noAlerts")}
               backgroundColor={stats.faulted > 0 ? `${colors.destructive}10` : colors.card}
             />
           </View>

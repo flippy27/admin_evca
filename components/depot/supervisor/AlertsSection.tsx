@@ -3,6 +3,7 @@ import { spacing, colors as themeColors } from "@/theme";
 import { useRouter } from "expo-router";
 import { View } from "react-native";
 import { FaultedAlert } from "./FaultedAlert";
+import { useTranslation } from "react-i18next";
 
 interface Connector {
   id: string;
@@ -21,6 +22,7 @@ interface AlertsSectionProps {
 }
 
 export function AlertsSection({ chargers }: AlertsSectionProps) {
+  const { t } = useTranslation();
   const router = useRouter();
 
   const faultedChargers = chargers.filter((c) => c.connectors?.some((cn) => cn.status?.toLowerCase() === "faulted"));
@@ -30,7 +32,7 @@ export function AlertsSection({ chargers }: AlertsSectionProps) {
   return (
     <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.lg }}>
       <Text style={{ fontSize: 14, fontWeight: "600", color: themeColors.light.destructive, marginBottom: spacing.md }}>
-        ⚠️ Alertas Activas
+        ⚠️ {t("mobile.supervisor.alerts.title")}
       </Text>
       <View style={{ gap: spacing.sm, marginBottom: spacing.lg }}>
         {faultedChargers.map((charger) =>

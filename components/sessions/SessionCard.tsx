@@ -6,6 +6,7 @@ import { getThemeColors, spacing } from "@/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 interface SessionCardProps {
   session: ChargingSession;
@@ -23,6 +24,7 @@ function parseDate(str?: string | null): Date | null {
 }
 
 export function SessionCard({ session, isActive }: SessionCardProps) {
+  const { t } = useTranslation();
   const scheme = useResolvedColorScheme();
   const colors = getThemeColors(scheme);
 
@@ -89,7 +91,7 @@ export function SessionCard({ session, isActive }: SessionCardProps) {
               marginTop: 2,
             }}
           >
-            Conector {session.connector_number || "?"}
+            {t("mobile.sessions.connector")} {session.connector_number || "?"}
           </Text>
         </View>
 
@@ -109,7 +111,7 @@ export function SessionCard({ session, isActive }: SessionCardProps) {
               color: isActive ? "#157e3c" : colors.mutedForeground,
             }}
           >
-            {isActive ? "En curso" : "Completada"}
+            {isActive ? t("mobile.sessions.inProgress") : t("mobile.sessions.completed")}
           </Text>
         </View>
       </View>
@@ -125,7 +127,7 @@ export function SessionCard({ session, isActive }: SessionCardProps) {
           }}
         >
           <Ionicons name="battery-half" size={13} color={colors.mutedForeground} />
-          <Text style={{ fontSize: 12, color: colors.mutedForeground }}>Vehículo:</Text>
+          <Text style={{ fontSize: 12, color: colors.mutedForeground }}>{t("mobile.sessions.vehicle")}:</Text>
           <Text
             style={{
               fontSize: 12,
@@ -146,7 +148,7 @@ export function SessionCard({ session, isActive }: SessionCardProps) {
           }}
         >
           <Ionicons name="calendar" size={13} color={colors.mutedForeground} />
-          <Text style={{ fontSize: 12, color: colors.mutedForeground }}>Inicio:</Text>
+          <Text style={{ fontSize: 12, color: colors.mutedForeground }}>{t("mobile.sessions.start")}:</Text>
           <Text style={{ fontSize: 12, color: colors.foreground }}>
             {formattedDate}, {formattedTime}
           </Text>
@@ -162,7 +164,7 @@ export function SessionCard({ session, isActive }: SessionCardProps) {
             }}
           >
             <Ionicons name="flash" size={13} color={colors.mutedForeground} />
-            <Text style={{ fontSize: 12, color: colors.mutedForeground }}>Energía:</Text>
+            <Text style={{ fontSize: 12, color: colors.mutedForeground }}>{t("mobile.sessions.energy")}:</Text>
             <Text
               style={{
                 fontSize: 12,
@@ -184,7 +186,7 @@ export function SessionCard({ session, isActive }: SessionCardProps) {
           }}
         >
           <Ionicons name="timer" size={13} color={colors.mutedForeground} />
-          <Text style={{ fontSize: 12, color: colors.mutedForeground }}>Duración:</Text>
+          <Text style={{ fontSize: 12, color: colors.mutedForeground }}>{t("mobile.sessions.duration")}:</Text>
           <Text style={{ fontSize: 12, color: colors.foreground }}>
             {durationMinutes != null ? `${hours! > 0 ? `${hours}h ` : ""}${minutes}min` : "—"}
           </Text>
@@ -202,8 +204,8 @@ export function SessionCard({ session, isActive }: SessionCardProps) {
               justifyContent: "space-between",
             }}
           >
-            <Text style={{ fontSize: 11, color: colors.mutedForeground }}>SoC inicial: {session.first_soc ?? "—"}%</Text>
-            <Text style={{ fontSize: 11, color: colors.mutedForeground }}>SoC final: {session.last_soc ?? "—"}%</Text>
+            <Text style={{ fontSize: 11, color: colors.mutedForeground }}>{t("mobile.sessions.socInitial", { value: session.first_soc ?? "—" })}</Text>
+            <Text style={{ fontSize: 11, color: colors.mutedForeground }}>{t("mobile.sessions.socFinal", { value: session.last_soc ?? "—" })}</Text>
           </View>
         )}
       </View>

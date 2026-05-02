@@ -2142,7 +2142,7 @@
       "appTitle": "Workforce App",
       "appVersion": "PoC v1",
       "nav": {
-        "depotView": "Depot View",
+        "depotView": "Vista del Patio",
         "sessions": "Sesiones de Carga"
       },
       "roleFocus": {
@@ -2204,9 +2204,14 @@
         "allConnectorsSubtitle": "Todos los conectores activos — Últimos 30 min"
       },
       "health": {
-        "healthy": "Sanos",
-        "faulted": "Con fallas",
+        "title": "Salud de Conectores",
+        "healthy": "Operativos",
+        "faulted": "Con Falla",
         "suspended": "Suspendidos"
+      },
+      "connectors": {
+        "title": "Conectores del Patio",
+        "distributionTitle": "Distribución de Conectores"
       },
       "activeSessions": {
         "title": "Sesiones Activas",
@@ -2214,7 +2219,21 @@
         "viewAll": "Ver todas"
       },
       "loading": "Cargando datos...",
-      "error": "Error al cargar datos"
+      "error": "Error al cargar datos",
+      "roleBanner": {
+        "operator": {
+          "title": "Operador de Patio",
+          "description": "Gestión de conectores • Inicio/Parada de carga • Control en tiempo real"
+        },
+        "supervisor": {
+          "title": "Supervisor",
+          "description": "Estado general del patio • KPIs operacionales • Alertas y monitoreo"
+        },
+        "maintainer": {
+          "title": "Mantenedor",
+          "description": "Variables energéticas • Diagnóstico técnico • Configuración OCPP"
+        }
+      }
     },
     "energyModal": {
       "title": "Variables Energéticas",
@@ -2286,10 +2305,11 @@
       "temperature": "Temperatura",
       "soc": "SoC",
       "maxPower": "Potencia máx.",
-      "startCharge": "Iniciar carga",
-      "stopCharge": "Detener carga",
+      "startCharge": "Iniciar Carga",
+      "stopCharge": "Detener Carga",
+      "unlock": "Desbloquear",
       "unlockConnector": "Desbloquear conector",
-      "resetCharger": "Reiniciar cargador",
+      "resetCharger": "Reiniciar Cargador",
       "confirmStart": "¿Iniciar carga?",
       "confirmStop": "¿Detener carga?",
       "confirmUnlock": "¿Desbloquear conector?",
@@ -2306,7 +2326,27 @@
       "idTagPlaceholder": "Escanea o ingresa el ID Tag",
       "activeSince": "Activo desde",
       "duration": "Duración",
-      "kwhDelivered": "kWh entregados"
+      "kwhDelivered": "kWh entregados",
+      "vehicle": "Vehículo",
+      "stateOfCharge": "Estado de Carga",
+      "socPartialNote": "SoC parcial — sin ETA (API no disponible)",
+      "energyDelivered": "Energía Entregada",
+      "viewCurves": "Ver curvas",
+      "temperatureHigh": "Temperatura alta",
+      "tapVariablesHint": "Toca las variables para ver gráfico de curvas",
+      "noEnergyDataConnector": "Sin datos energéticos para este conector",
+      "technicalTools": "Herramientas Técnicas",
+      "chargerInfo": "Información del Cargador",
+      "chargerActions": "Acciones del Cargador",
+      "remoteControls": "Controles Remotos",
+      "offlineWarning": "Cargador offline — comandos deshabilitados",
+      "activeSession": "Sesión en curso",
+      "delivered": "Entregado",
+      "viewSessionHistory": "Ver Historial de Sesiones",
+      "maintainerView": "Vista Mantenedor",
+      "operatorView": "Vista Operador",
+      "supervisorView": "Vista Supervisor",
+      "readyToDisconnect": "Listo para desconectar"
     },
     "sessions": {
       "title": "Sesiones de Carga",
@@ -2317,7 +2357,34 @@
       "start": "Inicio",
       "end": "Fin",
       "active": "Activa",
-      "completed": "Completada"
+      "inProgress": "En curso",
+      "completed": "Completada",
+      "vehicle": "Vehículo",
+      "socInitial": "SoC inicial: {{value}}%",
+      "socFinal": "SoC final: {{value}}%"
+    },
+    "supervisor": {
+      "kpi": {
+        "utilization": "Utilización",
+        "utilizationSubtitle": "{{charging}} de {{total}} conectores",
+        "totalEnergy": "Energía Total",
+        "energySubtitle": "entregados hoy",
+        "chargers": "Cargadores",
+        "chargersSubtitle": "online",
+        "alerts": "Alertas",
+        "alertsActiveFault": "con falla activa",
+        "noAlerts": "sin alertas"
+      },
+      "alerts": {
+        "title": "Alertas Activas"
+      },
+      "chargersList": {
+        "activeOf": "{{charging}}/{{total}} activos"
+      },
+      "faultedAlert": {
+        "connectorFault": "Conector con falla",
+        "view": "Ver"
+      }
     }
   }
 }

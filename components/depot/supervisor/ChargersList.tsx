@@ -4,6 +4,7 @@ import { spacing, getThemeColors } from "@/theme";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { useRouter } from "expo-router";
 import { TouchableOpacity, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 interface Charger {
   id: string;
@@ -22,6 +23,7 @@ interface ChargersListProps {
 }
 
 export function ChargersList({ chargers }: ChargersListProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const scheme = useResolvedColorScheme();
   const colors = getThemeColors(scheme);
@@ -71,7 +73,7 @@ export function ChargersList({ chargers }: ChargersListProps) {
               <View style={{ alignItems: "flex-end" }}>
                 {totalPower > 0 && <Text style={{ fontSize: 13, fontWeight: "600", color: "#3b82f6" }}>{totalPower} kW</Text>}
                 <Text style={{ fontSize: 11, color: colors.mutedForeground }}>
-                  {chargingCount}/{totalCount} activos
+                  {t("mobile.supervisor.chargersList.activeOf", { charging: chargingCount, total: totalCount })}
                 </Text>
               </View>
             </TouchableOpacity>

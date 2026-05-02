@@ -3,37 +3,26 @@ import { spacing, colors as themeColors } from "@/theme";
 import { Text } from "@/components/ui/Text";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { useTranslation } from "react-i18next";
 
 interface RoleBannerProps {
   role: "operator" | "supervisor" | "maintainer";
 }
 
-const roleConfig = {
-  operator: {
-    iconName: "flash",
-    title: "Operador de Patio",
-    description: "Gestión de conectores • Inicio/Parada de carga • Control en tiempo real",
-    color1: "#a855f7", // purple-500
-    color2: "#4f46e5", // indigo-600
-  },
-  supervisor: {
-    iconName: "eye",
-    title: "Supervisor",
-    description: "Estado general del patio • KPIs operacionales • Alertas y monitoreo",
-    color1: "#22c55e", // green-500
-    color2: "#059669", // emerald-600
-  },
-  maintainer: {
-    iconName: "hammer",
-    title: "Mantenedor",
-    description: "Variables energéticas • Diagnóstico técnico • Configuración OCPP",
-    color1: "#14b8a6", // teal-500
-    color2: "#0891b2", // cyan-600
-  },
+const roleVisuals = {
+  operator:   { iconName: "flash",   color1: "#a855f7", color2: "#4f46e5" },
+  supervisor: { iconName: "eye",     color1: "#22c55e", color2: "#059669" },
+  maintainer: { iconName: "hammer",  color1: "#14b8a6", color2: "#0891b2" },
 };
 
 export default function RoleBanner({ role }: RoleBannerProps) {
-  const config = roleConfig[role];
+  const { t } = useTranslation();
+  const visuals = roleVisuals[role];
+  const config = {
+    ...visuals,
+    title: t(`mobile.depot.roleBanner.${role}.title`),
+    description: t(`mobile.depot.roleBanner.${role}.description`),
+  };
 
   return (
     <LinearGradient

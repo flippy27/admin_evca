@@ -3,6 +3,7 @@ import { spacing, getThemeColors } from "@/theme";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { View } from "react-native";
 import { EnergyCard } from "../shared/EnergyCard";
+import { useTranslation } from "react-i18next";
 
 interface EnergyOverviewProps {
   avgVoltage: string;
@@ -19,20 +20,21 @@ export function EnergyOverview({
   totalEnergy,
   onPressVariable,
 }: EnergyOverviewProps) {
+  const { t } = useTranslation();
   const scheme = useResolvedColorScheme();
   const colors = getThemeColors(scheme);
 
   return (
     <View style={{ padding: spacing.lg, gap: spacing.md }}>
       <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>
-        Resumen Energético del Patio
+        {t("mobile.depot.overview.energySummaryTitle")}
       </Text>
       <View style={{ gap: spacing.sm }}>
         <View style={{ flexDirection: "row", gap: spacing.sm }}>
           <EnergyCard
             icon="speedometer"
             iconColor="#8b5cf6"
-            label="Voltaje Prom."
+            label={t("mobile.depot.overview.avgVoltage")}
             value={avgVoltage}
             unit="V"
             onPress={onPressVariable ? () => onPressVariable("voltage") : undefined}
@@ -40,7 +42,7 @@ export function EnergyOverview({
           <EnergyCard
             icon="flash"
             iconColor="#2563eb"
-            label="Corriente Prom."
+            label={t("mobile.depot.overview.avgCurrent")}
             value={avgCurrent}
             unit="A"
             onPress={onPressVariable ? () => onPressVariable("current") : undefined}
@@ -50,7 +52,7 @@ export function EnergyOverview({
           <EnergyCard
             icon="pulse"
             iconColor="#8b5cf6"
-            label="Potencia Total"
+            label={t("mobile.depot.overview.totalPower")}
             value={totalPower}
             unit="kW"
             onPress={onPressVariable ? () => onPressVariable("power") : undefined}
@@ -58,7 +60,7 @@ export function EnergyOverview({
           <EnergyCard
             icon="battery-charging"
             iconColor="#06b6d4"
-            label="Energía Total"
+            label={t("mobile.depot.overview.totalEnergy")}
             value={totalEnergy}
             unit="kWh"
             onPress={onPressVariable ? () => onPressVariable("energy") : undefined}

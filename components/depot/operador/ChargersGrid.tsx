@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";
 import ConnectorBadge from "@/components/depot/ConnectorBadge";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 interface Connector {
   id: string;
@@ -31,6 +32,7 @@ interface ChargersGridProps {
 }
 
 export function ChargersGrid({ chargers }: ChargersGridProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const colors = getThemeColors(useResolvedColorScheme());
 
@@ -121,7 +123,7 @@ export function ChargersGrid({ chargers }: ChargersGridProps) {
                 >
                   <Ionicons name="checkmark-circle" size={12} color="#a855f7" />
                   <Text style={{ fontSize: 12, fontWeight: "600", color: "#a855f7" }}>
-                    Listo para desconectar
+                    {t("mobile.chargerDetail.readyToDisconnect")}
                   </Text>
                 </View>
               )}

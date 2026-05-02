@@ -3,6 +3,7 @@ import { spacing, colors as themeColors } from "@/theme";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity, View } from "react-native";
 import { SessionCard } from "./SessionCard";
+import { useTranslation } from "react-i18next";
 
 const COLORS = themeColors.connectorStatus;
 
@@ -22,6 +23,7 @@ interface ActiveSessionsListProps {
 }
 
 export function ActiveSessionsList({ sessions, totalCount }: ActiveSessionsListProps) {
+  const { t } = useTranslation();
   const navigation = useNavigation();
 
   if (totalCount === 0) return null;
@@ -57,7 +59,7 @@ export function ActiveSessionsList({ sessions, totalCount }: ActiveSessionsListP
               color: "#1f2937",
             }}
           >
-            Sesiones Activas ({totalCount})
+            {t("mobile.depot.activeSessions.title")} ({totalCount})
           </Text>
         </View>
         <TouchableOpacity onPress={() => (navigation as any).navigate("sessions/index")}>
@@ -68,7 +70,7 @@ export function ActiveSessionsList({ sessions, totalCount }: ActiveSessionsListP
               fontWeight: "500",
             }}
           >
-            Ver todas →
+            {t("mobile.depot.activeSessions.viewAll")} →
           </Text>
         </TouchableOpacity>
       </View>

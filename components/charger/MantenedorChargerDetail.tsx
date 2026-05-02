@@ -10,6 +10,7 @@ import { chargerCommandsApi } from "@/lib/api/charger-commands.api";
 import { EnergyVariablesModal, EnergyVariable } from "@/components/charger/EnergyVariablesModal";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { getThemeColors } from "@/theme";
+import { useTranslation } from "react-i18next";
 
 const STATUS_CONFIG: Record<string, { label: string; bg: string; color: string }> = {
   available:   { label: "Disponible",    bg: "#f3f4f6",  color: "#0ACDA9" },
@@ -27,20 +28,20 @@ function getStatus(status: string) {
   return STATUS_CONFIG[status?.toLowerCase()] || { label: status, bg: "#f3f4f6", color: "#9ca3af" };
 }
 
-function buildConnectorVariables(connector: any): EnergyVariable[] {
+function buildConnectorVariables(connector: any, t: (key: string) => string): EnergyVariable[] {
   const vars: EnergyVariable[] = [];
   if (connector.voltage != null) {
-    vars.push({ key: "voltage", label: "Voltaje",   unit: "V",  icon: "speedometer", color: "#0ACDA9", bg: "#f0fdfa", value: connector.voltage });
+    vars.push({ key: "voltage", label: t("mobile.chargerDetail.voltage"), unit: "V",  icon: "speedometer", color: "#0ACDA9", bg: "#f0fdfa", value: connector.voltage });
   }
   if (connector.current != null) {
-    vars.push({ key: "current", label: "Corriente", unit: "A",  icon: "flash",       color: "#2563eb", bg: "#eff6ff", value: connector.current });
+    vars.push({ key: "current", label: t("mobile.chargerDetail.current"), unit: "A",  icon: "flash",       color: "#2563eb", bg: "#eff6ff", value: connector.current });
   }
   if (connector.livePower != null) {
-    vars.push({ key: "power",   label: "Potencia",  unit: "kW", icon: "pulse",       color: "#9333ea", bg: "#faf5ff", value: connector.livePower });
+    vars.push({ key: "power",   label: t("mobile.chargerDetail.power"),   unit: "kW", icon: "pulse",       color: "#9333ea", bg: "#faf5ff", value: connector.livePower });
   }
   vars.push({
     key: "temperature",
-    label: "Temperatura",
+    label: t("mobile.chargerDetail.temperature"),
     unit: "°C",
     icon: "thermometer",
     color: connector.temperature != null && connector.temperature > 45 ? "#dc2626" : "#ea580c",
@@ -51,6 +52,7 @@ function buildConnectorVariables(connector: any): EnergyVariable[] {
 }
 
 export function MantenedorChargerDetail({ charger }: { charger: any }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
@@ -69,15 +71,15 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
   const closeModal = () => setModalConnectorId(null);
 
   const modalConnector = charger.connectors?.find((c: any) => String(c.id) === modalConnectorId) ?? null;
-  const modalVars = modalConnector ? buildConnectorVariables(modalConnector) : [];
+  const modalVars = modalConnector ? buildConnectorVariables(modalConnector, t) : [];
 
   const runReboot = async () => {
     setActionLoading("reboot");
     try {
       await chargerCommandsApi.reboot(selectedLocationId, charger.id);
-      useToastStore.getState().show("Cargador reiniciado", "success", "Reiniciar Cargador");
+      useToastStore.getState().show(t("mobile.chargerDetail.chargerReset"), "success", t("mobile.chargerDetail.resetCharger"));
     } catch {
-      useToastStore.getState().show("Error al reiniciar", "error", "Reiniciar Cargador");
+      useToastStore.getState().show(t("mobile.chargerDetail.errorReset"), "error", t("mobile.chargerDetail.resetCharger"));
     } finally {
       setActionLoading(null);
     }
@@ -106,7 +108,7 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
           <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
             <View style={{ flexDirection: "row", alignItems: "center", gap: 4, backgroundColor: "#ccfbf1", paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20 }}>
               <Ionicons name="construct" size={11} color="#0d9488" />
-              <Text style={{ fontSize: 10, fontWeight: "600", color: "#0d9488" }}>Vista Mantenedor</Text>
+              <Text style={{ fontSize: 10, fontWeight: "600", color: "#0d9488" }}>{t("mobile.chargerDetail.maintainerView")}</Text>
             </View>
             <View style={{ backgroundColor: charger.online ? "#dcfce7" : "#fee2e2", paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20 }}>
               <Text style={{ fontSize: 10, fontWeight: "600", color: charger.online ? "#15803d" : "#dc2626" }}>
@@ -122,7 +124,7 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
           const sc = getStatus(connector.status);
           const soc = connector.soc !== undefined ? Number(connector.soc) : undefined;
           const connEnergy = connector.energyDelivered ?? connector.energy;
-          const connVars = buildConnectorVariables(connector);
+          const connVars = buildConnectorVariables(connector, t);
           const hasEnergyData = connVars.length > 0;
           const tempHigh = connector.temperature != null && connector.temperature > 45;
 
@@ -134,10 +136,10 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
               {/* Connector header */}
               <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
                 <Text style={{ fontSize: 15, fontWeight: "600", color: colors.foreground }}>
-                  Conector {connector.connectorId}
+                  {t("mobile.chargerDetail.connector")} {connector.connectorId}
                 </Text>
                 <View style={{ backgroundColor: sc.bg, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20 }}>
-                  <Text style={{ fontSize: 12, fontWeight: "600", color: sc.color }}>{sc.label}</Text>
+                  <Text style={{ fontSize: 12, fontWeight: "600", color: sc.color }}>{t(`mobile.status.${connector.status?.toLowerCase()}`, { defaultValue: sc.label })}</Text>
                 </View>
               </View>
 
@@ -146,7 +148,7 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
                 <View style={{ gap: 10, marginBottom: 12 }}>
                   {connector.vehicleId && (
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                      <Text style={{ fontSize: 14, color: colors.mutedForeground }}>Vehículo</Text>
+                      <Text style={{ fontSize: 14, color: colors.mutedForeground }}>{t("mobile.chargerDetail.vehicle")}</Text>
                       <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>
                         {String(connector.vehicleId).toUpperCase()}
                       </Text>
@@ -156,7 +158,7 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
                   {soc != null && (
                     <View>
                       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                        <Text style={{ fontSize: 14, color: colors.mutedForeground }}>Estado de Carga</Text>
+                        <Text style={{ fontSize: 14, color: colors.mutedForeground }}>{t("mobile.chargerDetail.stateOfCharge")}</Text>
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
                           <Ionicons name="battery-half" size={16} color="#2563eb" />
                           <Text style={{ fontSize: 18, fontWeight: "700", color: "#2563eb" }}>{soc}%</Text>
@@ -166,21 +168,21 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
                         <View style={{ height: 8, width: `${soc}%`, backgroundColor: "#3b82f6", borderRadius: 4 }} />
                       </View>
                       <Text style={{ fontSize: 12, color: colors.mutedForeground, fontStyle: "italic", marginTop: 4 }}>
-                        SoC parcial — sin ETA (API no disponible)
+                        {t("mobile.chargerDetail.socPartialNote")}
                       </Text>
                     </View>
                   )}
 
                   {connector.power != null && (
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                      <Text style={{ fontSize: 14, color: colors.mutedForeground }}>Potencia</Text>
+                      <Text style={{ fontSize: 14, color: colors.mutedForeground }}>{t("mobile.chargerDetail.power")}</Text>
                       <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>{connector.power} kW</Text>
                     </View>
                   )}
 
                   {connEnergy != null && (
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                      <Text style={{ fontSize: 14, color: colors.mutedForeground }}>Energía Entregada</Text>
+                      <Text style={{ fontSize: 14, color: colors.mutedForeground }}>{t("mobile.chargerDetail.energyDelivered")}</Text>
                       <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>
                         {Number(connEnergy).toFixed(1)} kWh
                       </Text>
@@ -198,7 +200,7 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
                       <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
                         <Ionicons name="pulse" size={13} color="#0d9488" />
                         <Text style={{ fontSize: 11, fontWeight: "700", color: "#0d9488", textTransform: "uppercase", letterSpacing: 0.5 }}>
-                          Variables Energéticas
+                          {t("mobile.chargerDetail.energyVariables")}
                         </Text>
                       </View>
                       <TouchableOpacity
@@ -206,7 +208,7 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
                         style={{ flexDirection: "row", alignItems: "center", gap: 4, backgroundColor: "#ccfbf1", paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 }}
                       >
                         <Ionicons name="bar-chart" size={11} color="#0d9488" />
-                        <Text style={{ fontSize: 11, fontWeight: "500", color: "#0d9488" }}>Ver curvas</Text>
+                        <Text style={{ fontSize: 11, fontWeight: "500", color: "#0d9488" }}>{t("mobile.chargerDetail.viewCurves")}</Text>
                       </TouchableOpacity>
                     </View>
 
@@ -229,7 +231,7 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
                             {v.key === "temperature" && tempHigh && (
                               <View style={{ flexDirection: "row", alignItems: "center", gap: 3, marginTop: 3 }}>
                                 <Ionicons name="alert-circle" size={10} color="#dc2626" />
-                                <Text style={{ fontSize: 9, color: "#dc2626", fontWeight: "600" }}>Temperatura alta</Text>
+                                <Text style={{ fontSize: 9, color: "#dc2626", fontWeight: "600" }}>{t("mobile.chargerDetail.temperatureHigh")}</Text>
                               </View>
                             )}
                           </TouchableOpacity>
@@ -253,7 +255,7 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
                               {v.key === "temperature" && tempHigh && (
                                 <View style={{ flexDirection: "row", alignItems: "center", gap: 3, marginTop: 3 }}>
                                   <Ionicons name="alert-circle" size={10} color="#dc2626" />
-                                  <Text style={{ fontSize: 9, color: "#dc2626", fontWeight: "600" }}>Temperatura alta</Text>
+                                  <Text style={{ fontSize: 9, color: "#dc2626", fontWeight: "600" }}>{t("mobile.chargerDetail.temperatureHigh")}</Text>
                                 </View>
                               )}
                             </TouchableOpacity>
@@ -265,13 +267,13 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
                     {/* Hint */}
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 4, marginTop: 8 }}>
                       <Ionicons name="bar-chart" size={10} color="#0d9488" />
-                      <Text style={{ fontSize: 11, color: "#0d9488" }}>Toca las variables para ver gráfico de curvas</Text>
+                      <Text style={{ fontSize: 11, color: "#0d9488" }}>{t("mobile.chargerDetail.tapVariablesHint")}</Text>
                     </View>
                   </View>
                 ) : (
                   <View style={{ backgroundColor: colors.muted, borderRadius: 8, padding: 16, alignItems: "center" }}>
                     <Ionicons name="pulse" size={20} color={colors.mutedForeground} />
-                    <Text style={{ fontSize: 11, color: colors.mutedForeground, marginTop: 4 }}>Sin datos energéticos para este conector</Text>
+                    <Text style={{ fontSize: 11, color: colors.mutedForeground, marginTop: 4 }}>{t("mobile.chargerDetail.noEnergyDataConnector")}</Text>
                   </View>
                 )}
               </View>
@@ -282,7 +284,7 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
         {/* Herramientas Técnicas */}
         <View style={{ backgroundColor: colors.card, borderRadius: 8, borderWidth: 1, borderColor: colors.border, padding: 16, marginBottom: 16 }}>
           <Text style={{ fontSize: 15, fontWeight: "600", color: colors.foreground, marginBottom: 12 }}>
-            Herramientas Técnicas
+            {t("mobile.chargerDetail.technicalTools")}
           </Text>
           <View style={{ gap: 8 }}>
             <TouchableOpacity
@@ -291,7 +293,7 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
               style={{ backgroundColor: "#f97316", paddingVertical: 14, borderRadius: 8, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, opacity: actionLoading === "reboot" ? 0.5 : 1 }}
             >
               {actionLoading === "reboot" ? <ActivityIndicator size="small" color="white" /> : <Ionicons name="reload" size={17} color="white" />}
-              <Text style={{ fontSize: 14, fontWeight: "600", color: "white" }}>Reiniciar Cargador</Text>
+              <Text style={{ fontSize: 14, fontWeight: "600", color: "white" }}>{t("mobile.chargerDetail.resetCharger")}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -299,7 +301,7 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
               style={{ backgroundColor: colors.muted, paddingVertical: 12, borderRadius: 8, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 }}
             >
               <Ionicons name="chatbubble-ellipses" size={17} color={colors.foreground} />
-              <Text style={{ fontSize: 14, fontWeight: "500", color: colors.foreground }}>Ver Mensajes OCPP</Text>
+              <Text style={{ fontSize: 14, fontWeight: "500", color: colors.foreground }}>{t("mobile.chargerDetail.ocppMessages")}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -307,7 +309,7 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
               style={{ backgroundColor: "#f0fdfa", borderWidth: 1, borderColor: "#99f6e4", paddingVertical: 12, borderRadius: 8, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 }}
             >
               <Ionicons name="settings" size={17} color="#0d9488" />
-              <Text style={{ fontSize: 14, fontWeight: "600", color: "#0d9488" }}>Configuración OCPP</Text>
+              <Text style={{ fontSize: 14, fontWeight: "600", color: "#0d9488" }}>{t("mobile.chargerDetail.ocppConfig")}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -317,8 +319,8 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
       <EnergyVariablesModal
         visible={!!modalConnectorId}
         onClose={closeModal}
-        title="Variables Energéticas"
-        subtitle={`${charger.name} · C${modalConnector?.connectorId ?? ""} — Últimos 30 min`}
+        title={t("mobile.chargerDetail.energyVariables")}
+        subtitle={`${charger.name} · C${modalConnector?.connectorId ?? ""} — ${t("mobile.chargerDetail.last30min")}`}
         variables={modalVars}
         initialKey={modalInitialKey}
         connectorId={modalConnectorId ?? undefined}

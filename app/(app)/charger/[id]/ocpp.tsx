@@ -131,7 +131,7 @@ export default function OCPPMessages() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <AppHeader />
+      <AppHeader hideRoleSelector={true} />
 
       {/* Page header */}
       <View

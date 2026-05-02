@@ -3,6 +3,7 @@ import { Text } from "@/components/ui/Text";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { getThemeColors, spacing, colors as themeColors } from "@/theme";
 import { View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 const COLORS = themeColors.connectorStatus;
 
@@ -14,8 +15,10 @@ interface StatsGridProps {
   title?: string;
 }
 
-export function StatsGrid({ charging, available, finishing, faulted, title = "Conectores del Patio" }: StatsGridProps) {
+export function StatsGrid({ charging, available, finishing, faulted, title }: StatsGridProps) {
+  const { t } = useTranslation();
   const colors = getThemeColors(useResolvedColorScheme());
+  const resolvedTitle = title ?? t("mobile.depot.connectors.title");
 
   return (
     <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.lg }}>
@@ -37,24 +40,24 @@ export function StatsGrid({ charging, available, finishing, faulted, title = "Co
             letterSpacing: 0.5,
           }}
         >
-          {title}
+          {resolvedTitle}
         </Text>
         <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 8 }}>
           <View style={{ flex: 1, alignItems: "center" }}>
             <Text style={{ fontSize: 24, fontWeight: "700", color: COLORS.charging }}>{charging}</Text>
-            <Text style={{ fontSize: 12, color: colors.mutedForeground, marginTop: 4 }}>Cargando</Text>
+            <Text style={{ fontSize: 12, color: colors.mutedForeground, marginTop: 4 }}>{t("mobile.status.charging")}</Text>
           </View>
           <View style={{ flex: 1, alignItems: "center" }}>
             <Text style={{ fontSize: 24, fontWeight: "700", color: COLORS.available }}>{available}</Text>
-            <Text style={{ fontSize: 12, color: colors.mutedForeground, marginTop: 4 }}>Disponible</Text>
+            <Text style={{ fontSize: 12, color: colors.mutedForeground, marginTop: 4 }}>{t("mobile.status.available")}</Text>
           </View>
           <View style={{ flex: 1, alignItems: "center" }}>
             <Text style={{ fontSize: 24, fontWeight: "700", color: COLORS.finishing }}>{finishing}</Text>
-            <Text style={{ fontSize: 12, color: colors.mutedForeground, marginTop: 4 }}>Finalizando</Text>
+            <Text style={{ fontSize: 12, color: colors.mutedForeground, marginTop: 4 }}>{t("mobile.status.finishing")}</Text>
           </View>
           <View style={{ flex: 1, alignItems: "center" }}>
             <Text style={{ fontSize: 24, fontWeight: "700", color: themeColors.light.destructive }}>{faulted}</Text>
-            <Text style={{ fontSize: 12, color: colors.mutedForeground, marginTop: 4 }}>Falla</Text>
+            <Text style={{ fontSize: 12, color: colors.mutedForeground, marginTop: 4 }}>{t("mobile.status.faulted")}</Text>
           </View>
         </View>
       </Card>
