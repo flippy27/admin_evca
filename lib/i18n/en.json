@@ -2132,5 +2132,188 @@
     "SIMULATE_404": "Simulate 404",
     "SIMULATE_409": "Simulate 409",
     "SIMULATE_500": "Simulate 500"
+  },
+  "mobile": {
+    "sidebar": {
+      "appTitle": "Workforce App",
+      "appVersion": "PoC v1",
+      "nav": {
+        "depotView": "Depot View",
+        "sessions": "Charging Sessions"
+      },
+      "roleFocus": {
+        "title": "Role Focus",
+        "roles": {
+          "maintainer": "Maintainer",
+          "operator": "Operator",
+          "supervisor": "Supervisor"
+        },
+        "maintainer": {
+          "energyVariables": "Energy variables",
+          "ocppMessages": "OCPP Messages",
+          "ocppConfig": "OCPP Configuration"
+        },
+        "operator": {
+          "startStop": "Start / Stop charging",
+          "unlock": "Unlock connectors",
+          "bulkTecle": "Mass hoists"
+        },
+        "supervisor": {
+          "kpis": "Operational KPIs",
+          "alerts": "Alerts and faults",
+          "generalStatus": "General yard status"
+        }
+      },
+      "theme": {
+        "dark": "Dark mode",
+        "light": "Light mode"
+      },
+      "language": "Language",
+      "logout": "Log out",
+      "role": "Role"
+    },
+    "status": {
+      "available": "Available",
+      "preparing": "Preparing",
+      "charging": "Charging",
+      "finishing": "Finishing",
+      "faulted": "Fault",
+      "suspended": "Suspended",
+      "unavailable": "Unavailable",
+      "offline": "Offline",
+      "online": "Online"
+    },
+    "charger": {
+      "online": "Online",
+      "offline": "Offline",
+      "fault_one": "{{count}} fault",
+      "fault_other": "{{count}} faults",
+      "noEnergyData": "No energy data"
+    },
+    "depot": {
+      "overview": {
+        "avgVoltage": "Avg. Voltage",
+        "avgCurrent": "Avg. Current",
+        "totalPower": "Total Power",
+        "totalEnergy": "Total Energy",
+        "energySummaryTitle": "Yard Energy Summary",
+        "allConnectorsSubtitle": "All active connectors — Last 30 min"
+      },
+      "health": {
+        "healthy": "Healthy",
+        "faulted": "Faulted",
+        "suspended": "Suspended"
+      },
+      "activeSessions": {
+        "title": "Active Sessions",
+        "empty": "No active sessions",
+        "viewAll": "View all"
+      },
+      "loading": "Loading data...",
+      "error": "Error loading data"
+    },
+    "energyModal": {
+      "title": "Energy Variables",
+      "subtitle": "Last 30 min",
+      "loading": "Loading data...",
+      "stats": {
+        "title": "Stats — {{label}} (30 MIN)",
+        "min": "Minimum",
+        "avg": "Average",
+        "max": "Maximum"
+      },
+      "frequency": "Grid frequency: {{value}} Hz",
+      "frequencyNote": "Data updated every 60s via OCPP MeterValues",
+      "tooltip": {
+        "time": "Time"
+      },
+      "variables": {
+        "voltage": "Voltage",
+        "current": "Current",
+        "power": "Power",
+        "temperature": "Temperature",
+        "energy": "Energy"
+      }
+    },
+    "tecle": {
+      "controlTitle": "Hoist Control",
+      "controlSubtitle": "Select hoist, direction and duration",
+      "step1": "1. Select Hoist",
+      "step2": "2. Direction",
+      "step3": "3. Duration",
+      "noData": "No data available",
+      "up": "Up",
+      "down": "Down",
+      "moving": {
+        "up": "Going up",
+        "down": "Going down"
+      },
+      "error": "Error executing hoist",
+      "success": "{{name}} — {{direction}}",
+      "operatingFor": "Hoist operating for {{duration}}s",
+      "durationNote": "Hoist operation time: {{duration}} second{{plural}}",
+      "button": "Hoist",
+      "execute": "{{action}} {{name}} for {{duration}}s"
+    },
+    "auth": {
+      "loginTitle": "Log in",
+      "welcomeBack": "Welcome back",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot your password?",
+      "loginButton": "Sign in",
+      "resetTitle": "Reset password",
+      "resetSubtitle": "We'll send you an email to reset your password",
+      "sendEmail": "Send email",
+      "backToLogin": "Back to login"
+    },
+    "chargerDetail": {
+      "energyVariables": "Energy Variables",
+      "last30min": "Last 30 min",
+      "ocppConfig": "OCPP Configuration",
+      "ocppMessages": "OCPP Messages",
+      "noData": "No data",
+      "connector": "Connector",
+      "status": "Status",
+      "voltage": "Voltage",
+      "current": "Current",
+      "power": "Power",
+      "energy": "Energy",
+      "temperature": "Temperature",
+      "soc": "SoC",
+      "maxPower": "Max power",
+      "startCharge": "Start charging",
+      "stopCharge": "Stop charging",
+      "unlockConnector": "Unlock connector",
+      "resetCharger": "Reset charger",
+      "confirmStart": "Start charging?",
+      "confirmStop": "Stop charging?",
+      "confirmUnlock": "Unlock connector?",
+      "confirmReset": "Reset charger?",
+      "chargeStarted": "Charging started",
+      "chargeStopped": "Charging stopped",
+      "connectorUnlocked": "Connector unlocked",
+      "chargerReset": "Charger reset",
+      "errorStart": "Error starting charge",
+      "errorStop": "Error stopping charge",
+      "errorUnlock": "Error unlocking",
+      "errorReset": "Error resetting",
+      "idTagLabel": "ID Tag",
+      "idTagPlaceholder": "Scan or enter ID Tag",
+      "activeSince": "Active since",
+      "duration": "Duration",
+      "kwhDelivered": "kWh delivered"
+    },
+    "sessions": {
+      "title": "Charging Sessions",
+      "noSessions": "No sessions recorded",
+      "duration": "Duration",
+      "energy": "Energy",
+      "connector": "Connector",
+      "start": "Start",
+      "end": "End",
+      "active": "Active",
+      "completed": "Completed"
+    }
   }
 }

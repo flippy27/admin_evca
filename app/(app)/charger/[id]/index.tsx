@@ -7,6 +7,7 @@ import { Text } from "@/components/ui/Text";
 import { useChargersStore } from "@/lib/stores/chargers.store";
 import { useGroupStore } from "@/lib/stores/group.store";
 import { useChargingSessionsStore } from "@/lib/stores/charging-session.store";
+import { getAllChargerIdsFromGroup, parsePanelPowerKw, useChargerPanelStore } from "@/lib/stores/charger-panel.store";
 import { mockChargers } from "@/lib/data/mockData";
 import { OperadorChargerDetail } from "@/components/charger/OperadorChargerDetail";
 import { SupervisorChargerDetail } from "@/components/charger/SupervisorChargerDetail";
@@ -26,20 +27,26 @@ export default function ChargerDetail() {
   const storeChargers = useChargersStore((state) => state.chargers || []);
   const { groupData } = useGroupStore();
   const sessions = useChargingSessionsStore((state: any) => state.sessions || []);
+  const panels = useChargerPanelStore((s) => s.panels);
 
-  // 3-second polling: keep group + sessions fresh while on this screen
+  // 3-second silent polling: group + sessions + panel for this charger
   useEffect(() => {
     if (!selectedLocationId) return;
     const poll = () => {
-      useGroupStore.getState().fetchGroup(selectedLocationId);
+      useGroupStore.getState().fetchGroup(selectedLocationId, true);
       useChargingSessionsStore.getState().fetchSessions({
         payload: { location_ids: [selectedLocationId] },
         pagination: { page: 1, per_page: 20 },
       });
+      const gd = useGroupStore.getState().groupData;
+      if (gd && id) {
+        useChargerPanelStore.getState().fetchPanel(gd.site.site_ID, String(id));
+      }
     };
+    poll();
     const interval = setInterval(poll, 3000);
     return () => clearInterval(interval);
-  }, [selectedLocationId]);
+  }, [selectedLocationId, id]);
 
   // Find charger from group store, enriched with active session data
   const groupCharger = useMemo(() => {
@@ -54,6 +61,7 @@ export default function ChargerDetail() {
   const charger = useMemo(() => {
     // Prefer group store (live data)
     if (groupCharger) {
+      const panel = panels[String(groupCharger.charger_ID)];
       return {
         id: String(groupCharger.charger_ID),
         name: chargerName || groupCharger.charger_name,
@@ -62,34 +70,34 @@ export default function ChargerDetail() {
           (c) => c.connector_status.toLowerCase() !== "offline"
         ),
         connectors: groupCharger.connectors.map((c) => {
-          // Match active session for this connector
-          const session = sessions.find(
-            (s: any) =>
-              s.connector_id === c.connector_id ||
-              (s.charger_id === String(groupCharger.charger_ID) &&
-                String(s.connector_number) === String(c.connector_number))
-          );
-          const energyFromSession = session?.delivered_energy
-            ? parseFloat(session.delivered_energy)
-            : undefined;
+          const pc = panel?.connectors?.find((p) => p.connector_id === c.connector_id);
+
+          // Live power: panel session.power_kw → last_charging_record.power
+          const livePower = parsePanelPowerKw(pc?.session?.power_kw)
+            ?? (c.last_charging_record?.power != null ? +c.last_charging_record.power.toFixed(2) : undefined);
+
+          // Live energy: panel session.energy_kwh → last_charging_record.energy
+          const liveEnergy = pc?.session?.energy_kwh != null
+            ? parseFloat(String(pc.session.energy_kwh))
+            : (c.last_charging_record?.energy ?? undefined);
+
+          // Live SoC: panel → group soc_pct → last_charging_record
+          const liveSoc = pc?.session?.soc_current_pct
+            ?? (c.soc_pct != null ? c.soc_pct : (c.last_charging_record?.soc ?? undefined));
+
           return {
             id: c.connector_id,
             connectorId: c.connector_number,
-            status: c.connector_status.toLowerCase(),
-            soc: c.soc_pct != null ? c.soc_pct : (c.last_charging_record?.soc ?? undefined),
-            vehicleId: c.vehicle_alias || undefined,
-            power: c.connector_max_power ? c.connector_max_power / 1000 : undefined,
-            energyDelivered:
-              energyFromSession ??
-              (c.last_charging_record?.energy != null
-                ? c.last_charging_record.energy
-                : undefined),
-            // Live energy variables from last meter record
+            status: (pc?.state_code.toLowerCase() ?? c.connector_status.toLowerCase()),
+            soc: liveSoc,
+            vehicleId: pc?.vehicle_alias ?? c.vehicle_alias ?? undefined,
+            // Live power for top info row (not max power)
+            power: livePower,
+            energyDelivered: liveEnergy,
+            // Energy variables
             voltage: c.last_charging_record?.voltage ?? undefined,
             current: c.last_charging_record?.current ?? undefined,
-            livePower: c.last_charging_record?.power != null
-              ? +(c.last_charging_record.power).toFixed(1)
-              : undefined,
+            livePower,
           };
         }),
       };

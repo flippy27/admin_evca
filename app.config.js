@@ -82,6 +82,8 @@ module.exports = ({ config }) => {
         process.env.API_BASE_URL || 'https://emobility-bff.dev.dhemax.link/',
       apiTimeout: parseInt(process.env.API_TIMEOUT || '30000', 10),
       httpLogLevel: parseInt(process.env.HTTP_LOG_LEVEL || '1', 10),
+      httpLogMethods: process.env.HTTP_LOG_METHODS || 'ALL',
+      httpLogSkipPaths: process.env.HTTP_LOG_SKIP_PATHS || '',
 
       // Authentication
       authProvider: process.env.AUTH_PROVIDER || 'keycloak',

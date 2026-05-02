@@ -19,6 +19,27 @@ enum HttpLogLevel {
 
 const LOG_LEVEL: HttpLogLevel = parseInt(ENV.HTTP_LOG_LEVEL || '1', 10) as HttpLogLevel;
 
+// HTTP_LOG_METHODS: ALL | COMMANDS (POST/PUT/PATCH/DELETE) | GET | or comma-separated methods
+const LOG_METHODS: string[] = (ENV.HTTP_LOG_METHODS || 'ALL')
+  .toUpperCase()
+  .split(',')
+  .map((s) => s.trim());
+
+function shouldLogMethod(method: string): boolean {
+  if (LOG_METHODS.includes('ALL')) return true;
+  if (LOG_METHODS.includes('COMMANDS')) return ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method);
+  return LOG_METHODS.includes(method);
+}
+
+const SKIP_PATHS: string[] = (ENV.HTTP_LOG_SKIP_PATHS || '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+function shouldSkipPath(url: string): boolean {
+  return SKIP_PATHS.some((fragment) => url.includes(fragment));
+}
+
 // In-flight refresh token to prevent concurrent refresh requests
 let refreshTokenPromise: Promise<string | null> | null = null;
 
@@ -30,6 +51,8 @@ let onRefreshFailedCallback: (() => void) | null = null;
  */
 function logHttpRequest(method: string, url: string, config?: InternalAxiosRequestConfig) {
   if (LOG_LEVEL === HttpLogLevel.OFF) return;
+  if (!shouldLogMethod(method)) return;
+  if (shouldSkipPath(url)) return;
 
   const prefix = `[HTTP ${method}]`;
 
@@ -62,6 +85,8 @@ function logHttpRequest(method: string, url: string, config?: InternalAxiosReque
 
 function logHttpResponse(method: string, url: string, response: AxiosResponse) {
   if (LOG_LEVEL === HttpLogLevel.OFF) return;
+  if (!shouldLogMethod(method)) return;
+  if (shouldSkipPath(url)) return;
 
   const prefix = `[HTTP ${method}] ${response.status}`;
 
@@ -197,29 +222,18 @@ function createAuthenticatedClient(baseURL: string, isBff: boolean = false): Axi
  * Calls auth store to refresh using refresh token
  */
 async function attemptRefresh(): Promise<string | null> {
-  try {
-    // Import here to avoid circular dependencies
-    const { useAuthStore } = await import('../stores/auth.store');
-    const authStore = useAuthStore.getState();
+  const { useAuthStore } = await import('../stores/auth.store');
+  const authStore = useAuthStore.getState();
 
-    // Call refresh method
-    await authStore.refreshAccessToken();
+  await authStore.refreshAccessToken();
 
-    // Return new token
-    const newToken = authStore.accessToken;
-    if (newToken) {
-      logger.info('Token refreshed successfully');
-      return newToken;
-    }
-
-    logger.error('Token refresh returned null');
-    return null;
-  } catch (error) {
-    logger.error('attemptRefresh failed:', {
-      error: error instanceof Error ? error.message : String(error),
-    });
-    return null;
+  const newToken = authStore.accessToken;
+  if (!newToken) {
+    throw new Error('Token refresh returned null');
   }
+
+  logger.info('Token refreshed successfully');
+  return newToken;
 }
 
 // Create two clients: one for BFF, one for user management

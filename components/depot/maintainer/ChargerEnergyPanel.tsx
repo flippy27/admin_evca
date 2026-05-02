@@ -3,6 +3,7 @@ import { Text } from "@/components/ui/Text";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { getThemeColors, spacing, colors as themeColors } from "@/theme";
 import { TouchableOpacity, View } from "react-native";
+import { useTranslation } from "react-i18next";
 import { ConnectorEnergyRow } from "./ConnectorEnergyRow";
 
 interface Connector {
@@ -13,6 +14,7 @@ interface Connector {
   current?: number;
   power?: number;
   energy?: number;
+  temperature?: number;
 }
 
 interface ChargerEnergyPanelProps {
@@ -27,6 +29,7 @@ interface ChargerEnergyPanelProps {
 }
 
 export function ChargerEnergyPanel({ charger, statusConfigMap, onPress }: ChargerEnergyPanelProps) {
+  const { t } = useTranslation();
   const scheme = useResolvedColorScheme();
   const colors = getThemeColors(scheme);
   const faultedCount = charger.connectors?.filter((c) => c.status?.toLowerCase() === "faulted").length || 0;
@@ -52,12 +55,12 @@ export function ChargerEnergyPanel({ charger, statusConfigMap, onPress }: Charge
                 borderRadius: 20,
               }}
             >
-              <Text style={{ fontSize: 10, color: "white", fontWeight: "500" }}>{charger.online ? "Online" : "Offline"}</Text>
+              <Text style={{ fontSize: 10, color: "white", fontWeight: "500" }}>{charger.online ? t("mobile.charger.online") : t("mobile.charger.offline")}</Text>
             </View>
             {faultedCount > 0 && (
               <View style={{ backgroundColor: themeColors.light.destructive, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20 }}>
                 <Text style={{ fontSize: 10, color: "white", fontWeight: "600" }}>
-                  {faultedCount} falla{faultedCount > 1 ? "s" : ""}
+                  {t("mobile.charger.fault", { count: faultedCount })}
                 </Text>
               </View>
             )}
@@ -78,7 +81,7 @@ export function ChargerEnergyPanel({ charger, statusConfigMap, onPress }: Charge
                   voltage: connector.voltage ?? 0,
                   current: connector.current ?? 0,
                   power: connector.power ?? 0,
-                  energy: connector.energy ?? 0,
+                  temperature: connector.temperature ?? 0,
                 }}
               />
             );

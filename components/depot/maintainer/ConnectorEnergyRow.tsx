@@ -7,7 +7,7 @@ interface EnergyData {
   voltage: number;
   current: number;
   power: number;
-  energy: number;
+  temperature: number;
 }
 
 interface ConnectorEnergyRowProps {
@@ -55,8 +55,8 @@ export function ConnectorEnergyRow({ connectorId, status, statusLabel, statusCol
           <Text style={{ fontSize: 11, fontWeight: "600", color: colors.foreground }}>{Number(energyData.power).toFixed(1)}</Text>
         </View>
         <View style={{ flex: 1, flexDirection: "row", gap: spacing.xs }}>
-          <Text style={{ fontSize: 9, color: colors.mutedForeground }}>kWh</Text>
-          <Text style={{ fontSize: 11, fontWeight: "600", color: colors.foreground }}>{Number(energyData.energy).toFixed(1)}</Text>
+          <Text style={{ fontSize: 9, color: colors.mutedForeground }}>°C</Text>
+          <Text style={{ fontSize: 11, fontWeight: "600", color: colors.foreground }}>{Number(energyData.temperature).toFixed(1)}</Text>
         </View>
       </View>
     </View>

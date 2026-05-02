@@ -9,6 +9,7 @@ import { useToastStore } from "@/components/ui/Toast";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { useChargersStore } from "@/lib/stores/chargers.store";
 import { chargerCommandsApi } from "@/lib/api/charger-commands.api";
+import { chargingSessionApi } from "@/lib/api/charging-session.api";
 
 const STATUS_CONFIG: Record<string, { label: string; bg: string; color: string }> = {
   available:   { label: "Disponible",    bg: "#f3f4f6",  color: "#0ACDA9" },
@@ -49,7 +50,13 @@ export function OperadorChargerDetail({ charger }: { charger: any }) {
     const key = `${command}-${connectorNumber}`;
     setActionLoading(key);
     try {
-      await chargerCommandsApi.connectorCommand(selectedLocationId, charger.id, connectorUUID, command);
+      // Create session registry before start — response id_tag goes into the start body
+      if (command === "start") {
+        const idTag = await chargingSessionApi.createRegistry(connectorUUID);
+        await chargerCommandsApi.connectorCommand(selectedLocationId, charger.id, connectorUUID, command, idTag);
+      } else {
+        await chargerCommandsApi.connectorCommand(selectedLocationId, charger.id, connectorUUID, command);
+      }
       useToastStore.getState().show(
         `Conector ${connectorNumber}`,
         "success",

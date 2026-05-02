@@ -6,14 +6,16 @@
 
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from '@/lib/i18n';
+import type { LanguageCode } from '@/lib/i18n/languages';
 
 const STORAGE_KEY = 'app_settings';
 
 interface AppState {
-  language: 'es' | 'en';
+  language: LanguageCode;
   colorScheme: 'light' | 'dark' | 'system';
 
-  setLanguage: (lang: 'es' | 'en') => Promise<void>;
+  setLanguage: (lang: LanguageCode) => Promise<void>;
   setColorScheme: (scheme: 'light' | 'dark' | 'system') => Promise<void>;
   restoreSettings: () => Promise<void>;
 }
@@ -22,8 +24,9 @@ export const useAppStore = create<AppState>((set) => ({
   language: 'es',
   colorScheme: 'system',
 
-  setLanguage: async (lang: 'es' | 'en') => {
+  setLanguage: async (lang: LanguageCode) => {
     set({ language: lang });
+    await i18n.changeLanguage(lang);
     try {
       const stored = await AsyncStorage.getItem(STORAGE_KEY);
       const settings = stored ? JSON.parse(stored) : {};
@@ -50,7 +53,10 @@ export const useAppStore = create<AppState>((set) => ({
       const stored = await AsyncStorage.getItem(STORAGE_KEY);
       if (stored) {
         const settings = JSON.parse(stored);
-        if (settings.language) set({ language: settings.language });
+        if (settings.language) {
+          set({ language: settings.language });
+          await i18n.changeLanguage(settings.language);
+        }
         if (settings.colorScheme) set({ colorScheme: settings.colorScheme });
       }
     } catch (error) {

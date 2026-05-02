@@ -38,7 +38,6 @@ function buildConnectorVariables(connector: any): EnergyVariable[] {
   if (connector.livePower != null) {
     vars.push({ key: "power",   label: "Potencia",  unit: "kW", icon: "pulse",       color: "#9333ea", bg: "#faf5ff", value: connector.livePower });
   }
-  // Always show temperature card; use real value when available, 0 as placeholder otherwise
   vars.push({
     key: "temperature",
     label: "Temperatura",
@@ -322,6 +321,7 @@ export function MantenedorChargerDetail({ charger }: { charger: any }) {
         subtitle={`${charger.name} · C${modalConnector?.connectorId ?? ""} — Últimos 30 min`}
         variables={modalVars}
         initialKey={modalInitialKey}
+        connectorId={modalConnectorId ?? undefined}
       />
     </SafeAreaView>
   );

@@ -42,11 +42,13 @@ export const chargerCommandsApi = {
     chargerId: string,
     connectorId: string,
     command: ConnectorCommand,
-  ) =>
-    bffClient.post<CommandResponse>(
-      `/bff/operations/sites/${siteId}/chargers/${chargerId}/connectors/${connectorId}/${command}`,
-      cmdMeta(),
-    ),
+    idTag?: string,
+  ) => {
+    const url = command === 'start'
+      ? `/bff/chargers/${chargerId}/connectors/${connectorId}/start-charge`
+      : `/bff/operations/sites/${siteId}/chargers/${chargerId}/connectors/${connectorId}/${command}`;
+    return bffClient.post<CommandResponse>(url, { ...cmdMeta(), ...(idTag ? { idTag } : {}) });
+  },
 
   /**
    * POST /bff/operations/sites/:siteId/chargers/:chargerId/reboot

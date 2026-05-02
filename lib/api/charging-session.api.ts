@@ -23,11 +23,30 @@ const getEndOfDay = (date: Date): string => {
 
 export const chargingSessionApi = {
   /**
+   * POST /bff/charging-session/create-registry
+   * Must be called before starting a charge session.
+   * company_id and user_id are read from the JWT (auth store).
+   */
+  createRegistry: async (connectorId: string): Promise<string> => {
+    const { user } = useAuthStore.getState()
+    const res = await bffClient.post<{ payload: { id_tag: string } }>(
+      '/bff/charging-session/create-registry',
+      {
+        company_id: Number(user?.companyExternalId ?? 0),
+        connector_id: connectorId,
+        platform: 'DHX_PLATFORM',
+        user_id: user?.userId ?? '',
+      },
+    )
+    return res.data.payload.id_tag
+  },
+
+  /**
    * POST /bff/charging-session/company - List sessions with filters
    */
   list: async (request: SessionsRequest) => {
     const { user } = useAuthStore.getState()
-    
+
     const companyId = user?.companyExternalId || 0
     if (companyId === 0) {
       logger.error(
@@ -62,26 +81,26 @@ export const chargingSessionApi = {
       ...(request.sort && { sort: request.sort }),
     }
 
-    logger.info('Fetching charging sessions', {
-      company_id: companyId,
-      page: fullRequest.pagination.page,
-      per_page: fullRequest.pagination.per_page,
-      location_ids: fullRequest.payload.location_ids,
-      date_start: fullRequest.payload.date_start,
-      date_end: fullRequest.payload.date_end,
-    })
+    // logger.debug('Fetching charging sessions', {
+    //   company_id: companyId,
+    //   page: fullRequest.pagination.page,
+    //   per_page: fullRequest.pagination.per_page,
+    //   location_ids: fullRequest.payload.location_ids,
+    //   date_start: fullRequest.payload.date_start,
+    //   date_end: fullRequest.payload.date_end,
+    // })
 
     try {
       const response = await bffClient.post<SessionsListResponse>(
         '/bff/charging-session/company',
         fullRequest,
       )
-      logger.info('Charging sessions fetched', {
-        count: response.data.payload?.length || 0,
-        current_page: response.data.pagination?.current_page,
-        total_items: response.data.pagination?.total_items,
-        total_pages: response.data.pagination?.total_pages,
-      })
+      // logger.debug('Charging sessions fetched', {
+      //   count: response.data.payload?.length || 0,
+      //   current_page: response.data.pagination?.current_page,
+      //   total_items: response.data.pagination?.total_items,
+      //   total_pages: response.data.pagination?.total_pages,
+      // })
 
       return response
     } catch (error) {

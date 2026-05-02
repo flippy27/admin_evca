@@ -325,21 +325,19 @@ export default function DepotView() {
           </View>
         )}
 
-        {/* Loading Skeletons */}
-        {chargersLoading ? (
+        {/* Skeleton while chargers load — shown above role views, not instead of them */}
+        {chargersLoading && (
           <View style={{ padding: spacing.lg, gap: spacing.md }}>
             <SkeletonCard lines={2} />
             <SkeletonCard lines={3} />
             <SkeletonCard lines={2} />
           </View>
-        ) : (
-          <>
-            {/* Role-specific Content */}
-            {selectedRole === "operator" && <OperadorView />}
-            {selectedRole === "supervisor" && <SupervisorView />}
-            {selectedRole === "maintainer" && <MantenedorView />}
-          </>
         )}
+
+        {/* Role-specific Content — always rendered, manage their own loading state */}
+        {selectedRole === "operator" && <OperadorView />}
+        {selectedRole === "supervisor" && <SupervisorView />}
+        {selectedRole === "maintainer" && <MantenedorView />}
       </ScrollView>
 
       {/* Tecle Button - Operador only */}

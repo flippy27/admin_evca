@@ -23,4 +23,8 @@ export const ENV = {
 
   // HTTP Logging: 0=off, 1=basic (URL+status), 2=detailed (+headers), 3=verbose (+bodies)
   HTTP_LOG_LEVEL: extra.httpLogLevel || '1',
+  // HTTP Log Methods filter: ALL | COMMANDS | GET | POST | or comma-separated e.g. "POST,DELETE"
+  HTTP_LOG_METHODS: extra.httpLogMethods || 'ALL',
+  // HTTP Log Skip Paths: comma-separated URL fragments to silence, e.g. "charging-session/company,/panel"
+  HTTP_LOG_SKIP_PATHS: extra.httpLogSkipPaths || '',
 };

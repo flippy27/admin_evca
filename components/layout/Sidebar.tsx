@@ -5,6 +5,7 @@
 
 import { useRouter, useSegments } from "expo-router";
 import React, { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Animated,
   ScrollView,
@@ -16,76 +17,32 @@ import {
 import { Text } from "@/components/ui/Text";
 import { useAuthStore } from "@/lib/stores/auth.store";
 import { getThemeColors, spacing } from "@/theme";
-import { useColorScheme, useResolvedColorScheme } from "@/hooks/use-color-scheme";
+import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
 import { useAppStore } from "@/lib/stores/app.store";
 import { Ionicons } from "@expo/vector-icons";
 import { useSidebar } from "./AppContainer";
+import { SUPPORTED_LANGUAGES } from "@/lib/i18n/languages";
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-interface NavItem {
-  label: string;
-  icon: string;
-  route: string;
-}
-
-interface RoleFocusItem {
-  label: string;
-  icon: string;
-}
-
-interface RoleFocusConfig {
-  items: RoleFocusItem[];
-  color: string;
-  displayLabel: string;
-}
-
-const ROLE_FOCUS_MAP: Record<string, RoleFocusConfig> = {
-  maintainer: {
-    displayLabel: "Mantenedor",
-    color: "#00B4B4",
-    items: [
-      { label: "Variables energéticas", icon: "construct" },
-      { label: "Mensajes OCPP", icon: "construct" },
-      { label: "Configuración OCPP", icon: "construct" },
-    ],
-  },
-  operator: {
-    displayLabel: "Operador",
-    color: "#8B5CF6",
-    items: [
-      { label: "Iniciar / Detener carga", icon: "power" },
-      { label: "Desbloquear conectores", icon: "power" },
-      { label: "Tecles masivos", icon: "power" },
-    ],
-  },
-  supervisor: {
-    displayLabel: "Supervisor",
-    color: "#10B981",
-    items: [
-      { label: "KPIs operacionales", icon: "eye" },
-      { label: "Alertas y fallas", icon: "eye" },
-      { label: "Estado general del patio", icon: "eye" },
-    ],
-  },
-};
-
 const SIDEBAR_WIDTH = Math.min(280, Dimensions.get("window").width * 0.8);
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const segments = useSegments();
   const resolvedScheme = useResolvedColorScheme();
   const colors = getThemeColors(resolvedScheme);
-  const logout = useAuthStore((state) => state.logout);
-  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((s) => s.logout);
+  const user = useAuthStore((s) => s.user);
   const { activeRole } = useSidebar();
-  const colorScheme = useColorScheme();
-  const setColorScheme = useAppStore((s) => s.setColorScheme);
   const isDark = resolvedScheme === "dark";
+  const setColorScheme = useAppStore((s) => s.setColorScheme);
+  const currentLanguage = useAppStore((s) => s.language);
+  const setLanguage = useAppStore((s) => s.setLanguage);
 
   const slideAnim = useRef(new Animated.Value(-SIDEBAR_WIDTH)).current;
 
@@ -101,17 +58,40 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   const toggleTheme = () => setColorScheme(isDark ? "light" : "dark");
 
-  const navItems: NavItem[] = [
-    {
-      label: "Depot View",
-      icon: "home",
-      route: "depot",
+  // Role focus config — uses t() so it re-evaluates on language change
+  const ROLE_FOCUS_MAP = {
+    maintainer: {
+      displayLabel: t("mobile.sidebar.roleFocus.roles.maintainer"),
+      color: "#00B4B4",
+      items: [
+        { label: t("mobile.sidebar.roleFocus.maintainer.energyVariables"), icon: "construct" },
+        { label: t("mobile.sidebar.roleFocus.maintainer.ocppMessages"), icon: "construct" },
+        { label: t("mobile.sidebar.roleFocus.maintainer.ocppConfig"), icon: "construct" },
+      ],
     },
-    {
-      label: "Sesiones de Carga",
-      icon: "time",
-      route: "sessions",
+    operator: {
+      displayLabel: t("mobile.sidebar.roleFocus.roles.operator"),
+      color: "#8B5CF6",
+      items: [
+        { label: t("mobile.sidebar.roleFocus.operator.startStop"), icon: "power" },
+        { label: t("mobile.sidebar.roleFocus.operator.unlock"), icon: "power" },
+        { label: t("mobile.sidebar.roleFocus.operator.bulkTecle"), icon: "power" },
+      ],
     },
+    supervisor: {
+      displayLabel: t("mobile.sidebar.roleFocus.roles.supervisor"),
+      color: "#10B981",
+      items: [
+        { label: t("mobile.sidebar.roleFocus.supervisor.kpis"), icon: "eye" },
+        { label: t("mobile.sidebar.roleFocus.supervisor.alerts"), icon: "eye" },
+        { label: t("mobile.sidebar.roleFocus.supervisor.generalStatus"), icon: "eye" },
+      ],
+    },
+  };
+
+  const navItems = [
+    { label: t("mobile.sidebar.nav.depotView"), icon: "home", route: "depot" },
+    { label: t("mobile.sidebar.nav.sessions"), icon: "time", route: "sessions" },
   ];
 
   const currentRoute = segments[segments.length - 1];
@@ -127,7 +107,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     onClose();
   };
 
-  const roleFocus = ROLE_FOCUS_MAP[activeRole] ?? null;
+  const roleFocus = ROLE_FOCUS_MAP[activeRole as keyof typeof ROLE_FOCUS_MAP] ?? null;
 
   return (
     <Animated.View
@@ -151,12 +131,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     >
       <SafeAreaView style={{ flex: 1 }}>
         {/* Header */}
-        <View
-          style={{
-            paddingHorizontal: spacing.lg,
-            paddingVertical: spacing.md,
-          }}
-        >
+        <View style={{ paddingHorizontal: spacing.lg, paddingVertical: spacing.md }}>
           <TouchableOpacity
             onPress={onClose}
             style={{ marginBottom: spacing.sm }}
@@ -165,10 +140,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             <Ionicons name="close" size={22} color={colors.foreground} />
           </TouchableOpacity>
           <Text style={{ fontSize: 18, fontWeight: "700", color: colors.foreground }}>
-            Workforce App
+            {t("mobile.sidebar.appTitle")}
           </Text>
           <Text style={{ fontSize: 12, color: colors.mutedForeground, marginTop: 2 }}>
-            PoC v1
+            {t("mobile.sidebar.appVersion")}
           </Text>
         </View>
 
@@ -180,7 +155,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         >
           {navItems.map((item) => {
             const active = isActive(item.route);
-
             return (
               <TouchableOpacity
                 key={item.route}
@@ -217,13 +191,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           {/* Role Focus Section */}
           {roleFocus && (
             <>
-              <View
-                style={{
-                  height: 1,
-                  backgroundColor: colors.border,
-                  marginVertical: spacing.md,
-                }}
-              />
+              <View style={{ height: 1, backgroundColor: colors.border, marginVertical: spacing.md }} />
               <Text
                 style={{
                   fontSize: 11,
@@ -235,7 +203,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   marginBottom: spacing.sm,
                 }}
               >
-                Foco del Rol
+                {t("mobile.sidebar.roleFocus.title")}
               </Text>
               {roleFocus.items.map((item, index) => (
                 <View
@@ -248,19 +216,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     paddingVertical: 6,
                   }}
                 >
-                  <Ionicons
-                    name={item.icon as any}
-                    size={16}
-                    color={roleFocus.color}
-                  />
-                  <Text
-                    style={{
-                      fontSize: 13,
-                      color: colors.foreground,
-                    }}
-                  >
-                    {item.label}
-                  </Text>
+                  <Ionicons name={item.icon as any} size={16} color={roleFocus.color} />
+                  <Text style={{ fontSize: 13, color: colors.foreground }}>{item.label}</Text>
                 </View>
               ))}
             </>
@@ -276,6 +233,51 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             paddingVertical: spacing.md,
           }}
         >
+          {/* Language Picker */}
+          <View style={{ marginBottom: spacing.md }}>
+            <Text
+              style={{
+                fontSize: 11,
+                fontWeight: "600",
+                color: colors.mutedForeground,
+                letterSpacing: 0.8,
+                textTransform: "uppercase",
+                marginBottom: spacing.sm,
+              }}
+            >
+              {t("mobile.sidebar.language")}
+            </Text>
+            <View style={{ flexDirection: "row", gap: spacing.sm, flexWrap: "wrap" }}>
+              {SUPPORTED_LANGUAGES.map((lang) => {
+                const selected = currentLanguage === lang.code;
+                return (
+                  <TouchableOpacity
+                    key={lang.code}
+                    onPress={() => setLanguage(lang.code)}
+                    style={{
+                      paddingHorizontal: 14,
+                      paddingVertical: 6,
+                      borderRadius: 8,
+                      borderWidth: 1.5,
+                      borderColor: selected ? colors.primary : colors.border,
+                      backgroundColor: selected ? colors.primary + "18" : "transparent",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        fontWeight: selected ? "700" : "400",
+                        color: selected ? colors.primary : colors.foreground,
+                      }}
+                    >
+                      {lang.label}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </View>
+
           {/* Dark / Light mode toggle */}
           <TouchableOpacity
             onPress={toggleTheme}
@@ -291,25 +293,38 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             }}
           >
             <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm }}>
-              <Ionicons name={isDark ? "moon" : "sunny"} size={18} color={isDark ? "#a78bfa" : "#f59e0b"} />
+              <Ionicons
+                name={isDark ? "moon" : "sunny"}
+                size={18}
+                color={isDark ? "#a78bfa" : "#f59e0b"}
+              />
               <Text style={{ fontSize: 14, color: colors.foreground }}>
-                {isDark ? "Modo oscuro" : "Modo claro"}
+                {isDark ? t("mobile.sidebar.theme.dark") : t("mobile.sidebar.theme.light")}
               </Text>
             </View>
-            {/* Toggle pill */}
-            <View style={{
-              width: 44, height: 24, borderRadius: 12,
-              backgroundColor: isDark ? "#6d28d9" : "#d1d5db",
-              justifyContent: "center",
-              paddingHorizontal: 2,
-            }}>
-              <View style={{
-                width: 20, height: 20, borderRadius: 10,
-                backgroundColor: "#fff",
-                alignSelf: isDark ? "flex-end" : "flex-start",
-                shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 2,
-                elevation: 2,
-              }} />
+            <View
+              style={{
+                width: 44,
+                height: 24,
+                borderRadius: 12,
+                backgroundColor: isDark ? "#6d28d9" : "#d1d5db",
+                justifyContent: "center",
+                paddingHorizontal: 2,
+              }}
+            >
+              <View
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: 10,
+                  backgroundColor: "#fff",
+                  alignSelf: isDark ? "flex-end" : "flex-start",
+                  shadowColor: "#000",
+                  shadowOpacity: 0.2,
+                  shadowRadius: 2,
+                  elevation: 2,
+                }}
+              />
             </View>
           </TouchableOpacity>
 
@@ -327,7 +342,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           >
             <Ionicons name="log-out" size={18} color={colors.destructive} />
             <Text style={{ fontSize: 14, fontWeight: "500", color: colors.destructive }}>
-              Cerrar sesión
+              {t("mobile.sidebar.logout")}
             </Text>
           </TouchableOpacity>
 
@@ -335,26 +350,13 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           {user && (
             <View style={{ alignItems: "center" }}>
               {user.company ? (
-                <Text
-                  style={{
-                    fontSize: 11,
-                    color: colors.mutedForeground,
-                    textAlign: "center",
-                  }}
-                >
+                <Text style={{ fontSize: 11, color: colors.mutedForeground, textAlign: "center" }}>
                   {user.company}
                 </Text>
               ) : null}
               {roleFocus && (
-                <Text
-                  style={{
-                    fontSize: 12,
-                    color: colors.foreground,
-                    textAlign: "center",
-                    marginTop: 2,
-                  }}
-                >
-                  {"Rol: "}
+                <Text style={{ fontSize: 12, color: colors.foreground, textAlign: "center", marginTop: 2 }}>
+                  {t("mobile.sidebar.role") + ": "}
                   <Text style={{ fontWeight: "700" }}>{roleFocus.displayLabel}</Text>
                 </Text>
               )}

@@ -5,6 +5,7 @@
 
 import { create } from 'zustand'
 import { ocppApi } from '../api/ocpp.api'
+import { chargingSessionApi } from '../api/charging-session.api'
 import { logger } from '../services/logger'
 
 interface OCPPCommand {
@@ -22,7 +23,7 @@ interface OCPPState {
   error: string | null
 
   // Actions
-  startCharge: (chargerId: string, connectorId: string, idTag?: string) => Promise<boolean>
+  startCharge: (siteId: string, chargerId: string, connectorId: string, idTag?: string) => Promise<boolean>
   stopCharge: (chargerId: string, transactionId: number) => Promise<boolean>
   disableCharger: (chargerId: string) => Promise<boolean>
   enableCharger: (chargerId: string) => Promise<boolean>
@@ -38,11 +39,15 @@ export const useOCPPStore = create<OCPPState>((set, get) => ({
   error: null,
 
   // Start charge command
-  startCharge: async (chargerId: string, connectorId: string, idTag?: string) => {
+  startCharge: async (siteId: string, chargerId: string, connectorId: string, idTag?: string) => {
     try {
       set({ executing: true, error: null })
 
-      const res = await ocppApi.startCharge(chargerId, connectorId, idTag)
+      // Step 1: create session registry — returns id_tag for the start command
+      const registryIdTag = await chargingSessionApi.createRegistry(connectorId)
+
+      // Step 2: send OCPP start, registry id_tag takes precedence over caller-supplied one
+      await ocppApi.startCharge(siteId, chargerId, connectorId, registryIdTag || idTag)
 
       const command: OCPPCommand = {
         type: 'start',
@@ -53,7 +58,7 @@ export const useOCPPStore = create<OCPPState>((set, get) => ({
       }
 
       set({ lastCommand: command, executing: false })
-      logger.info(`OCPP: Start charge on ${chargerId}/${connectorId}`)
+      logger.info(`OCPP: Start charge site=${siteId} charger=${chargerId} connector=${connectorId}`)
       return true
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to start charge'

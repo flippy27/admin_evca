@@ -2136,5 +2136,188 @@
         }
       }
     }
+  },
+  "mobile": {
+    "sidebar": {
+      "appTitle": "Workforce App",
+      "appVersion": "PoC v1",
+      "nav": {
+        "depotView": "Depot View",
+        "sessions": "Sesiones de Carga"
+      },
+      "roleFocus": {
+        "title": "Foco del Rol",
+        "roles": {
+          "maintainer": "Mantenedor",
+          "operator": "Operador",
+          "supervisor": "Supervisor"
+        },
+        "maintainer": {
+          "energyVariables": "Variables energéticas",
+          "ocppMessages": "Mensajes OCPP",
+          "ocppConfig": "Configuración OCPP"
+        },
+        "operator": {
+          "startStop": "Iniciar / Detener carga",
+          "unlock": "Desbloquear conectores",
+          "bulkTecle": "Tecles masivos"
+        },
+        "supervisor": {
+          "kpis": "KPIs operacionales",
+          "alerts": "Alertas y fallas",
+          "generalStatus": "Estado general del patio"
+        }
+      },
+      "theme": {
+        "dark": "Modo oscuro",
+        "light": "Modo claro"
+      },
+      "language": "Idioma",
+      "logout": "Cerrar sesión",
+      "role": "Rol"
+    },
+    "status": {
+      "available": "Disponible",
+      "preparing": "Preparando",
+      "charging": "Cargando",
+      "finishing": "Finalizando",
+      "faulted": "Falla",
+      "suspended": "Suspendido",
+      "unavailable": "No disponible",
+      "offline": "Offline",
+      "online": "Online"
+    },
+    "charger": {
+      "online": "Online",
+      "offline": "Offline",
+      "fault_one": "{{count}} falla",
+      "fault_other": "{{count}} fallas",
+      "noEnergyData": "Sin datos energéticos"
+    },
+    "depot": {
+      "overview": {
+        "avgVoltage": "Voltaje Prom.",
+        "avgCurrent": "Corriente Prom.",
+        "totalPower": "Potencia Total",
+        "totalEnergy": "Energía Total",
+        "energySummaryTitle": "Resumen Energético del Patio",
+        "allConnectorsSubtitle": "Todos los conectores activos — Últimos 30 min"
+      },
+      "health": {
+        "healthy": "Sanos",
+        "faulted": "Con fallas",
+        "suspended": "Suspendidos"
+      },
+      "activeSessions": {
+        "title": "Sesiones Activas",
+        "empty": "Sin sesiones activas",
+        "viewAll": "Ver todas"
+      },
+      "loading": "Cargando datos...",
+      "error": "Error al cargar datos"
+    },
+    "energyModal": {
+      "title": "Variables Energéticas",
+      "subtitle": "Últimos 30 min",
+      "loading": "Cargando datos...",
+      "stats": {
+        "title": "Estadísticas — {{label}} (30 MIN)",
+        "min": "Mínimo",
+        "avg": "Promedio",
+        "max": "Máximo"
+      },
+      "frequency": "Frecuencia de red: {{value}} Hz",
+      "frequencyNote": "Datos actualizados cada 60s vía MeterValues OCPP",
+      "tooltip": {
+        "time": "Hora"
+      },
+      "variables": {
+        "voltage": "Voltaje",
+        "current": "Corriente",
+        "power": "Potencia",
+        "temperature": "Temperatura",
+        "energy": "Energía"
+      }
+    },
+    "tecle": {
+      "controlTitle": "Control de Tecle",
+      "controlSubtitle": "Selecciona tecle, dirección y duración",
+      "step1": "1. Seleccionar Tecle",
+      "step2": "2. Dirección",
+      "step3": "3. Duración",
+      "noData": "Sin datos disponibles",
+      "up": "Subir",
+      "down": "Bajar",
+      "moving": {
+        "up": "Subiendo",
+        "down": "Bajando"
+      },
+      "error": "Error al ejecutar tecle",
+      "success": "{{name}} — {{direction}}",
+      "operatingFor": "Tecle operando por {{duration}}s",
+      "durationNote": "Tiempo de operación del tecle: {{duration}} segundo{{plural}}",
+      "button": "Tecle",
+      "execute": "{{action}} {{name}} por {{duration}}s"
+    },
+    "auth": {
+      "loginTitle": "Iniciar sesión",
+      "welcomeBack": "Bienvenido de vuelta",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "loginButton": "Ingresar",
+      "resetTitle": "Recuperar contraseña",
+      "resetSubtitle": "Te enviaremos un correo para restablecer tu contraseña",
+      "sendEmail": "Enviar correo",
+      "backToLogin": "Volver al inicio de sesión"
+    },
+    "chargerDetail": {
+      "energyVariables": "Variables Energéticas",
+      "last30min": "Últimos 30 min",
+      "ocppConfig": "Configuración OCPP",
+      "ocppMessages": "Mensajes OCPP",
+      "noData": "Sin datos",
+      "connector": "Conector",
+      "status": "Estado",
+      "voltage": "Voltaje",
+      "current": "Corriente",
+      "power": "Potencia",
+      "energy": "Energía",
+      "temperature": "Temperatura",
+      "soc": "SoC",
+      "maxPower": "Potencia máx.",
+      "startCharge": "Iniciar carga",
+      "stopCharge": "Detener carga",
+      "unlockConnector": "Desbloquear conector",
+      "resetCharger": "Reiniciar cargador",
+      "confirmStart": "¿Iniciar carga?",
+      "confirmStop": "¿Detener carga?",
+      "confirmUnlock": "¿Desbloquear conector?",
+      "confirmReset": "¿Reiniciar cargador?",
+      "chargeStarted": "Carga iniciada",
+      "chargeStopped": "Carga detenida",
+      "connectorUnlocked": "Conector desbloqueado",
+      "chargerReset": "Cargador reiniciado",
+      "errorStart": "Error al iniciar carga",
+      "errorStop": "Error al detener carga",
+      "errorUnlock": "Error al desbloquear",
+      "errorReset": "Error al reiniciar",
+      "idTagLabel": "ID Tag",
+      "idTagPlaceholder": "Escanea o ingresa el ID Tag",
+      "activeSince": "Activo desde",
+      "duration": "Duración",
+      "kwhDelivered": "kWh entregados"
+    },
+    "sessions": {
+      "title": "Sesiones de Carga",
+      "noSessions": "Sin sesiones registradas",
+      "duration": "Duración",
+      "energy": "Energía",
+      "connector": "Conector",
+      "start": "Inicio",
+      "end": "Fin",
+      "active": "Activa",
+      "completed": "Completada"
+    }
   }
 }

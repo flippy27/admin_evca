@@ -1,12 +1,14 @@
 import { TouchableOpacity, View } from "react-native";
 import { Text } from "@/components/ui/Text";
-import { Ionicons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
 interface TecleButtonProps {
   onPress: () => void;
 }
 
 export function TecleButton({ onPress }: TecleButtonProps) {
+  const { t } = useTranslation();
   return (
     <View
       style={{
@@ -33,12 +35,9 @@ export function TecleButton({ onPress }: TecleButtonProps) {
           elevation: 5,
         }}
       >
-        <View style={{ flexDirection: "column", alignItems: "center" }}>
-          <Ionicons name="arrow-up" size={20} color="white" />
-          <Ionicons name="arrow-up" size={20} color="white" style={{ marginTop: -4 }} />
-        </View>
+        <Feather name="chevrons-up" size={20} color="white" />
         <Text style={{ color: "white", fontWeight: "600", fontSize: 14 }}>
-          Tecle
+          {t("mobile.tecle.button")}
         </Text>
       </TouchableOpacity>
     </View>

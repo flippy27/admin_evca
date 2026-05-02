@@ -4,10 +4,9 @@
 
 import { create } from 'zustand';
 import { chargingSessionApi } from '../api/charging-session.api';
-import { ChargingSession, SessionsRequest } from '../types/charging-session.types';
-import { logger } from '../services/logger';
 import { handleError } from '../services/errorHandler';
-import { useAuthStore } from './auth.store';
+import { logger } from '../services/logger';
+import { ChargingSession, SessionsRequest } from '../types/charging-session.types';
 
 interface ChargingSessionsState {
   // List state
@@ -72,10 +71,10 @@ export const useChargingSessionsStore = create<ChargingSessionsState>((set, get)
         sessionsLoading: false,
       });
 
-      logger.info('Sessions loaded', {
-        count: res.data.payload?.length,
-        total: res.data.pagination?.total,
-      });
+      // logger.debug('Sessions loaded', {
+      //   count: res.data.payload?.length,
+      //   total: res.data.pagination?.total,
+      // });
     } catch (error) {
       const apiError = handleError(error);
       set({

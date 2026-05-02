@@ -9,6 +9,7 @@ import { getThemeColors, spacing } from "@/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Animated, Modal, ScrollView, TouchableOpacity, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 interface TecleControlProps {
   visible: boolean;
@@ -29,6 +30,7 @@ interface TecleEntry {
 const DURATION_OPTIONS = [3, 5, 10, 15, 20, 30];
 
 export function TecleControl({ visible, onClose }: TecleControlProps) {
+  const { t } = useTranslation();
   const scheme = useResolvedColorScheme();
   const colors = getThemeColors(scheme);
   const groupData = useGroupStore((s) => s.groupData);
@@ -105,9 +107,9 @@ export function TecleControl({ visible, onClose }: TecleControlProps) {
       });
       useToastStore
         .getState()
-        .show(`${activeTecle.name} — ${direction === "up" ? "Subiendo" : "Bajando"}`, "success", `Tecle operando por ${duration}s`);
+        .show(`${activeTecle.name} — ${direction === "up" ? t("mobile.tecle.moving.up") : t("mobile.tecle.moving.down")}`, "success", t("mobile.tecle.operatingFor", { duration }));
     } catch {
-      useToastStore.getState().show(activeTecle.name, "error", "Error al ejecutar tecle");
+      useToastStore.getState().show(activeTecle.name, "error", t("mobile.tecle.error"));
       progressAnim.stopAnimation();
       progressAnim.setValue(0);
       setStatus(selectedId, "idle");
@@ -191,9 +193,9 @@ export function TecleControl({ visible, onClose }: TecleControlProps) {
           >
             <View style={{ flex: 1 }}>
               <Text style={{ fontSize: 18, fontWeight: "700", color: colors.foreground, marginBottom: 2, marginTop: 4 }}>
-                Control de Tecle
+                {t("mobile.tecle.controlTitle")}
               </Text>
-              <Text style={{ fontSize: 12, color: colors.mutedForeground }}>Selecciona tecle, dirección y duración</Text>
+              <Text style={{ fontSize: 12, color: colors.mutedForeground }}>{t("mobile.tecle.controlSubtitle")}</Text>
             </View>
             <TouchableOpacity onPress={onClose} style={{ padding: spacing.xs, marginLeft: spacing.sm }}>
               <Ionicons name="close" size={24} color={colors.foreground} />
@@ -206,10 +208,10 @@ export function TecleControl({ visible, onClose }: TecleControlProps) {
           >
             {/* Step 1 */}
             <View style={{ marginBottom: 14 }}>
-              <SectionLabel>1. Seleccionar Tecle</SectionLabel>
+              <SectionLabel>{t("mobile.tecle.step1")}</SectionLabel>
 
               {groupLabels.length === 0 ? (
-                <Text style={{ fontSize: 13, color: colors.mutedForeground }}>Sin datos disponibles</Text>
+                <Text style={{ fontSize: 13, color: colors.mutedForeground }}>{t("mobile.tecle.noData")}</Text>
               ) : (
                 <View style={{ gap: 10 }}>
                   {groupLabels.map((label) => (
@@ -249,7 +251,7 @@ export function TecleControl({ visible, onClose }: TecleControlProps) {
                                 />
                               </View>
                               <Text style={{ fontSize: 13, color: colors.mutedForeground }}>
-                                {st === "idle" ? "Disponible" : st === "moving_up" ? "Subiendo..." : "Bajando..."}
+                                {st === "idle" ? t("mobile.status.available") : st === "moving_up" ? `${t("mobile.tecle.moving.up")}...` : `${t("mobile.tecle.moving.down")}...`}
                               </Text>
                             </TouchableOpacity>
                           );
@@ -265,7 +267,7 @@ export function TecleControl({ visible, onClose }: TecleControlProps) {
               <>
                 {/* Step 2 */}
                 <View style={{ marginBottom: 14 }}>
-                  <SectionLabel>2. Dirección</SectionLabel>
+                  <SectionLabel>{t("mobile.tecle.step2")}</SectionLabel>
                   <View style={{ flexDirection: "row", gap: 10 }}>
                     {(["up", "down"] as const).map((dir) => {
                       const isSel = direction === dir;
@@ -302,7 +304,7 @@ export function TecleControl({ visible, onClose }: TecleControlProps) {
                             />
                           </View>
                           <Text style={{ fontSize: 13, fontWeight: "600", color: isSel ? activeColor : colors.mutedForeground }}>
-                            {dir === "up" ? "Subir" : "Bajar"}
+                            {dir === "up" ? t("mobile.tecle.up") : t("mobile.tecle.down")}
                           </Text>
                         </TouchableOpacity>
                       );
@@ -312,7 +314,7 @@ export function TecleControl({ visible, onClose }: TecleControlProps) {
 
                 {/* Step 3 */}
                 <View style={{ marginBottom: 14 }}>
-                  <SectionLabel>3. Duración (segundos)</SectionLabel>
+                  <SectionLabel>{t("mobile.tecle.step3")}</SectionLabel>
                   <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 8 }}>
                     {DURATION_OPTIONS.map((sec) => (
                       <TouchableOpacity
@@ -343,7 +345,7 @@ export function TecleControl({ visible, onClose }: TecleControlProps) {
                   <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
                     <Ionicons name="timer-outline" size={13} color={colors.mutedForeground} />
                     <Text style={{ fontSize: 12, color: colors.mutedForeground }}>
-                      Tiempo de operación del tecle: {duration} segundo{duration !== 1 ? "s" : ""}
+                      {t("mobile.tecle.durationNote", { duration, plural: duration !== 1 ? "s" : "" })}
                     </Text>
                   </View>
                 </View>
@@ -368,7 +370,7 @@ export function TecleControl({ visible, onClose }: TecleControlProps) {
                           color={direction === "up" ? "#22c55e" : "#f97316"}
                         />
                         <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>
-                          {activeTecle?.name} — {direction === "up" ? "Subiendo" : "Bajando"}
+                          {activeTecle?.name} — {direction === "up" ? t("mobile.tecle.moving.up") : t("mobile.tecle.moving.down")}
                         </Text>
                       </View>
                       <Text style={{ fontSize: 24, fontWeight: "700", color: colors.primary }}>{countdown}s</Text>
@@ -401,7 +403,7 @@ export function TecleControl({ visible, onClose }: TecleControlProps) {
                   >
                     <Ionicons name={direction === "up" ? "chevron-up" : "chevron-down"} size={20} color="white" />
                     <Text style={{ fontSize: 16, fontWeight: "700", color: "white" }}>
-                      {direction === "up" ? "Subir" : "Bajar"} {activeTecle?.name} por {duration}s
+                      {t("mobile.tecle.execute", { action: direction === "up" ? t("mobile.tecle.up") : t("mobile.tecle.down"), name: activeTecle?.name, duration })}
                     </Text>
                   </TouchableOpacity>
                 )}

@@ -1,33 +1,25 @@
 /**
  * i18n setup using i18next + react-i18next
- * Loads translation files and initializes i18next
+ * Language registry is in ./languages.ts — add new languages there.
  */
 
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import * as Localization from 'expo-localization';
-import es from './es.json';
-import en from './en.json';
+import { i18nResources, LanguageCode, SUPPORTED_LANGUAGES } from './languages';
 
-const resources = {
-  es: { translation: es },
-  en: { translation: en },
-};
-
-// Detect device locale
-const deviceLanguage = Localization.getLocales()[0]?.languageCode;
-const defaultLanguage = deviceLanguage === 'en' ? 'en' : 'es';
+const deviceLanguage = Localization.getLocales()[0]?.languageCode as LanguageCode | undefined;
+const supportedCodes = SUPPORTED_LANGUAGES.map((l) => l.code) as readonly string[];
+const defaultLanguage: LanguageCode = supportedCodes.includes(deviceLanguage ?? '') ? (deviceLanguage as LanguageCode) : 'es';
 
 i18n
   .use(initReactI18next)
   .init({
-    resources,
+    resources: i18nResources,
     lng: defaultLanguage,
     fallbackLng: 'es',
-    interpolation: {
-      escapeValue: false, // React already escapes values
-    },
-    compatibilityJSON: 'v4', // For RN compatibility
+    interpolation: { escapeValue: false },
+    compatibilityJSON: 'v4',
   });
 
 export default i18n;

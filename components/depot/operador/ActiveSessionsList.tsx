@@ -18,12 +18,13 @@ interface Session {
 
 interface ActiveSessionsListProps {
   sessions: Session[];
+  totalCount: number;
 }
 
-export function ActiveSessionsList({ sessions }: ActiveSessionsListProps) {
+export function ActiveSessionsList({ sessions, totalCount }: ActiveSessionsListProps) {
   const navigation = useNavigation();
 
-  if (sessions.length === 0) return null;
+  if (totalCount === 0) return null;
 
   return (
     <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.md }}>
@@ -56,7 +57,7 @@ export function ActiveSessionsList({ sessions }: ActiveSessionsListProps) {
               color: "#1f2937",
             }}
           >
-            Sesiones Activas ({sessions.length})
+            Sesiones Activas ({totalCount})
           </Text>
         </View>
         <TouchableOpacity onPress={() => (navigation as any).navigate("sessions/index")}>

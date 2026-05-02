@@ -4,7 +4,7 @@
 
 export const colors = {
   light: {
-    background: '#ffffff',
+    background: '#f5f5f8',
     foreground: '#1a1a1a',
     card: '#ffffff',
     cardForeground: '#1a1a1a',
@@ -42,7 +42,7 @@ export const colors = {
     primaryForeground: '#030213',
     secondary: '#4ade80', // Light green for dark mode
     secondaryForeground: '#030213',
-    muted: '#3a3a4a',
+    muted: '#252535',
     mutedForeground: '#b0b0b0',
     accent: '#22d3ee', // Light cyan for dark mode
     accentForeground: '#030213',

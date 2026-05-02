@@ -43,13 +43,13 @@ export function getJWTClaims(token: string) {
   // console.log('[JWT] Token length:', token.length);
 
   const decoded = decodeJWT(token);
-  console.log('[JWT] Decoded payload:', {
-    user_id_local: decoded.user_id_local,
-    company_id_local: decoded.company_id_local,
-    company_external_id: decoded.company_external_id,
-    email: decoded.email,
-    name: decoded.name,
-  });
+  // console.log('[JWT] Decoded payload:', {
+  //   user_id_local: decoded.user_id_local,
+  //   company_id_local: decoded.company_id_local,
+  //   company_external_id: decoded.company_external_id,
+  //   email: decoded.email,
+  //   name: decoded.name,
+  // });
 
   const claims = {
     userId: decoded.user_id_local,
@@ -60,21 +60,21 @@ export function getJWTClaims(token: string) {
     sub: decoded.sub,
   };
 
-  logger.info('JWT Claims extracted', {
-    userId: claims.userId,
-    companyId: claims.companyId,
-    companyExternalId: claims.companyExternalId,
-    email: claims.email,
-    name: claims.name,
-    allClaims: decoded,
-  });
+  // logger.info('JWT Claims extracted', {
+  //   userId: claims.userId,
+  //   companyId: claims.companyId,
+  //   companyExternalId: claims.companyExternalId,
+  //   email: claims.email,
+  //   name: claims.name,
+  //   allClaims: decoded,
+  // });
 
-  console.log('[JWT] Final claims:', {
-    userId: claims.userId,
-    companyId: claims.companyId,
-    companyExternalId: claims.companyExternalId,
-    email: claims.email,
-  });
+  // console.log('[JWT] Final claims:', {
+  //   userId: claims.userId,
+  //   companyId: claims.companyId,
+  //   companyExternalId: claims.companyExternalId,
+  //   email: claims.email,
+  // });
 
   return claims;
 }

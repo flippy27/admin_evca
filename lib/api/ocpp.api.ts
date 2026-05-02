@@ -8,15 +8,16 @@ import { bffClient } from './client'
 export const ocppApi = {
   /**
    * Start charging on a connector
+   * POST /bff/operations/sites/:siteId/chargers/:chargerId/connectors/:connectorId/start
    */
-  startCharge: (chargerId: string, connectorId: string, idTag?: string) =>
-    bffClient.post(`/bff/chargers/${chargerId}/start-charge`, {
-      payload: {
-        connector_id: connectorId,
-        //idTag: idTag || undefined,
-        idTag: idTag || "Zfv2w7T7s5LGzL5",
+  startCharge: (siteId: string, chargerId: string, connectorId: string, idTag?: string) =>
+    bffClient.post(
+      `/bff/chargers/${chargerId}/connectors/${connectorId}/start-charge`,
+      {
+        meta: { request_id: `cmd-${Date.now()}`, ts: new Date().toISOString() },
+        ...(idTag ? { idTag } : {}),
       },
-    }),
+    ),
 
   /**
    * Stop active charging session

@@ -1,8 +1,10 @@
-import { ActivityIndicator, RefreshControl, ScrollView, View } from "react-native";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { ActivityIndicator, AppState, AppStateStatus, RefreshControl, ScrollView, View } from "react-native";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useChargersStore } from "@/lib/stores/chargers.store";
 import { useChargingSessionsStore } from "@/lib/stores/charging-session.store";
 import { useGroupStore } from "@/lib/stores/group.store";
+import { getAllChargerIdsFromGroup, parsePanelPowerKw, useChargerPanelStore } from "@/lib/stores/charger-panel.store";
+import { ChargerPanel } from "@/lib/types/charger-panel.types";
 import { GroupCharger } from "@/lib/types/group.types";
 import { getThemeColors, spacing } from "@/theme";
 import { useResolvedColorScheme } from "@/hooks/use-color-scheme";
@@ -21,26 +23,38 @@ function parseDuration(d?: string): number {
   return parseInt(d) || 0;
 }
 
-function mapGroupCharger(gc: GroupCharger) {
+function mapGroupCharger(gc: GroupCharger, panel?: ChargerPanel) {
   return {
     id: String(gc.charger_ID),
     name: gc.charger_name,
-    online: gc.connectors.some((c) => c.connector_status.toLowerCase() !== "offline"),
-    connectors: gc.connectors.map((c) => ({
-      id: c.connector_id,
-      connectorId: c.connector_number,
-      name: c.connector_name,
-      alias: c.connector_alias ?? undefined,
-      status: c.connector_status.toLowerCase() as any,
-      // Use live SOC; fall back to last_charging_record when soc_pct is null
-      soc: c.soc_pct != null ? c.soc_pct : (c.last_charging_record?.soc ?? undefined),
-      vehicleId: c.vehicle_alias ?? undefined,
-      power: c.connector_max_power ? c.connector_max_power / 1000 : undefined,
-    })),
+    online: gc.connectors.some((c) => {
+      const pc = panel?.connectors.find((p) => p.connector_id === c.connector_id);
+      return (pc?.state_code.toLowerCase() ?? c.connector_status.toLowerCase()) !== "offline";
+    }),
+    connectors: gc.connectors.map((c) => {
+      const pc = panel?.connectors.find((p) => p.connector_id === c.connector_id);
+      return {
+        id: c.connector_id,
+        connectorId: c.connector_number,
+        name: c.connector_name,
+        alias: c.connector_alias ?? undefined,
+        // Panel state_code is most up-to-date; fall back to group status
+        status: (pc?.state_code.toLowerCase() ?? c.connector_status.toLowerCase()) as any,
+        // Panel SOC is real-time; fall back to group soc_pct, then last record
+        soc: pc?.session?.soc_current_pct ?? (c.soc_pct != null ? c.soc_pct : (c.last_charging_record?.soc ?? undefined)),
+        vehicleId: pc?.vehicle_alias ?? c.vehicle_alias ?? undefined,
+        // Panel power_kw is live delivered power; fall back to connector max
+        power: parsePanelPowerKw(pc?.session?.power_kw) ?? (c.connector_max_power ? c.connector_max_power / 1000 : undefined),
+        capabilities: pc?.capabilities,
+      };
+    }),
   };
 }
 
-function buildGroups(data: import("@/lib/types/group.types").GroupData) {
+function buildGroups(
+  data: import("@/lib/types/group.types").GroupData,
+  panels: Record<string, ChargerPanel>
+) {
   if (data.areas.length > 0) {
     const areaMap = new Map<string, Map<string, GroupCharger[]>>();
     for (const area of data.areas) {
@@ -55,7 +69,9 @@ function buildGroups(data: import("@/lib/types/group.types").GroupData) {
       areaName,
       lines: Array.from(lineMap.entries()).map(([lineName, chargers]) => ({
         lineName,
-        chargers: chargers.sort((a, b) => a.charger_order - b.charger_order).map(mapGroupCharger),
+        chargers: chargers
+          .sort((a, b) => a.charger_order - b.charger_order)
+          .map((gc) => mapGroupCharger(gc, panels[String(gc.charger_ID)])),
       })),
     }));
   }
@@ -66,7 +82,7 @@ function buildGroups(data: import("@/lib/types/group.types").GroupData) {
       chargers: data.chargers
         .slice()
         .sort((a, b) => a.charger_order - b.charger_order)
-        .map(mapGroupCharger),
+        .map((gc) => mapGroupCharger(gc, panels[String(gc.charger_ID)])),
     }],
   }];
 }
@@ -75,28 +91,69 @@ export default function OperadorView() {
   const scheme = useResolvedColorScheme();
   const colors = getThemeColors(scheme);
 
-  const storeSessions = useChargingSessionsStore((state: any) => state.sessions || []);
   const selectedLocationId = useChargersStore((state) => state.selectedLocationId);
-  const { groupData, groupLoading, groupError } = useGroupStore();
+  const groupData = useGroupStore((s) => s.groupData);
+  const groupLoading = useGroupStore((s) => s.groupLoading);
+  const groupError = useGroupStore((s) => s.groupError);
+  const panels = useChargerPanelStore((s) => s.panels);
   const [refreshing, setRefreshing] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const hasFetchedInitialPanels = useRef(false);
 
   // Silent background fetch (no loading state)
   const silentFetch = useCallback(() => {
     if (!selectedLocationId) return;
-    useGroupStore.getState().fetchGroup(selectedLocationId);
+    useGroupStore.getState().fetchGroup(selectedLocationId, true);
     useChargingSessionsStore.getState().fetchSessions({
       payload: { location_ids: [selectedLocationId] },
       pagination: { page: 1, per_page: 20 },
     });
+    // Overlay: fetch live panel for each charger using current group data
+    const gd = useGroupStore.getState().groupData;
+    if (gd) {
+      useChargerPanelStore.getState().fetchPanelsForGroup(
+        gd.site.site_ID,
+        getAllChargerIdsFromGroup(gd)
+      );
+    }
   }, [selectedLocationId]);
 
   // 3-second polling — silent, keeps content visible
   useEffect(() => {
     if (!selectedLocationId) return;
-    silentFetch(); // immediate first call
-    const interval = setInterval(silentFetch, 3000);
-    return () => clearInterval(interval);
+    silentFetch();
+    intervalRef.current = setInterval(silentFetch, 3000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
   }, [selectedLocationId, silentFetch]);
+
+  // Resume polling immediately when app returns to foreground
+  useEffect(() => {
+    const handleAppState = (nextState: AppStateStatus) => {
+      if (nextState === "active" && selectedLocationId) {
+        silentFetch();
+      }
+    };
+    const sub = AppState.addEventListener("change", handleAppState);
+    return () => sub.remove();
+  }, [selectedLocationId, silentFetch]);
+
+  // Initial panel fetch — fires once when group data first arrives
+  useEffect(() => {
+    if (!groupData || !selectedLocationId || hasFetchedInitialPanels.current) return;
+    hasFetchedInitialPanels.current = true;
+    const ids = getAllChargerIdsFromGroup(groupData);
+    if (ids.length > 0) {
+      useChargerPanelStore.getState().fetchPanelsForGroup(groupData.site.site_ID, ids);
+    }
+  }, [groupData, selectedLocationId]);
+
+  // Clear panel data and reset flag on location change
+  useEffect(() => {
+    hasFetchedInitialPanels.current = false;
+    useChargerPanelStore.getState().clearPanels();
+  }, [selectedLocationId]);
 
   // Pull-to-refresh — shows RefreshControl spinner
   const handleRefresh = useCallback(async () => {
@@ -116,8 +173,8 @@ export default function OperadorView() {
   }, [selectedLocationId]);
 
   const groups = useMemo(
-    () => (groupData ? buildGroups(groupData) : []),
-    [groupData]
+    () => (groupData ? buildGroups(groupData, panels) : []),
+    [groupData, panels]
   );
 
   const allChargers = useMemo(
@@ -147,23 +204,51 @@ export default function OperadorView() {
   }, [allChargers]);
 
   const activeSessions = useMemo(() => {
-    const raw = storeSessions
-      .filter((s: any) =>
-        s.connector_status?.toLowerCase() === "charging" ||
-        s.status?.toLowerCase() === "active"
-      )
-      .slice(0, 3);
+    if (!groupData) return [];
+    const result: { id: string; charger_name: string; charger_id: string; connector_number: number; vehicleId: string; energy: number; duration: number }[] = [];
 
-    return raw.map((s: any) => ({
-      id: s.id || s.transaction_id || `${s.charger_id}-${s.connector_number}`,
-      charger_name: s.connector_alias || s.connector_name || "C",
-      charger_id: s.charger_id || "",
-      connector_number: Number(s.connector_number) || 0,
-      vehicleId: s.license_plate || s.evccid || s.vin || "",
-      energy: parseFloat(s.delivered_energy ?? "0") || (s.energy_kwh ?? 0),
-      duration: parseDuration(s.session_duration) || ((s.duration_minutes ?? 0) * 60),
-    }));
-  }, [storeSessions]);
+    const processCharger = (gc: GroupCharger) => {
+      for (const conn of gc.connectors) {
+        if (!conn.is_charging) continue;
+
+        const panel = panels[String(gc.charger_ID)];
+        const pc = panel?.connectors?.find((p) => p.connector_id === conn.connector_id);
+
+        // kWh: panel session > last_charging_record
+        const energy = pc?.session?.energy_kwh != null
+          ? parseFloat(String(pc.session.energy_kwh))
+          : (conn.last_charging_record?.energy ?? 0);
+
+        // Duration: now - connector_status_timestamp (when it entered Charging state)
+        const startMs = conn.connector_status_timestamp
+          ? new Date(conn.connector_status_timestamp).getTime()
+          : null;
+        const durationSec = startMs && !isNaN(startMs)
+          ? Math.floor((Date.now() - startMs) / 1000)
+          : 0;
+
+        result.push({
+          id: conn.last_charging_record?.transaction_id || conn.connector_id,
+          charger_name: conn.connector_alias || conn.connector_name,
+          charger_id: String(gc.charger_ID),
+          connector_number: conn.connector_number,
+          vehicleId: conn.licence_plate || conn.vehicle_alias || "",
+          energy,
+          duration: durationSec,
+        });
+      }
+    };
+
+    if (groupData.areas.length > 0) {
+      for (const area of groupData.areas)
+        for (const line of area.lines)
+          for (const gc of line.chargers) processCharger(gc);
+    } else {
+      for (const gc of groupData.chargers) processCharger(gc);
+    }
+
+    return result;
+  }, [groupData, panels]);
 
   return (
     <ScrollView
@@ -182,7 +267,7 @@ export default function OperadorView() {
         finishing={stats.finishing}
         faulted={stats.faulted}
       />
-      <ActiveSessionsList sessions={activeSessions} />
+      <ActiveSessionsList sessions={activeSessions.slice(0, 3)} totalCount={activeSessions.length} />
 
       {/* Initial load spinner — only when no data yet */}
       {!groupData && groupLoading && (
