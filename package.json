@@ -47,6 +47,7 @@
     "babel-plugin-module-resolver": "^5.0.3",
     "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",
+    "eas-cli": "^18.9.1",
     "expo": "^55.0.0",
     "expo-build-properties": "^55.0.13",
     "expo-constants": "~55.0.0",
@@ -55,6 +56,7 @@
     "expo-image": "~55.0.0",
     "expo-linear-gradient": "~55.0.0",
     "expo-linking": "~55.0.0",
+    "expo-local-authentication": "~55.0.13",
     "expo-localization": "~55.0.13",
     "expo-router": "~55.0.0",
     "expo-secure-store": "~55.0.13",
@@ -87,7 +89,8 @@
     "eslint": "^9.25.0",
     "eslint-config-expo": "~55.0.0",
     "expo-dev-client": "55.0.27",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.2",
+    "eas-cli-local-build-plugin": "1.0.171"
   },
   "private": true
 }

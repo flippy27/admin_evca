@@ -357,7 +357,10 @@
       "signingIn": "Signing in...",
       "forgotPasswordConfirm": "Are you sure you want to recover your password?",
       "emailPlaceholder": "Enter your email",
-      "passwordPlaceholder": "Enter your password"
+      "passwordPlaceholder": "Enter your password",
+      "biometricLogin": "Sign in with Face ID",
+      "biometricFailed": "Authentication failed",
+      "biometricNoCredentials": "No saved credentials. Sign in with email and password first."
     },
     "error": {
       "title": "Oops!!!",

@@ -113,7 +113,7 @@ export default function RootLayout() {
         <OfflineIndicator />
         <ToastContainer />
         <LoadingOverlayComponent />
-        <StatusBar style="auto" />
+        <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
       </ThemeProvider>
     </I18nextProvider>
   );

@@ -357,7 +357,10 @@
       "signingIn": "Iniciando sesión...",
       "forgotPasswordConfirm": "¿Estás seguro de que quieres recuperar tu contraseña?",
       "emailPlaceholder": "Ingrese su correo",
-      "passwordPlaceholder": "Ingrese su contraseña"
+      "passwordPlaceholder": "Ingrese su contraseña",
+      "biometricLogin": "Ingresar con Face ID",
+      "biometricFailed": "Autenticación fallida",
+      "biometricNoCredentials": "No hay credenciales guardadas. Ingresa con email y contraseña primero."
     },
     "error": {
       "title": "¡Ups!",

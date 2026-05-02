@@ -4,6 +4,8 @@
 
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import * as LocalAuthentication from "expo-local-authentication";
+import * as SecureStore from "expo-secure-store";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -15,6 +17,8 @@ import { Text } from "@/components/ui/Text";
 import { useToast } from "@/components/ui/Toast";
 import { useAuthStore } from "@/lib/stores/auth.store";
 import { spacing } from "@/theme";
+
+const BIOMETRIC_CREDS_KEY = "biometric_creds";
 
 interface LoginForm {
   email: string;
@@ -77,7 +81,9 @@ export default function LoginScreen() {
 
   const login = useAuthStore((state) => state.login);
   const [isLoading, setIsLoading] = useState(false);
+  const [isBiometricLoading, setIsBiometricLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [biometricAvailable, setBiometricAvailable] = useState(false);
   const insets = useSafeAreaInsets();
   const screenWidth = Dimensions.get("window").width;
 
@@ -95,14 +101,17 @@ export default function LoginScreen() {
   });
 
   useEffect(() => {
-    const loadRememberedEmail = async () => {
+    const checkBiometrics = async () => {
       try {
-        await import("@react-native-async-storage/async-storage").then((m) => m.default);
-      } catch (error) {
-        console.error("Failed to load remembered email:", error);
+        const hasHardware = await LocalAuthentication.hasHardwareAsync();
+        const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+        const savedCreds = await SecureStore.getItemAsync(BIOMETRIC_CREDS_KEY);
+        setBiometricAvailable(hasHardware && isEnrolled && !!savedCreds);
+      } catch {
+        setBiometricAvailable(false);
       }
     };
-    loadRememberedEmail();
+    checkBiometrics();
   }, []);
 
   const emailField = watch("email");
@@ -111,7 +120,22 @@ export default function LoginScreen() {
     setIsLoading(true);
     try {
       const success = await login(data.email, data.password, data.rememberMe);
-      if (!success) {
+      if (success) {
+        // Save credentials for future biometric login
+        try {
+          const hasHardware = await LocalAuthentication.hasHardwareAsync();
+          const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+          if (hasHardware && isEnrolled) {
+            await SecureStore.setItemAsync(
+              BIOMETRIC_CREDS_KEY,
+              JSON.stringify({ email: data.email, password: data.password }),
+            );
+            setBiometricAvailable(true);
+          }
+        } catch {
+          // Don't fail login if credential save fails
+        }
+      } else {
         toast.show(t("auth.login.invalidCredentials"), "error");
       }
     } catch (error) {
@@ -119,6 +143,40 @@ export default function LoginScreen() {
       toast.show(t("common.ui.messages.error"), "error");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const onBiometricLogin = async () => {
+    setIsBiometricLoading(true);
+    try {
+      const savedCreds = await SecureStore.getItemAsync(BIOMETRIC_CREDS_KEY);
+      if (!savedCreds) {
+        toast.show(t("auth.login.biometricNoCredentials"), "error");
+        setBiometricAvailable(false);
+        return;
+      }
+
+      const result = await LocalAuthentication.authenticateAsync({
+        promptMessage: t("auth.login.biometricLogin"),
+        cancelLabel: t("common.ui.actions.cancel"),
+        disableDeviceFallback: false,
+      });
+
+      if (!result.success) {
+        toast.show(t("auth.login.biometricFailed"), "error");
+        return;
+      }
+
+      const { email, password } = JSON.parse(savedCreds);
+      const success = await login(email, password, false);
+      if (!success) {
+        toast.show(t("auth.login.invalidCredentials"), "error");
+      }
+    } catch (error) {
+      console.error("Biometric login error:", error);
+      toast.show(t("auth.login.biometricFailed"), "error");
+    } finally {
+      setIsBiometricLoading(false);
     }
   };
 
@@ -294,6 +352,37 @@ export default function LoginScreen() {
                 )}
               </LinearGradient>
             </TouchableOpacity>
+
+            {/* Face ID button */}
+            {biometricAvailable && (
+              <TouchableOpacity
+                onPress={onBiometricLogin}
+                disabled={isBiometricLoading || isLoading}
+                style={{
+                  borderRadius: 10,
+                  borderWidth: 1.5,
+                  borderColor: "#d1d5db",
+                  paddingVertical: spacing.md + 2,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: "row",
+                  gap: spacing.sm,
+                  marginBottom: spacing.md,
+                  opacity: isBiometricLoading || isLoading ? 0.5 : 1,
+                }}
+              >
+                {isBiometricLoading ? (
+                  <ActivityIndicator color="#1477FF" size="small" />
+                ) : (
+                  <>
+                    <Ionicons name="scan-outline" size={20} color="#1477FF" />
+                    <Text style={{ color: "#1477FF", fontSize: 15, fontWeight: "600" }}>
+                      {t("auth.login.biometricLogin")}
+                    </Text>
+                  </>
+                )}
+              </TouchableOpacity>
+            )}
 
             {/* Remember me + forgot password row */}
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
