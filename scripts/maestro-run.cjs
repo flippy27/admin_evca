@@ -8,7 +8,7 @@ const mode = (args[1] || process.env.MAESTRO_MODE || 'all').toLowerCase();
 const explicitAppId = process.env.APP_ID;
 const appVariant = process.env.APP_VARIANT || 'production';
 const isPreview = appVariant === 'development' || appVariant === 'staging';
-const defaultAppId = isPreview ? 'com.example.rnexpothree.dev' : 'com.example.rnexpothree';
+const defaultAppId = isPreview ? 'com.dhemax.workforce-dev' : 'com.dhemax.workforce-dev';
 const appId = explicitAppId || defaultAppId;
 
 let target = '.maestro';

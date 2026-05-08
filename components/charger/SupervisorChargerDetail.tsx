@@ -121,7 +121,7 @@ export function SupervisorChargerDetail({ charger }: { charger: any }) {
                   {connector.power !== undefined && (
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                       <Text style={{ fontSize: 14, color: colors.mutedForeground }}>{t("mobile.chargerDetail.power")}</Text>
-                      <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>{connector.power} kW</Text>
+                      <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground }}>{Number(connector.power).toFixed(1)} kW</Text>
                     </View>
                   )}
 
@@ -142,7 +142,7 @@ export function SupervisorChargerDetail({ charger }: { charger: any }) {
                   </View>
                   <View style={{ flexDirection: "row", gap: 24 }}>
                     <Text style={{ fontSize: 12, color: "#16a34a" }}>
-                      {t("mobile.chargerDetail.power")}: <Text style={{ fontWeight: "700" }}>{connector.power || 0} kW</Text>
+                      {t("mobile.chargerDetail.power")}: <Text style={{ fontWeight: "700" }}>{Number(connector.power || 0).toFixed(1)} kW</Text>
                     </Text>
                     <Text style={{ fontSize: 12, color: "#16a34a" }}>
                       {t("mobile.chargerDetail.delivered")}: <Text style={{ fontWeight: "700" }}>{energy || 0} kWh</Text>

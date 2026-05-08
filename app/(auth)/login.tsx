@@ -39,7 +39,7 @@ function AnimatedParticle({
   const scale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    Animated.loop(
+    const anim = Animated.loop(
       Animated.sequence([
         Animated.delay(delay),
         Animated.parallel([
@@ -51,7 +51,9 @@ function AnimatedParticle({
           Animated.timing(scale, { toValue: 1, duration: duration / 2, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
         ]),
       ]),
-    ).start();
+    );
+    anim.start();
+    return () => anim.stop();
   }, [delay, duration, opacity, scale]);
 
   return (
@@ -84,6 +86,8 @@ export default function LoginScreen() {
   const [isBiometricLoading, setIsBiometricLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [biometricAvailable, setBiometricAvailable] = useState(false);
+  const biometricInProgress = useRef(false);
+  const isMounted = useRef(true);
   const insets = useSafeAreaInsets();
   const screenWidth = Dimensions.get("window").width;
 
@@ -94,6 +98,8 @@ export default function LoginScreen() {
     formState: { errors },
   } = useForm<LoginForm>({
     defaultValues: {
+      // email: "",
+      // password: "",
       email: "fcarrasco@dhemax.com",
       password: "123hola!",
       rememberMe: false,
@@ -101,17 +107,39 @@ export default function LoginScreen() {
   });
 
   useEffect(() => {
+    isMounted.current = true;
+
     const checkBiometrics = async () => {
       try {
         const hasHardware = await LocalAuthentication.hasHardwareAsync();
         const isEnrolled = await LocalAuthentication.isEnrolledAsync();
         const savedCreds = await SecureStore.getItemAsync(BIOMETRIC_CREDS_KEY);
-        setBiometricAvailable(hasHardware && isEnrolled && !!savedCreds);
+        if (isMounted.current) {
+          setBiometricAvailable(hasHardware && isEnrolled && !!savedCreds);
+        }
       } catch {
-        setBiometricAvailable(false);
+        if (isMounted.current) {
+          setBiometricAvailable(false);
+        }
       }
     };
     checkBiometrics();
+
+    return () => {
+      isMounted.current = false;
+      // Cancelar autenticación biométrica si está en progreso
+      // Usar setTimeout para dar tiempo a que termine naturalmente primero
+      if (biometricInProgress.current) {
+        setTimeout(() => {
+          if (biometricInProgress.current) {
+            console.log("[Biometric] Cancelling authentication on unmount");
+            LocalAuthentication.cancelAuthenticate().catch(() => {
+              // Ignorar errores de cancelación
+            });
+          }
+        }, 500);
+      }
+    };
   }, []);
 
   const emailField = watch("email");
@@ -126,10 +154,7 @@ export default function LoginScreen() {
           const hasHardware = await LocalAuthentication.hasHardwareAsync();
           const isEnrolled = await LocalAuthentication.isEnrolledAsync();
           if (hasHardware && isEnrolled) {
-            await SecureStore.setItemAsync(
-              BIOMETRIC_CREDS_KEY,
-              JSON.stringify({ email: data.email, password: data.password }),
-            );
+            await SecureStore.setItemAsync(BIOMETRIC_CREDS_KEY, JSON.stringify({ email: data.email, password: data.password }));
             setBiometricAvailable(true);
           }
         } catch {
@@ -147,36 +172,159 @@ export default function LoginScreen() {
   };
 
   const onBiometricLogin = async () => {
-    setIsBiometricLoading(true);
+    if (biometricInProgress.current) {
+      console.log("[Biometric] Authentication already in progress, ignoring");
+      return;
+    }
+
+    const safetyTimeout = setTimeout(() => {
+      console.log("[Biometric] Safety timeout triggered, resetting state");
+      biometricInProgress.current = false;
+      if (isMounted.current) {
+        setIsBiometricLoading(false);
+      }
+    }, 30000);
+
+    biometricInProgress.current = true;
+    if (isMounted.current) {
+      setIsBiometricLoading(true);
+    }
+
     try {
-      const savedCreds = await SecureStore.getItemAsync(BIOMETRIC_CREDS_KEY);
+      // Cancelar cualquier sesión biométrica nativa previa antes de iniciar
+      // Esto limpia el LAContext de iOS y previene el crash en el 2do intento
+      try {
+        await LocalAuthentication.cancelAuthenticate();
+      } catch {
+        // Ignorar — si no había nada en progreso, esto falla silenciosamente
+      }
+      // Dar tiempo al sistema para limpiar el estado nativo
+      await new Promise((resolve) => setTimeout(resolve, 150));
+
+      // Paso 1: Verificar credenciales guardadas
+      let savedCreds: string | null = null;
+      try {
+        savedCreds = await SecureStore.getItemAsync(BIOMETRIC_CREDS_KEY);
+      } catch (storeError) {
+        console.error("[Biometric] Error reading credentials:", storeError);
+        if (isMounted.current) {
+          toast.show(t("auth.login.biometricFailed"), "error");
+        }
+        return;
+      }
+
       if (!savedCreds) {
-        toast.show(t("auth.login.biometricNoCredentials"), "error");
-        setBiometricAvailable(false);
+        console.log("[Biometric] No saved credentials");
+        if (isMounted.current) {
+          toast.show(t("auth.login.biometricNoCredentials"), "error");
+          setBiometricAvailable(false);
+        }
         return;
       }
 
-      const result = await LocalAuthentication.authenticateAsync({
-        promptMessage: t("auth.login.biometricLogin"),
-        cancelLabel: t("common.ui.actions.cancel"),
-        disableDeviceFallback: false,
-      });
+      // Paso 2: Verificar hardware
+      let hasHardware = false;
+      let isEnrolled = false;
+      try {
+        hasHardware = await LocalAuthentication.hasHardwareAsync();
+        isEnrolled = await LocalAuthentication.isEnrolledAsync();
+      } catch (hwError) {
+        console.error("[Biometric] Error checking hardware:", hwError);
+        if (isMounted.current) {
+          toast.show(t("auth.login.biometricFailed"), "error");
+        }
+        return;
+      }
 
+      if (!hasHardware || !isEnrolled) {
+        console.log("[Biometric] Hardware not available or not enrolled");
+        if (isMounted.current) {
+          toast.show(t("auth.login.biometricFailed"), "error");
+          setBiometricAvailable(false);
+        }
+        return;
+      }
+
+      if (!biometricInProgress.current) {
+        console.log("[Biometric] Cancelled before starting");
+        return;
+      }
+
+      // Paso 3: Autenticación biométrica
+      let result: LocalAuthentication.LocalAuthenticationResult;
+      try {
+        console.log("[Biometric] Starting authentication...");
+        result = await LocalAuthentication.authenticateAsync({
+          promptMessage: t("auth.login.biometricLogin"),
+          cancelLabel: t("common.ui.actions.cancel"),
+          disableDeviceFallback: false,
+        });
+        console.log("[Biometric] Authentication result:", result.success ? "success" : "failed");
+      } catch (authError: any) {
+        console.error("[Biometric] Authentication error:", authError);
+        if (authError?.message?.includes("already") || authError?.code === "ERR_ALREADY_AUTHENTICATING") {
+          console.log("[Biometric] Already authenticating, ignoring");
+          return;
+        }
+        if (isMounted.current) {
+          toast.show(t("auth.login.biometricFailed"), "error");
+        }
+        return;
+      }
+
+      // Paso 4: Manejar resultado
       if (!result.success) {
-        toast.show(t("auth.login.biometricFailed"), "error");
+        const errorCode = (result as any).error;
+        console.log("[Biometric] Error code:", errorCode);
+        if (errorCode !== "user_cancel" && errorCode !== "system_cancel" && errorCode !== "app_cancel") {
+          if (isMounted.current) {
+            toast.show(t("auth.login.biometricFailed"), "error");
+          }
+        }
         return;
       }
 
-      const { email, password } = JSON.parse(savedCreds);
+      // Paso 5: Parsear credenciales
+      let email: string, password: string;
+      try {
+        const parsed = JSON.parse(savedCreds);
+        email = parsed.email;
+        password = parsed.password;
+        if (!email || !password) {
+          throw new Error("Invalid credentials format");
+        }
+      } catch (parseError) {
+        console.error("[Biometric] Error parsing credentials:", parseError);
+        if (isMounted.current) {
+          toast.show(t("auth.login.biometricFailed"), "error");
+          setBiometricAvailable(false);
+        }
+        return;
+      }
+
+      // Esperar que el modal de Face ID se dimisse completamente antes de navegar
+      // Sin este delay, la transición de navegación choca con el dismiss del modal en iOS
+      await new Promise((resolve) => setTimeout(resolve, 350));
+
+      if (!isMounted.current) return;
+
+      console.log("[Biometric] Attempting login with saved credentials...");
       const success = await login(email, password, false);
-      if (!success) {
+      if (!success && isMounted.current) {
         toast.show(t("auth.login.invalidCredentials"), "error");
       }
     } catch (error) {
-      console.error("Biometric login error:", error);
-      toast.show(t("auth.login.biometricFailed"), "error");
+      console.error("[Biometric] Unexpected error:", error);
+      if (isMounted.current) {
+        toast.show(t("auth.login.biometricFailed"), "error");
+      }
     } finally {
-      setIsBiometricLoading(false);
+      clearTimeout(safetyTimeout);
+      biometricInProgress.current = false;
+      if (isMounted.current) {
+        setIsBiometricLoading(false);
+      }
+      console.log("[Biometric] Cleanup completed");
     }
   };
 
@@ -200,17 +348,84 @@ export default function LoginScreen() {
           showsVerticalScrollIndicator={false}
         >
           {/* Logo section */}
-          <View style={{ alignItems: "center", marginBottom: spacing.xxl }}>
-            <View
-              style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: spacing.md, marginBottom: spacing.sm }}
-            >
+          {/* <View style={{ alignSelf: "stretch", alignItems: "center" }}>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.md }}>
               <DhemaxLogo width={60} height={60} />
-              <View>
+              <View style={{ justifyContent: "center" }}>
                 <Text style={{ color: "#ffffff", fontSize: 28, fontWeight: "800", letterSpacing: 1 }}>DHEMAX</Text>
-                <Text style={{ color: "rgba(255,255,255,0.65)", fontSize: 11, marginTop: -2 }}>The Smart Inside Mobility</Text>
+                <Text style={{ color: "rgba(255,255,255,0.65)", fontSize: 11, marginTop: 2 }}>The Smart Inside Mobility</Text>
               </View>
             </View>
             <Text style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, marginTop: spacing.sm }}>Workforce App · PoC v1</Text>
+          </View> */}
+          {/* Logo section */}
+          <View
+            style={{
+              alignSelf: "stretch",
+              alignItems: "center",
+              marginTop: spacing.xxl + spacing.lg,
+              marginBottom: spacing.sm,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: spacing.md,
+                minHeight: 76,
+              }}
+            >
+              <DhemaxLogo width={68} height={68} />
+
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "flex-start",
+                  paddingTop: 2,
+                }}
+              >
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    color: "#ffffff",
+                    fontSize: 30,
+                    lineHeight: 36,
+                    fontWeight: "800",
+                    letterSpacing: 1.4,
+                    includeFontPadding: false,
+                  }}
+                >
+                  DHEMAX
+                </Text>
+
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    color: "rgba(255,255,255,0.68)",
+                    fontSize: 13,
+                    lineHeight: 17,
+                    marginTop: 2,
+                    includeFontPadding: false,
+                  }}
+                >
+                  The Smart Inside Mobility
+                </Text>
+              </View>
+            </View>
+
+            <Text
+              style={{
+                color: "rgba(255,255,255,0.52)",
+                fontSize: 14,
+                lineHeight: 18,
+                marginTop: spacing.md,
+                textAlign: "center",
+                includeFontPadding: false,
+              }}
+            >
+              Workforce App · PoC v1
+            </Text>
           </View>
 
           {/* White card */}
@@ -356,7 +571,18 @@ export default function LoginScreen() {
             {/* Face ID button */}
             {biometricAvailable && (
               <TouchableOpacity
-                onPress={onBiometricLogin}
+                activeOpacity={0.7}
+                onPress={() => {
+                  // Debounce extra para prevenir doble-click
+                  if (biometricInProgress.current) {
+                    console.log("[Biometric] Button pressed while in progress");
+                    return;
+                  }
+                  // Delay mínimo para asegurar que el estado se actualizó
+                  requestAnimationFrame(() => {
+                    onBiometricLogin();
+                  });
+                }}
                 disabled={isBiometricLoading || isLoading}
                 style={{
                   borderRadius: 10,
@@ -376,9 +602,7 @@ export default function LoginScreen() {
                 ) : (
                   <>
                     <Ionicons name="scan-outline" size={20} color="#1477FF" />
-                    <Text style={{ color: "#1477FF", fontSize: 15, fontWeight: "600" }}>
-                      {t("auth.login.biometricLogin")}
-                    </Text>
+                    <Text style={{ color: "#1477FF", fontSize: 15, fontWeight: "600" }}>{t("auth.login.biometricLogin")}</Text>
                   </>
                 )}
               </TouchableOpacity>

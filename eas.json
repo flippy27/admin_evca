@@ -4,16 +4,35 @@
     "appVersionSource": "remote"
   },
   "build": {
-    "development": {
-      "ios": {
-        "distribution": "store"
+    "dev": {
+      "distribution": "store",
+      "env": {
+        "APP_VARIANT": "development",
+        "NODE_ENV": "dev"
       }
     },
+    "qa": {
+      "distribution": "store",
+      "env": {
+        "APP_VARIANT": "qa",
+        "NODE_ENV": "qa"
+      }
+    },
+    "prod": {
+      "autoIncrement": true,
+      "env": {
+        "APP_VARIANT": "production",
+        "NODE_ENV": "prod"
+      }
+    },
+    "development": {
+      "extends": "dev"
+    },
     "preview": {
-      "distribution": "internal"
+      "extends": "qa"
     },
     "production": {
-      "autoIncrement": true
+      "extends": "prod"
     }
   },
   "submit": {

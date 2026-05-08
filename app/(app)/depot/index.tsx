@@ -118,15 +118,15 @@ export default function DepotView() {
 
   // Calculate stats from chargers
   const stats = useMemo(() => {
-    const charging = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Charging").length || 0), 0);
-    const available = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Available").length || 0), 0);
-    const finishing = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Finishing").length || 0), 0);
-    const faulted = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Faulted").length || 0), 0);
-    const suspended = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status === "Suspended").length || 0), 0);
+    const charging = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status?.toLowerCase() === "charging").length || 0), 0);
+    const available = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status?.toLowerCase() === "available").length || 0), 0);
+    const finishing = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status?.toLowerCase() === "finishing").length || 0), 0);
+    const faulted = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status?.toLowerCase() === "faulted").length || 0), 0);
+    const suspended = chargers.reduce((sum, c: any) => sum + (c.connectors?.filter((cn: any) => cn.status?.toLowerCase() === "suspended").length || 0), 0);
 
     // Total connectors (all except Offline/Unavailable)
     const total = chargers.reduce((sum, c: any) => {
-      const activeCount = c.connectors?.filter((cn: any) => cn.status !== "Offline" && cn.status !== "Unavailable").length || 0;
+      const activeCount = c.connectors?.filter((cn: any) => cn.status?.toLowerCase() !== "offline" && cn.status?.toLowerCase() !== "unavailable").length || 0;
       return sum + activeCount;
     }, 0);
 

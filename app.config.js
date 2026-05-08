@@ -22,13 +22,37 @@ console.log(`[app.config.js] Loading environment: ${env} (${envFile})`)
 dotenv.config({ path: path.join(__dirname, envFile) })
 
 module.exports = ({ config }) => {
-  const appVariant = process.env.APP_VARIANT || 'production'
+  const appVariant = process.env.APP_VARIANT || 'development'
 
   const appName = 'Workforce'
-  const appId = 'com.dhemax.workforce'
 
-  const resolvedVersion = config.version || '1.0.0'
-  const resolvedBuildNumber = config?.ios?.buildNumber || '1'
+  // Bundle identifier dinámico según el ambiente
+  // IMPORTANTE: iOS NO permite '_' (underscore), solo letras, números, '.' y '-'
+  // dev: com.dhemax.workforce-dev
+  // qa: com.dhemax.workforce-qa
+  // stg: com.dhemax.workforce-stg
+  // prod: com.dhemax.workforce (sin sufijo)
+  const getBundleId = () => {
+    switch (appVariant) {
+      case 'development':
+      case 'dev':
+        return 'com.dhemax.workforce-dev'
+      case 'qa':
+        return 'com.dhemax.workforce-qa'
+      case 'staging':
+      case 'stg':
+        return 'com.dhemax.workforce-stg'
+      case 'production':
+      case 'prod':
+      default:
+        return 'com.dhemax.workforce'
+    }
+  }
+
+  const appId = getBundleId()
+
+  const resolvedVersion = process.env.APP_VERSION || '1.0.0'
+  const resolvedBuildNumber = process.env.APP_BUILD_NUMBER || '1'
   const resolvedVersionCode = Number.parseInt(
     String(config?.android?.versionCode || 1),
     10,
@@ -36,7 +60,7 @@ module.exports = ({ config }) => {
 
   return {
     name: appName,
-    slug: 'admin_evca',
+    slug: process.env.APP_SLUG || 'workforce-dev',
     version: resolvedVersion,
     orientation: 'portrait',
     icon: './assets/images/icon.png',
@@ -65,7 +89,9 @@ module.exports = ({ config }) => {
       },
       edgeToEdgeEnabled: true,
       predictiveBackGestureEnabled: false,
-      versionCode: Number.isFinite(resolvedVersionCode) ? resolvedVersionCode : 1,
+      versionCode: Number.isFinite(resolvedVersionCode)
+        ? resolvedVersionCode
+        : 1,
       package: appId,
       permissions: ['android.permission.ACCESS_NETWORK_STATE'],
     },
@@ -112,19 +138,28 @@ module.exports = ({ config }) => {
     extra: {
       // API
       BFF_URL: process.env.BFF_URL || 'https://emobility-bff.dev.dhemax.link',
-      USER_MGMT_URL: process.env.USER_MGMT_URL || 'https://user-management.dev.dhemax.link/api',
-      ENCRYPTION_KEY: process.env.ENCRYPTION_KEY || 'H6pLB2FvN0y9M/RoH08zrXZyJl/gN8PEZQdzVTlwxeBvulpY+5y18Jhi11cTpN8nQ1FE6yVcl5HngGMHB24Y8Q==',
-      HMAC_SECRET: process.env.HMAC_SECRET || 'JMzs4PDKaxdxS1ykXs5yyPWWI1mJ8OurUx43d4QHxygvRsfHltTJNa0pEe5lbW3rdJBISoQwyl+vOZt6uKo34A==',
-      apiUrl: process.env.API_BASE_URL || 'https://emobility-bff.dev.dhemax.link/',
+      USER_MGMT_URL:
+        process.env.USER_MGMT_URL ||
+        'https://user-management.dev.dhemax.link/api',
+      ENCRYPTION_KEY:
+        process.env.ENCRYPTION_KEY ||
+        'H6pLB2FvN0y9M/RoH08zrXZyJl/gN8PEZQdzVTlwxeBvulpY+5y18Jhi11cTpN8nQ1FE6yVcl5HngGMHB24Y8Q==',
+      HMAC_SECRET:
+        process.env.HMAC_SECRET ||
+        'JMzs4PDKaxdxS1ykXs5yyPWWI1mJ8OurUx43d4QHxygvRsfHltTJNa0pEe5lbW3rdJBISoQwyl+vOZt6uKo34A==',
+      apiUrl:
+        process.env.API_BASE_URL || 'https://emobility-bff.dev.dhemax.link/',
       apiTimeout: parseInt(process.env.API_TIMEOUT || '30000', 10),
       httpLogLevel: parseInt(process.env.HTTP_LOG_LEVEL || '2', 10),
       httpLogMethods: process.env.HTTP_LOG_METHODS || 'COMMANDS',
-      httpLogSkipPaths: process.env.HTTP_LOG_SKIP_PATHS || 'charging-session/company',
+      httpLogSkipPaths:
+        process.env.HTTP_LOG_SKIP_PATHS || 'charging-session/company',
       // Auth
       authProvider: process.env.AUTH_PROVIDER || 'keycloak',
       authRealm: process.env.AUTH_REALM || 'evca',
       authClientId: process.env.AUTH_CLIENT_ID || 'admin-evca-mobile',
-      encryptionKey: process.env.TOKEN_ENCRYPTION_KEY || 'your-32-char-encryption-key-here',
+      encryptionKey:
+        process.env.TOKEN_ENCRYPTION_KEY || 'your-32-char-encryption-key-here',
       // App
       environment: process.env.ENVIRONMENT || 'development',
       appVersion: process.env.APP_VERSION || '1.0.0',
@@ -144,7 +179,7 @@ module.exports = ({ config }) => {
       easBuildChannel: process.env.EAS_BUILD_CHANNEL || 'production',
       // Misc
       maestro: { appId, appVariant },
-      eas: { projectId: '1db1f716-6458-416c-ac45-e332903709ef' },
+      eas: { projectId: process.env.EAS_PROJECT_ID || '017aefff-040c-4065-9fc8-7668c9905974' },
       router: {},
     },
   }

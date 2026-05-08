@@ -198,7 +198,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       const storedData = await SecureStore.getItemAsync(STORAGE_KEY)
       if (!storedData) {
-        set({ sessionState: 'unauthenticated' })
+        set({ sessionState: 'unauthenticated', hydrated: true })
         return
       }
 
@@ -211,7 +211,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       if (now >= refreshTokenExpiry) {
         // Refresh token expired — session is gone
         await SecureStore.deleteItemAsync(STORAGE_KEY)
-        set({ sessionState: 'unauthenticated' })
+        set({ sessionState: 'unauthenticated', hydrated: true })
         return
       }
 
@@ -428,8 +428,4 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 }))
 
-// Register callback for when token refresh fails (API client will call this)
-onRefreshFailed(() => {
-  logger.error('Token refresh failed in API interceptor — forcing logout')
-  useAuthStore.getState().logout()
-})
+// NOTE: onRefreshFailed callback is registered in _layout.tsx (includes navigation to login)

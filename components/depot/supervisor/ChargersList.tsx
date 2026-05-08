@@ -71,7 +71,7 @@ export function ChargersList({ chargers }: ChargersListProps) {
               </View>
 
               <View style={{ alignItems: "flex-end" }}>
-                {totalPower > 0 && <Text style={{ fontSize: 13, fontWeight: "600", color: "#3b82f6" }}>{totalPower} kW</Text>}
+                {totalPower > 0 && <Text style={{ fontSize: 13, fontWeight: "600", color: "#3b82f6" }}>{totalPower.toFixed(1)} kW</Text>}
                 <Text style={{ fontSize: 11, color: colors.mutedForeground }}>
                   {t("mobile.supervisor.chargersList.activeOf", { charging: chargingCount, total: totalCount })}
                 </Text>

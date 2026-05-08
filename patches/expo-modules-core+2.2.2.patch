@@ -1,0 +1,10 @@
+--- a/ios/ReactDelegates/ExpoReactDelegate.swift
++++ b/ios/ReactDelegates/ExpoReactDelegate.swift
+@@ -38,7 +38,7 @@ public class ExpoReactDelegate: NSObject, RCTRootViewFactoryProvider {
+   public func createRootViewController() -> UIViewController {
+     return self.handlers.lazy
+       .compactMap { $0.createRootViewController() }
+-      .first(where: { _ in true }) ?? UIViewController()
++      .first(where: { _ in true }) ?? MainActor.assumeIsolated { UIViewController() }
+   }
+ }

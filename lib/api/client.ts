@@ -187,8 +187,9 @@ function createAuthenticatedClient(baseURL: string, isBff: boolean = false): Axi
         message: apiError.message,
       });
 
-      // Handle 401: try to refresh token
-      if (error.response?.status === 401 && !originalRequest._retried) {
+      // Handle 401: try to refresh token (skip for auth endpoints)
+      const isAuthEndpoint = AUTH_WHITELIST.some((endpoint) => (error.config?.url || '').includes(endpoint));
+      if (error.response?.status === 401 && !originalRequest._retried && !isAuthEndpoint) {
         originalRequest._retried = true;
 
         // Use single-flight pattern for refresh
