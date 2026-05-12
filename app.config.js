@@ -60,7 +60,7 @@ module.exports = ({ config }) => {
 
   return {
     name: appName,
-    slug: process.env.APP_SLUG || 'workforce-dev',
+    slug: process.env.APP_SLUG,
     version: resolvedVersion,
     orientation: 'portrait',
     icon: './assets/images/icon.png',
@@ -179,7 +179,7 @@ module.exports = ({ config }) => {
       easBuildChannel: process.env.EAS_BUILD_CHANNEL || 'production',
       // Misc
       maestro: { appId, appVariant },
-      eas: { projectId: process.env.EAS_PROJECT_ID || '017aefff-040c-4065-9fc8-7668c9905974' },
+      eas: { projectId: process.env.EAS_PROJECT_ID },
       router: {},
     },
   }
